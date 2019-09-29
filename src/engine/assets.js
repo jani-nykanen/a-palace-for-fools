@@ -64,12 +64,33 @@ export class AssetLoader {
     }
 
 
+    // Load an XML document
+    loadXML(src, name) {
+
+        this.loadDocument(src, (t) => {
+
+            let parser = new DOMParser();
+            this.documents[name] = parser.parseFromString(t,"text/xml");
+        });
+    }
+
+
     // Add bitmaps to be loaded
     addBitmaps() {
 
         for (let a of arguments) {
 
-            this.loadBitmap(a.src, a.name, a.preserve);
+            this.loadBitmap(a.src, a.name);
+        }
+    }
+
+
+    // Add documents to be loaded
+    addDocuments() {
+
+        for (let a of arguments) {
+
+            this.loadXML(a.src, a.name);
         }
     }
 

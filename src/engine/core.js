@@ -31,6 +31,7 @@ export class Core {
         // objects, to we can easily have access to them
         // later
         this.canvas.bitmaps = this.assets.bitmaps;
+        this.ev.documents = this.assets.documents;
 
         // Compute required values
         this.ev.step = 60.0 / this.frameRate;

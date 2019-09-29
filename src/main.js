@@ -21,6 +21,10 @@ window.onload = () => {
     // Set assets loading
     c.assets.addBitmaps(
         {name: "font",   src: "assets/bitmaps/font.png"},
+        {name: "tileset",   src: "assets/bitmaps/tileset.png"},
+    );
+    c.assets.addDocuments(
+        {name: "sewers", src: "assets/maps/sewers.tmx"},
     );
 
     // Configure keys
