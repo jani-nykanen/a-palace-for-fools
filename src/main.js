@@ -34,8 +34,8 @@ window.onload = () => {
         {name: "right", key: 39},
         {name: "down", key: 40},
 
-        {name: "fire1", key: 32},
-        {name: "fire2", key: 90},
+        {name: "fire1", key: 90},
+        {name: "fire2", key: 88},
 
         {name: "start", key: 13},
         {name: "back", key: 27},

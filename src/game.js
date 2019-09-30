@@ -37,6 +37,8 @@ export class Game {
 
         // Update player
         this.player.update(ev);
+        // Get collisions with the stage
+        this.stage.getCollisions(this.player);
 
         // Update camera
         this.player.updateCamera(this.cam, this.stage);

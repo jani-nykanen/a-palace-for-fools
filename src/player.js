@@ -19,36 +19,113 @@ export class Player extends GameObject {
 
         // Set acceleration
         this.acc = new Vector2(
-            0.1, 0.1
+            0.1, 0.15
         );
+
+        this.jumpTimer = 0.0;
+
+        this.w = 8;
+        this.h = 12;
+    }
+
+
+    // Update jump
+    updateJump(ev) {
+
+        const JUMP_SPEED = -2.0;
+
+        if (this.jumpTimer <= 0.0) return;
+
+        this.jumpTimer -= ev.step;
+        this.speed.y = JUMP_SPEED;
+    }
+
+
+    // Update climbing controls
+    climb(ev) {
+
+        const CLIMB_SPEED = 0.5;
+
+        this.target.x = 0;
+        this.target.y = 0;
+
+        // Moving up and down
+        if (ev.input.action.up.state == State.Down) {
+
+            this.target.y = -CLIMB_SPEED;
+        }
+        else if (ev.input.action.down.state == State.Down) {
+
+            this.target.y = CLIMB_SPEED;
+        }
+
+        if (!this.touchLadder)
+            this.climbing = false;
     }
 
 
     // Control
     control(ev) {
 
-        this.target.x = 0;
-        this.target.y = 0;
+        const GRAVITY = 2.0;
+        const H_SPEED = 1.0;
+        const JUMP_TIME = 15;
 
+        this.target.x = 0;
+        this.target.y = GRAVITY;
+
+        // Update jump
+        this.updateJump(ev);
+
+        // Check jump button
+        let s = ev.input.action.fire1.state;
+        if (s == State.Pressed) {
+
+            if (this.climbing)
+                this.climbing = false;
+
+            else if( this.canJump && this.jumpTimer <= 0.0)
+                this.jumpTimer = JUMP_TIME;
+        }
+        else if(s == State.Released && this.jumpTimer > 0) {
+
+            this.jumpTimer = 0.0;
+        }
+
+        // Update climbing
+        if (this.climbing) {
+
+            this.climb(ev);
+            return;
+        }
+
+        // Check climbing buttons
+        if (this.touchLadder &&
+            (ev.input.action.up.state == State.Pressed ||
+            ev.input.action.down.state == State.Down)) {
+
+            this.pos.x = this.ladderX + 8;
+            this.speed.x = 0;
+            this.speed.y = 0;
+            this.target.x = 0;
+            this.climbing = true;
+
+            // Required to get the speed
+            this.climb(ev);
+
+            return;
+        }
+
+        // Moving left and right
         if (ev.input.action.left.state == State.Down) {
 
-            this.target.x = -1;
+            this.target.x = -H_SPEED;
         }
         else if (ev.input.action.right.state == State.Down) {
 
-            this.target.x = 1;
+            this.target.x = H_SPEED;
         }
-
-        if (ev.input.action.up.state == State.Down) {
-
-            this.target.y = -1;
-        }
-        else if (ev.input.action.down.state == State.Down) {
-
-            this.target.y = 1;
-        }
-
-        this.target.normalize();
+        
     }
 
 
@@ -98,6 +175,8 @@ export class Player extends GameObject {
 
         let px = this.pos.x | 0;
         let py = this.pos.y | 0;
+
+        py -= (16 - this.h)/2;
 
         // Draw a box
         for (let i = 0; i < 3; ++ i) {

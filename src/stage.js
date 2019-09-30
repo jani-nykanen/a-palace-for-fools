@@ -242,4 +242,98 @@ export class Stage {
             10, 9);
     }
 
+
+    // Get wall collision with an object
+    getWallCollision(o, x, y) {
+
+        let sy = o.speed.y;
+
+        // Left
+        if (this.map.getTile(0, x-1, y, true) != 1) {
+
+            o.verticalCollision(x*16, y*16, 16);
+        }
+
+        // Right
+        if (this.map.getTile(0, x+1, y, true) != 1) {
+
+            o.verticalCollision((x+1)*16, y*16, 16);
+        }
+
+        // Top
+        if (this.map.getTile(0, x, y-1, true) != 1) {
+
+            // If touched ground while climbing downwards, stop
+            // climbing
+            if (o.horizontalCollision(x*16, y*16, 16)) {
+
+                if (o.climbing) {
+
+                    o.climbing = false;
+                }
+            }
+        }
+
+        // Bottom
+        if (this.map.getTile(0, x, y+1, true) != 1) {
+
+            o.horizontalCollision(x*16, (y+1) *16, 16);
+        }
+    }
+
+
+    // Get ladder collision with an object
+    getLadderCollision(o, x, y) {
+
+        o.ladderCollision(x*16, y*16, 16, 16);
+
+        // Check if the ladder end in the tile
+        // above
+        let s = this.map.getTile(0, x, y-1);
+        if (s != 2 && s != 1) {
+
+            o.ladderCollision(x*16, y*16+8, 16, 8);
+
+            if (!o.climbing)
+                o.horizontalCollision(x*16, y*16, 16);  
+
+        }
+    }
+
+
+    // Get collisions with a game object
+    getCollisions(o) {
+
+        const RADIUS = 2; 
+
+        let sx = Math.floor(o.pos.x / 16) - RADIUS;
+        let sy = Math.floor(o.pos.y / 16) - RADIUS;
+
+        let t;
+        for (let y = sy; y <= sy + RADIUS*2; ++ y) {
+
+            for (let x = sx; x <= sx + RADIUS*2; ++ x) {
+
+                t = this.map.getTile(0, x, y, true);
+                switch(t) {
+
+                // Wall
+                case 1:
+
+                    this.getWallCollision(o, x, y);
+                    break; 
+
+                // Ladder
+                case 2:
+
+                    this.getLadderCollision(o, x, y);
+                    break;
+
+                default:
+                    break;
+                }
+            }
+        }
+    }
+
 }
