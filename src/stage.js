@@ -133,6 +133,66 @@ export class Stage {
     }
 
 
+    // Draw ladder
+    drawLadder(c, x, y) {
+
+        let ts = c.bitmaps.tileset;
+
+        let up = this.map.getTile(0, x, y - 1);
+        if (up != 2 && up != 1) {
+
+            // Draw ladder top
+            c.drawBitmapRegion(ts, 
+                96, 0, 16, 16,
+                x*16, (y-1)*16);  
+        }
+
+        // Draw ladder base
+        c.drawBitmapRegion(ts, 
+            80, 0, 16, 16,
+            x*16, y*16);  
+    }
+
+
+    // Draw spikes
+    drawSpikes(c, t, x, y) {
+
+        let ts = c.bitmaps.tileset;
+
+        const DIR_X = [1, 0, 1, 0];
+        const DIR_Y = [0, 1, 0, 1];
+
+        let dx = 0;
+        let dy = 0;
+
+        let jump = 0;
+        // If not a similar spike (or wall) next to 
+        // this spike, make the second spike slightly 
+        // different
+        let s = this.map.getTile(
+            0, x + DIR_X[t], y + DIR_Y[t]);
+        if (s != 3 + t && s != 1) {
+
+            jump = 1;
+        }
+
+        // Draw both spikes, obviously
+        for (let i = 0; i < 2; ++ i) {
+
+            c.drawBitmapRegion(ts, 
+                112 + t*16 + dx * jump, 
+                dy * jump, 
+                8 + DIR_Y[t]*8, 
+                8 + DIR_X[t]*8,
+                x*16 + dx, 
+                y*16 + dy); 
+
+            dx += DIR_X[t] * 8;
+            dy += DIR_Y[t] * 8;
+        }
+    }
+
+
     // Draw the (static) tiles
     drawTiles(c, sx, sy, w, h) {
 
@@ -150,7 +210,21 @@ export class Stage {
                     this.drawWallTile(c, x, y);
                     break;  
 
+                // Ladder
+                case 2:
+
+                    this.drawLadder(c, x, y);
+                    break;
                 
+                // Spikes
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+
+                    this.drawSpikes(c, t-3, x, y);
+                    break;
+
                 default:
                     break;
                 }
@@ -163,9 +237,9 @@ export class Stage {
     draw(c, x, y) {
 
         this.drawTiles(c,
-            (x*160) | 0, 
-            (y*144) | 0, 
-            160, 144);
+            (x*10) | 0, 
+            (y*9) | 0, 
+            10, 9);
     }
 
 }

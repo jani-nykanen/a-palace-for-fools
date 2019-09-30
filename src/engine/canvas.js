@@ -35,6 +35,10 @@ export class Canvas {
         this.w = w;
         this.h = h;
 
+        // Transformation
+        this.tr = new Vector2(0, 0);
+
+        // Create the canvas
         this.createHtml5Canvas(w, h);
 
         // Black screen by default
@@ -43,8 +47,7 @@ export class Canvas {
         // Set the proper size for the canvases (style-wise)
         this.resize(window.innerWidth, window.innerHeight);
 
-        // Transformation
-        this.tr = new Vector2(0, 0);
+        
     }
 
 
@@ -127,6 +130,10 @@ export class Canvas {
     fillRect(x, y, w, h) {
 
         let c = this.ctx;
+
+        // Apply translation
+        x += this.tr.x;
+        y += this.tr.y;
 
         c.fillRect(x, y, w, h);
     }

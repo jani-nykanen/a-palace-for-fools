@@ -104,17 +104,6 @@ export function updateSpeedAxis(speed, target, d) {
 }
 
 
-// Update a vector with a target vector
-export function updateVectorMovement(v, t, div, s) {
-
-    v.x = updateSpeedAxis(v.x, t.x, Math.abs(v.x-t.x)/div *s);
-    v.y = updateSpeedAxis(v.y, t.y, Math.abs(v.y-t.y)/div *s);
-    v.z = updateSpeedAxis(v.z, t.z, Math.abs(v.z-t.z)/div *s);
-
-    v.normalize();
-}
-
-
 // Convert RGBA values to a string that is 
 // understood by Html5
 export function getColorString(r, g, b, a) {
