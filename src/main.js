@@ -22,6 +22,8 @@ window.onload = () => {
     c.assets.addBitmaps(
         {name: "font",   src: "assets/bitmaps/font.png"},
         {name: "tileset",   src: "assets/bitmaps/tileset.png"},
+        {name: "clouds",   src: "assets/bitmaps/clouds.png"},
+        {name: "background",   src: "assets/bitmaps/background.png"},
     );
     c.assets.addDocuments(
         {name: "sewers", src: "assets/maps/sewers.tmx"},

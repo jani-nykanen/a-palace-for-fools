@@ -28,6 +28,8 @@ export class GameObject {
         this.touchLadder = false;
         this.ladderX = 0;
         this.climbing = false;
+
+        this.touchWater = false;
     }
 
 
@@ -67,6 +69,7 @@ export class GameObject {
 
         this.canJump = false;
         this.touchLadder = false;
+        this.touchWater = false;
     }   
 
 
@@ -92,8 +95,25 @@ export class GameObject {
     }
 
 
+    // Water collision
+    waterCollision(x, y, w, h) {
+
+        let px = this.pos.x;
+        let py = this.pos.y;
+
+        let pw = this.w;
+        let ph = this.h;
+
+        this.touchWater |= 
+            px+pw/2 > x &&
+            px-pw/2 < x+w &&
+            py+ph/2 > y &&
+            py-ph/2 < y+h;
+    }
+
+
     // Horizontal collision
-    horizontalCollision(x, y, d) {
+    horizontalCollision(x, y, d, dir) {
 
         let px = this.pos.x;
         let py = this.pos.y;
@@ -108,7 +128,8 @@ export class GameObject {
             return false;
 
         // Check collision from above
-        if (this.speed.y > 0.0 &&
+        if ((!dir || dir > 0) &&
+            this.speed.y > 0.0 &&
             py+h/2 >= y-this.speed.y && 
             opy+h/2 < y+this.speed.y) {
 
@@ -121,7 +142,8 @@ export class GameObject {
         }
 
         // Check collision from below
-        if (this.speed.y < 0.0 &&
+        if ((!dir || dir < 0) &&
+            this.speed.y < 0.0 &&
             py-h/2 <= y-this.speed.y && 
             opy-h/2 > y+this.speed.y) {
 

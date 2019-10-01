@@ -245,6 +245,20 @@ export class Canvas {
     }
 
 
+    // Draw a sprite frame (another way)
+    drawSpriteFrame(spr, bmp, frame, row, x, y, flip)  {
+
+        spr.drawFrame(this, bmp, frame, row, x, y, flip);
+    }
+
+
+    // Draw a sprite (another way)
+    drawSprite(spr, bmp, x, y, flip)  {
+
+        spr.draw(this, bmp, x, y, flip);
+    }
+
+
     // Translate the rendering point
     translate(x, y) {
 

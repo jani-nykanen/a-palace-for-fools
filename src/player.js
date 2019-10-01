@@ -68,28 +68,39 @@ export class Player extends GameObject {
     control(ev) {
 
         const GRAVITY = 2.0;
+        const WATER_GRAVITY = 0.5;
         const H_SPEED = 1.0;
         const JUMP_TIME = 15;
+        const SWIM_SPEED_UP = -1.5;
 
         this.target.x = 0;
-        this.target.y = GRAVITY;
+        this.target.y = 
+            this.touchWater ? WATER_GRAVITY :  GRAVITY;
 
         // Update jump
         this.updateJump(ev);
 
         // Check jump button
         let s = ev.input.action.fire1.state;
-        if (s == State.Pressed) {
 
-            if (this.climbing)
-                this.climbing = false;
+        if (s == State.Down && this.touchWater) {
 
-            else if( this.canJump && this.jumpTimer <= 0.0)
-                this.jumpTimer = JUMP_TIME;
+            this.target.y = SWIM_SPEED_UP;
         }
-        else if(s == State.Released && this.jumpTimer > 0) {
+        else if (!this.touchWater) {
 
-            this.jumpTimer = 0.0;
+            if (s == State.Pressed) {
+
+                if (this.climbing)
+                    this.climbing = false;
+
+                else if( this.canJump && this.jumpTimer <= 0.0)
+                    this.jumpTimer = JUMP_TIME;
+            }
+            else if(s == State.Released && this.jumpTimer > 0) {
+
+                this.jumpTimer = 0.0;
+            }
         }
 
         // Update climbing
@@ -176,7 +187,7 @@ export class Player extends GameObject {
         let px = this.pos.x | 0;
         let py = this.pos.y | 0;
 
-        py -= (16 - this.h)/2;
+        py -= (16 - this.h)/2 -1;
 
         // Draw a box
         for (let i = 0; i < 3; ++ i) {

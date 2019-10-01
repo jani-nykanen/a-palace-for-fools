@@ -1,5 +1,6 @@
 import { Tilemap } from "./engine/tilemap.js";
 import { negMod } from "./engine/util.js";
+import { Sprite } from "./engine/sprite.js";
 
 //
 // Handles the game stage rendering
@@ -17,6 +18,8 @@ export class Stage {
         this.map = new Tilemap(map);
         this.w = this.map.w;
         this.h = this.map.h;
+
+        this.waterSurface = new Sprite(16, 16);
     }
 
 
@@ -193,7 +196,25 @@ export class Stage {
     }
 
 
-    // Draw the (static) tiles
+    // Draw water
+    drawWater(c, x, y) {
+
+        let ts = c.bitmaps.tileset;
+
+        if (this.map.getTile(0, x, y-1, true) != 7) {
+
+            c.drawSprite(this.waterSurface, ts,
+                x*16, y*16);
+        }
+        else {
+
+            c.drawBitmapRegion(ts, 14*16, 0, 16, 16,
+                x*16, y*16);
+        }
+    }
+
+
+    // Draw the (mostly static) tiles
     drawTiles(c, sx, sy, w, h) {
 
         let t;
@@ -225,11 +246,24 @@ export class Stage {
                     this.drawSpikes(c, t-3, x, y);
                     break;
 
+                // Water
+                case 7:
+
+                    this.drawWater(c, x, y);
+                    break;
+
                 default:
                     break;
                 }
             }
         }
+    }
+
+
+    // Update stage
+    update(ev) {
+
+        this.waterSurface.animate(0, 11, 13, 12, ev.step);
     }
 
 
@@ -246,18 +280,18 @@ export class Stage {
     // Get wall collision with an object
     getWallCollision(o, x, y) {
 
-        let sy = o.speed.y;
+        const MARGIN = 2;
 
         // Left
         if (this.map.getTile(0, x-1, y, true) != 1) {
 
-            o.verticalCollision(x*16, y*16, 16);
+            o.verticalCollision(x*16, y*16, 16, -1);
         }
 
         // Right
         if (this.map.getTile(0, x+1, y, true) != 1) {
 
-            o.verticalCollision((x+1)*16, y*16, 16);
+            o.verticalCollision((x+1)*16, y*16, 16, 1);
         }
 
         // Top
@@ -265,7 +299,8 @@ export class Stage {
 
             // If touched ground while climbing downwards, stop
             // climbing
-            if (o.horizontalCollision(x*16, y*16, 16)) {
+            if (o.horizontalCollision(
+                x*16-MARGIN, y*16, 16+MARGIN*2, 1)) {
 
                 if (o.climbing) {
 
@@ -277,7 +312,7 @@ export class Stage {
         // Bottom
         if (this.map.getTile(0, x, y+1, true) != 1) {
 
-            o.horizontalCollision(x*16, (y+1) *16, 16);
+            o.horizontalCollision(x*16, (y+1) *16, 16, -1);
         }
     }
 
@@ -287,7 +322,7 @@ export class Stage {
 
         o.ladderCollision(x*16, y*16, 16, 16);
 
-        // Check if the ladder end in the tile
+        // Check if the ladder ends in the tile
         // above
         let s = this.map.getTile(0, x, y-1);
         if (s != 2 && s != 1) {
@@ -295,8 +330,28 @@ export class Stage {
             o.ladderCollision(x*16, y*16+8, 16, 8);
 
             if (!o.climbing)
-                o.horizontalCollision(x*16, y*16, 16);  
+                o.horizontalCollision(x*16, y*16, 16, 1);  
 
+        }
+    }
+
+
+    // Get water collision
+    getWaterCollision(o, x, y) {
+
+        const TOP_OFF = 4;
+
+        // Check if there is water in the tile
+        // above
+        let s = this.map.getTile(0, x, y-1);
+        if (s != 7) {
+
+            o.waterCollision(x*16, y*16+TOP_OFF, 
+                16, 16-TOP_OFF);
+        }
+        else {
+
+            o.waterCollision(x*16, y*16, 16, 16);
         }
     }
 
@@ -327,6 +382,12 @@ export class Stage {
                 case 2:
 
                     this.getLadderCollision(o, x, y);
+                    break;
+
+                // Water
+                case 7:
+
+                    this.getWaterCollision(o, x, y);
                     break;
 
                 default:

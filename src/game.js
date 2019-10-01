@@ -20,6 +20,8 @@ export class Game {
             w: 160, h: 144
         };
         this.player = new Player(80, 72);
+
+        this.cloudPos = [0, 0, 0];
     }
 
 
@@ -35,6 +37,8 @@ export class Game {
     // Update the scene
     update(ev) {
 
+        const CLOUD_SPEED = [1.5, 1.0, 0.5];
+
         // Update player
         this.player.update(ev);
         // Get collisions with the stage
@@ -42,6 +46,38 @@ export class Game {
 
         // Update camera
         this.player.updateCamera(this.cam, this.stage);
+
+        // Update stage
+        this.stage.update(ev);
+
+        // Update cloud position
+        for (let i = 0; i < 3; ++ i) {
+
+            this.cloudPos[i] += CLOUD_SPEED[i] * ev.step;
+            this.cloudPos[i] %= 160;
+        }
+    }
+
+
+    // Draw the background
+    drawBackground(c) {
+
+        c.drawBitmap(c.bitmaps.background, 0, 0);
+
+        // Draw clouds
+        let x;
+        for (let i = 2; i >= 0; -- i) {
+
+            x = this.cloudPos[i] | 0;
+            for (let j = 0; j < 2; ++ j) {
+
+                c.drawBitmapRegion(c.bitmaps.clouds,  
+                    0, 72*i, 160, 72,
+                    -x + j*160,
+                    64 + 16*(2-i)
+                    );
+            }
+        }
     }
 
 
@@ -49,6 +85,9 @@ export class Game {
     draw(c) {
 
         c.clear(85);
+
+        // Draw background
+        this.drawBackground(c);
 
         // Move to camera
         c.moveTo(-(this.cam.x*160) | 0, 
