@@ -73,6 +73,14 @@ export class Sprite {
     }
 
 
+    // Set frame
+    setFrame(row, frame) {
+
+        this.row = row;
+        this.frame = frame;
+    }
+
+
     // Draw a frame
     drawFrame(c, bmp, frame, row, dx, dy, flip) {
     

@@ -320,6 +320,8 @@ export class Stage {
     // Get ladder collision with an object
     getLadderCollision(o, x, y) {
 
+        const TOP_OFF = 12;
+
         o.ladderCollision(x*16, y*16, 16, 16);
 
         // Check if the ladder ends in the tile
@@ -327,10 +329,11 @@ export class Stage {
         let s = this.map.getTile(0, x, y-1);
         if (s != 2 && s != 1) {
 
-            o.ladderCollision(x*16, y*16+8, 16, 8);
-
+        
             if (!o.climbing)
                 o.horizontalCollision(x*16, y*16, 16, 1);  
+
+            o.ladderCollision(x*16, (y-1)*16+TOP_OFF, 16, 16-TOP_OFF);
 
         }
     }

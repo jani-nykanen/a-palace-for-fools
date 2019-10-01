@@ -83,10 +83,10 @@ export class GameObject {
         let ph = this.h;
 
         let touch = 
-            px+pw/2 > x &&
-            px-pw/2 < x+w &&
-            py+ph/2 > y &&
-            py-ph/2 < y+h;
+            px+pw/4 > x &&
+            px-pw/4 < x+w &&
+            py+ph/4 > y &&
+            py-ph/4 < y+h;
 
         this.touchLadder |= touch;
 
@@ -136,6 +136,7 @@ export class GameObject {
             this.pos.y = y - h/2;
             this.speed.y = 0;
             this.canJump = true;
+            this.jumpTimer = 0;
 
             return true;
 
@@ -162,7 +163,7 @@ export class GameObject {
     // TODO: One could merge this one and the previous
     // one to a more general method. The code is 99%
     // the same.
-    verticalCollision(x, y, d) {
+    verticalCollision(x, y, d, dir) {
 
         // With this we avoid the case the object
         // is taking the wall collision before floor
@@ -181,8 +182,9 @@ export class GameObject {
         if (py+h/2 <= y+MARGIN || py-h/2 >= y+d-MARGIN) 
             return false;
 
-        // Check collision from above
-        if (this.speed.x > 0.0 &&
+        // Check collision from left
+        if ((!dir || dir < 0) &&
+            this.speed.x > 0.0 &&
             px+w/2 >= x-this.speed.x && 
             opx+w/2 < x+this.speed.x) {
 
@@ -193,7 +195,8 @@ export class GameObject {
         }
 
         // Check collision from right
-        if (this.speed.x < 0.0 &&
+        if ((!dir || dir > 0) &&
+            this.speed.x < 0.0 &&
             px-w/2 <= x-this.speed.x && 
             opx-w/2 > x+this.speed.x) {
 
