@@ -30,10 +30,12 @@ export class Player extends GameObject {
         this.h = 12;
 
         this.spr = new Sprite(16, 16);
+        this.gunSpr = new Sprite(8, 8);
         this.flip = Flip.None;
 
         this.shootAnimTimer = 0;
         this.shootDir = 0;
+        this.canShoot = true;
     }
 
 
@@ -102,9 +104,13 @@ export class Player extends GameObject {
             this.touchWater ? WATER_GRAVITY :  GRAVITY;
 
         // Shoot a bullet
-        if (ev.input.action.fire2.state == State.Pressed) {
+        if (this.canShoot &&
+            ev.input.action.fire2.state == State.Pressed) {
             
             this.shootAnimTimer = SHOOT_ANIM_TIME;
+            this.canShoot = false;
+            this.gunSpr.setFrame(0, 0);
+            this.gunSpr.count = 0;
         }
 
         // Update jump
@@ -185,6 +191,7 @@ export class Player extends GameObject {
         const WALK_SPEED_VARY = 5;
         const WALK_SPEED_BASE = 12;
         const AIR_FRAME_LIMIT = 0.5;
+        const GUN_ANIM_SPEED = 4;
 
         let s;
 
@@ -196,17 +203,29 @@ export class Player extends GameObject {
         if (this.shootAnimTimer > 0) {
 
             this.shootAnimTimer -= 1.0 * ev.step;
+
+            // Update gun animation
+            if (!this.canShoot) {
+
+                this.gunSpr.animate(0, 0, 3, GUN_ANIM_SPEED, ev.step);
+                if (this.gunSpr.frame == 3)
+                    this.canShoot = true;
+            }
         }
-        let row = this.shootAnimTimer > 0 ? 1 : 0;
+        let jump = this.shootAnimTimer > 0 ? 1 : 0;
 
         // Climbing
         if (this.climbing) {
 
             s = Math.abs(this.speed.y) > EPS ? 1 : 0;
 
-            this.spr.animate(2, 
-                2*row, 2*row+s, 
-                CLIMB_SPEED, ev.step);
+            if (s == 1 || this.shootAnimTimer > 0 ||
+                this.spr.frame >= 2) {
+
+                this.spr.animate(2, 
+                    Math.min(2*jump, 2),  Math.min(2*jump+s, 2), 
+                    CLIMB_SPEED, ev.step);
+            }
             
             this.flip = Flip.None;        
             if (this.shootAnimTimer > 0 && this.shootDir < 0 ) {
@@ -222,11 +241,11 @@ export class Player extends GameObject {
                 s = WALK_SPEED_BASE - 
                     Math.abs(this.speed.x) * WALK_SPEED_VARY;
 
-                this.spr.animate(row, 1, 4, s, ev.step);
+                this.spr.animate(0, 1, 4, s, ev.step);
             }
             else {
 
-                this.spr.setFrame(row, 0);
+                this.spr.setFrame(0, 0);
             }
         }
         // Falling or jumping
@@ -238,7 +257,7 @@ export class Player extends GameObject {
             else if(this.speed.y >= AIR_FRAME_LIMIT)
                 s = 7;
 
-            this.spr.setFrame(row, s);
+            this.spr.setFrame(0, s);
         }
     }
 
@@ -285,7 +304,27 @@ export class Player extends GameObject {
 
         py -= (16 - this.h)/2 -1;
 
-        c.drawSprite(this.spr, c.bitmaps.figure,
+        let row = this.spr.row;
+        if (this.shootAnimTimer > 0 && !this.climbing) {
+
+            row += 1;
+        }
+
+        c.drawSpriteFrame(this.spr, c.bitmaps.figure,
+            this.spr.frame, row,
             px-8, py-8, this.flip);
+
+        
+        if (this.shootAnimTimer > 0) {
+
+            if (this.flip == Flip.Horizontal) {
+
+                px -= 18;
+            }
+
+            // Draw gun
+            c.drawSprite(this.gunSpr, c.bitmaps.gun,
+                px+5, py-3, this.flip);
+        }
     }
 }

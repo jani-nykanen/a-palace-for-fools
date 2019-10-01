@@ -78,6 +78,8 @@ export class Sprite {
 
         this.row = row;
         this.frame = frame;
+
+        this.count = 0;
     }
 
 
