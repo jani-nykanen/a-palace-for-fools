@@ -35,6 +35,7 @@ export class GameObject {
         this.exist = true;
 
         this.dieOnCollision = false;
+        this.forceUp = false;
     }
 
 
@@ -131,6 +132,7 @@ export class GameObject {
 
 
     // Horizontal collision
+    // (or wait, maybe vertical?)
     horizontalCollision(x, y, d, dir) {
 
         if (!this.exist || this.dying) return;
@@ -175,7 +177,12 @@ export class GameObject {
             opy-h/2 > y+this.speed.y) {
 
             this.pos.y = y + h/2;
-            this.speed.y = 0;
+
+            if (this.forceUp)
+                this.speed.y *= -1;
+            else
+                this.speed.y = 0;
+
             this.jumpTimer = 0.0;
 
             if (this.dieOnCollision) {
@@ -199,6 +206,8 @@ export class GameObject {
 
         if (!this.exist || this.dying) return;
 
+        let margin = this.dieOnCollision ? 0 : 1;
+
         let px = this.pos.x;
         let py = this.pos.y;
         let opx = this.oldPos.x;
@@ -206,9 +215,9 @@ export class GameObject {
         let w = this.w;
         let h = this.h;
 
-        // If not in the horizontal area,
+        // If not in the vertical area,
         // stop here
-        if (py+h/2 <= y || py-h/2 >= y+d) 
+        if (py+h/2 <= y+margin || py-h/2 >= y+d) 
             return false;
 
         // Check collision from left

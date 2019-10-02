@@ -197,7 +197,7 @@ export class Player extends GameObject {
     // Update rocket
     updateRocket(ev) {
 
-        const ROCKET_SPEED = 0.30;
+        const ROCKET_SPEED = 0.25;
         const SPEED_CAP = -1.5;
 
         // Stop rocketing, if touching ground, climbing
@@ -216,6 +216,8 @@ export class Player extends GameObject {
 
             this.rocketTimer -= 1.0 * ev.step;
             this.dustTimer -= 1.0 * ev.step;
+
+            this.forceUp = true;
         }
     }
 
@@ -236,6 +238,8 @@ export class Player extends GameObject {
         this.target.x = 0;
         this.target.y = 
             this.touchWater ? WATER_GRAVITY :  GRAVITY;
+
+        this.forceUp = false;
 
         // Update dust
         this.updateDust(ev);
@@ -297,10 +301,13 @@ export class Player extends GameObject {
 
                     }
                 }
-                else if (!this.canJump) {
+                else if (!this.canJump && !this.rocketActive) {
 
                     this.rocketActive = true;
                     this.rocketTimer = ROCKET_TIME;
+
+                    this.speed.y = 0;
+                    this.target.y = 0;
                 }
             }
             else if(s == State.Released) {
