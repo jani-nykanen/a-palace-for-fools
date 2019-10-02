@@ -44,7 +44,7 @@ export class Game {
         // Update player
         this.player.update(ev, [this.bgen]);
         // Get collisions with the stage
-        this.stage.getCollisions(this.player);
+        this.stage.getCollisions(this.player, ev);
 
         // Update bullets
         this.bgen.updateBullets(this.stage, this.cam, ev);

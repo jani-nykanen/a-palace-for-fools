@@ -50,7 +50,7 @@ export class BulletGen {
             // The order is important, this way
             // we prevent bullets going through
             // walls
-            stage.getCollisions(b);
+            stage.getCollisions(b, ev);
             b.update(ev, [cam]);
             
         }

@@ -13,6 +13,10 @@ import { Dust } from "./dust.js";
 //
 
 
+const KNOCKBACK_TIME = 30;
+const HURT_TIME = 60;
+
+
 export class Player extends GameObject {
 
 
@@ -51,6 +55,12 @@ export class Player extends GameObject {
             this.dust[i] = new Dust();
         }
         this.dustTimer = 0;
+
+        this.hurtTimer = 0;
+
+        // Old "can jump" state, required to
+        // prevent y knockback in collisions
+        this.canJumpOld = false;
     }
 
 
@@ -232,6 +242,7 @@ export class Player extends GameObject {
         const SLIDE_TIME = 30;
         const SWIM_SPEED_UP = -1.5;
         const ROCKET_TIME = 45;
+        const BASE_HEIGHT = 12;
 
         let bgen = extra[0];
 
@@ -240,9 +251,22 @@ export class Player extends GameObject {
             this.touchWater ? WATER_GRAVITY :  GRAVITY;
 
         this.forceUp = false;
+        this.canJumpOld = this.canJump;
+
+        // Determine hitbox height
+        this.hitbox.y = this.slideTimer > 0 ?
+            BASE_HEIGHT/2 : BASE_HEIGHT;
 
         // Update dust
         this.updateDust(ev);
+
+        // Update hurt timer
+        if (this.hurtTimer > 0) {
+
+            this.hurtTimer -= ev.step;
+            if (this.hurtTimer >= HURT_TIME)
+                return;
+        }
 
         // Update rocketing
         if (this.rocketActive) {
@@ -370,6 +394,14 @@ export class Player extends GameObject {
 
         let s;
 
+        // Knockback
+        if (this.hurtTimer >= HURT_TIME) {
+
+            this.spr.setFrame(2, 4);
+
+            return;
+        }
+
         if (Math.abs(this.target.x) > EPS)
             this.flip = this.target.x > 0 ? 
                     Flip.None : Flip.Horizontal;
@@ -476,6 +508,32 @@ export class Player extends GameObject {
     }
 
 
+    // Hurt player
+    hurt(cx, cy) {
+
+        const KNOCKBACK_X = 2;
+        const KNOCKBACK_Y = 2;
+
+        this.hurtTimer = HURT_TIME + KNOCKBACK_TIME;
+
+        // Determine knockback
+        let dirx = this.speed.x >= 0 ? -1 : 1;
+        let diry = this.speed.y >= 0 ? -1 : 1;
+        let knockY = diry > 0 ? KNOCKBACK_Y/2 : KNOCKBACK_Y;
+        this.speed.x = dirx * KNOCKBACK_X;
+
+        if (!this.canJumpOld)
+            this.speed.y = diry * knockY * Math.abs(this.pos.y-cy)/8.0;
+
+        // Disable flags
+        this.climbing = false;
+        this.slideTimer = 0;
+        this.shootAnimTimer = 0;
+        this.canShoot = true;
+        this.rocketActive = false;
+    }
+
+
     // Draw player
     draw(c) {
 
@@ -489,6 +547,12 @@ export class Player extends GameObject {
 
             d.draw(c);
         }
+
+        // If hurt, skip some frames
+        if (this.hurtTimer > 0 && 
+            this.hurtTimer < HURT_TIME &&
+            Math.floor(this.hurtTimer/4) % 2 == 0)
+            return;
 
         let row = this.spr.row;
         if (this.shootAnimTimer > 0 && !this.climbing) {

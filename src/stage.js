@@ -278,20 +278,20 @@ export class Stage {
 
 
     // Get wall collision with an object
-    getWallCollision(o, x, y) {
+    getWallCollision(o, x, y, ev) {
 
         const MARGIN = 2;
 
         // Left
         if (this.map.getTile(0, x-1, y, true) != 1) {
 
-            o.verticalCollision(x*16, y*16, 16, -1);
+            o.verticalCollision(x*16, y*16, 16, -1, ev);
         }
 
         // Right
         if (this.map.getTile(0, x+1, y, true) != 1) {
 
-            o.verticalCollision((x+1)*16, y*16, 16, 1);
+            o.verticalCollision((x+1)*16, y*16, 16, 1, ev);
         }
 
         // Top
@@ -300,7 +300,7 @@ export class Stage {
             // If touched ground while climbing downwards, stop
             // climbing
             if (o.horizontalCollision(
-                x*16-MARGIN, y*16, 16+MARGIN*2, 1)) {
+                x*16-MARGIN, y*16, 16+MARGIN*2, 1, ev)) {
 
                 if (o.climbing) {
 
@@ -312,13 +312,13 @@ export class Stage {
         // Bottom
         if (this.map.getTile(0, x, y+1, true) != 1) {
 
-            o.horizontalCollision(x*16, (y+1) *16, 16, -1);
+            o.horizontalCollision(x*16, (y+1) *16, 16, -1, ev);
         }
     }
 
 
     // Get ladder collision with an object
-    getLadderCollision(o, x, y) {
+    getLadderCollision(o, x, y, ev) {
 
         const TOP_OFF = 12;
 
@@ -331,7 +331,7 @@ export class Stage {
 
         
             if (!o.climbing)
-                o.horizontalCollision(x*16, y*16, 16, 1);  
+                o.horizontalCollision(x*16, y*16, 16, 1, ev);  
 
             o.ladderCollision(x*16, (y-1)*16+TOP_OFF, 16, 16-TOP_OFF);
 
@@ -359,8 +359,24 @@ export class Stage {
     }
 
 
+    // Get spike collision
+    getSpikeCollision(o, t, x, y) {
+
+        const START_X = [4, 0, 4, 10];
+        const START_Y = [10, 2, 0, 2];
+        const WIDTH = [10, 6, 10, 6];
+        const HEIGHT = [6, 12, 6, 12];
+
+        o.hurtCollision(
+            x*16 + START_X[t], y*16 + START_Y[t],
+            WIDTH[t], HEIGHT[t]
+        );
+
+    }
+
+
     // Get collisions with a game object
-    getCollisions(o) {
+    getCollisions(o, ev) {
 
         const RADIUS = 2; 
 
@@ -378,13 +394,22 @@ export class Stage {
                 // Wall
                 case 1:
 
-                    this.getWallCollision(o, x, y);
+                    this.getWallCollision(o, x, y, ev);
                     break; 
 
                 // Ladder
                 case 2:
 
-                    this.getLadderCollision(o, x, y);
+                    this.getLadderCollision(o, x, y, ev);
+                    break;
+
+                // Spikes
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                    
+                    this.getSpikeCollision(o, t-3, x, y);
                     break;
 
                 // Water
@@ -393,6 +418,7 @@ export class Stage {
                     this.getWaterCollision(o, x, y);
                     break;
 
+                    
                 default:
                     break;
                 }

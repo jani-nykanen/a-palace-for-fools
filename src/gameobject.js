@@ -36,6 +36,9 @@ export class GameObject {
 
         this.dieOnCollision = false;
         this.forceUp = false;
+
+        this.hurtTimer = 0;
+        this.hitbox = new Vector2(this.w, this.h);
     }
 
 
@@ -131,9 +134,37 @@ export class GameObject {
     }
 
 
+    // Hurt collision
+    hurtCollision(x, y, w, h) {
+
+        if (!this.hurt || 
+            this.hurtTimer > 0 ||
+            !this.exist || 
+            this.dying) return;
+
+        let px = this.pos.x;
+        let py = this.pos.y;
+
+        let pw = this.hitbox.x;
+        let ph = this.hitbox.y;
+
+        // If in the hurt area... activate
+        // pain!
+        if (px+pw/2 > x &&
+            px-pw/2 < x+w &&
+            py+ph/2 > y &&
+            py-ph/2 < y+h) {
+
+            this.hurt(x+w/2, y+h/2);
+        }
+    }
+
+
     // Horizontal collision
     // (or wait, maybe vertical?)
-    horizontalCollision(x, y, d, dir) {
+    horizontalCollision(x, y, d, dir, ev) {
+
+        const OFFSET = 1;
 
         if (!this.exist || this.dying) return;
 
@@ -152,8 +183,8 @@ export class GameObject {
         // Check collision from above
         if ((!dir || dir > 0) &&
             this.speed.y > 0.0 &&
-            py+h/2 >= y-this.speed.y && 
-            opy+h/2 < y+this.speed.y) {
+            py+h/2 >= y-(OFFSET+this.speed.y)*ev.step && 
+            opy+h/2 < y+(OFFSET+this.speed.y)*ev.step) {
 
             this.pos.y = y - h/2;
             this.speed.y = 0;
@@ -173,8 +204,8 @@ export class GameObject {
         // Check collision from below
         if ((!dir || dir < 0) &&
             this.speed.y < 0.0 &&
-            py-h/2 <= y-this.speed.y && 
-            opy-h/2 > y+this.speed.y) {
+            py-h/2 <= y+(OFFSET-this.speed.y)*ev.step && 
+            opy-h/2 > y-(OFFSET+this.speed.y)*ev.step) {
 
             this.pos.y = y + h/2;
 
@@ -202,7 +233,9 @@ export class GameObject {
     // TODO: One could merge this one and the previous
     // one to a more general method. The code is 99%
     // the same.
-    verticalCollision(x, y, d, dir) {
+    verticalCollision(x, y, d, dir, ev) {
+
+        const OFFSET = 1;
 
         if (!this.exist || this.dying) return;
 
@@ -223,8 +256,8 @@ export class GameObject {
         // Check collision from left
         if ((!dir || dir < 0) &&
             this.speed.x > 0.0 &&
-            px+w/2 >= x-this.speed.x && 
-            opx+w/2 < x+this.speed.x) {
+            px+w/2 >= x-(OFFSET+this.speed.x)*ev.step && 
+            opx+w/2 < x+(OFFSET+this.speed.x)*ev.step) {
 
             this.pos.x = x - w/2;
             this.speed.x = 0;
@@ -241,8 +274,8 @@ export class GameObject {
         // Check collision from right
         if ((!dir || dir > 0) &&
             this.speed.x < 0.0 &&
-            px-w/2 <= x-this.speed.x && 
-            opx-w/2 > x+this.speed.x) {
+            px-w/2 <= x+(OFFSET-this.speed.x)*ev.step && 
+            opx-w/2 > x-(OFFSET+this.speed.x)*ev.step) {
 
             this.pos.x = x + w/2;
             this.speed.x = 0;
