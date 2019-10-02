@@ -199,11 +199,6 @@ export class GameObject {
 
         if (!this.exist || this.dying) return;
 
-        // With this we avoid the case the object
-        // is taking the wall collision before floor
-        // collision, and thus getting stuck
-        let margin = this.dieOnCollision ? 0 : 1;
-
         let px = this.pos.x;
         let py = this.pos.y;
         let opx = this.oldPos.x;
@@ -213,7 +208,7 @@ export class GameObject {
 
         // If not in the horizontal area,
         // stop here
-        if (py+h/2 <= y+margin || py-h/2 >= y+d-margin) 
+        if (py+h/2 <= y || py-h/2 >= y+d) 
             return false;
 
         // Check collision from left

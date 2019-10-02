@@ -4,6 +4,7 @@ import { State } from "./engine/input.js";
 import { negMod } from "./engine/util.js";
 import { Sprite } from "./engine/sprite.js";
 import { Flip } from "./engine/canvas.js";
+import { Dust } from "./dust.js";
 
 // 
 // Player object
@@ -19,12 +20,19 @@ export class Player extends GameObject {
 
         super(x, y);
 
+        const DUST_COUNT = 8;
+
         // Set acceleration
         this.acc = new Vector2(
             0.1, 0.15
         );
 
         this.jumpTimer = 0.0;
+        this.slideTimer = 0;
+        this.slideDir = 1;
+
+        this.rocketTimer = 0.0;
+        this.rocketActive = false;
 
         this.w = 8;
         this.h = 12;
@@ -36,6 +44,13 @@ export class Player extends GameObject {
         this.shootAnimTimer = 0;
         this.shootDir = 1;
         this.canShoot = true;
+        
+        this.dust = new Array(DUST_COUNT);
+        for (let i = 0; i < DUST_COUNT; ++ i) {
+
+            this.dust[i] = new Dust();
+        }
+        this.dustTimer = 0;
     }
 
 
@@ -121,6 +136,90 @@ export class Player extends GameObject {
     }
 
 
+    // Update sliding
+    updateSlide(ev) {
+
+        const SLIDE_SPEED = 1.5;
+
+        this.slideTimer -= 1.0 * ev.step;
+        // Release jump
+        if (ev.input.action.fire1.state == State.Up) {
+
+            this.slideTimer = 0.0;
+        }
+
+        this.speed.x = SLIDE_SPEED * this.slideDir;
+        this.target.x = this.speed.x;
+    }
+
+
+    // Update dust
+    updateDust(ev) {
+        
+        const DUST_TIME = 6;
+        const DUST_SPEED = 8;
+
+        // Update dust
+        for (let d of this.dust) {
+
+            d.update(ev);
+        }
+
+        // Check dust timer
+        let dust;
+        let x;
+        if (this.dustTimer <= 0) {
+
+            for (let d of this.dust) {
+
+                if (d.exist == false) {
+
+                    dust = d;
+                    break;
+                }
+            }
+            if (dust == null) return;
+
+            if (this.flip == Flip.None)
+                x = -2;
+            else
+                x = 2;
+
+            dust.spawn(
+                this.pos.x + x, 
+                this.pos.y+2, DUST_SPEED);
+
+            this.dustTimer += DUST_TIME;
+        }
+    }
+
+
+    // Update rocket
+    updateRocket(ev) {
+
+        const ROCKET_SPEED = 0.30;
+        const SPEED_CAP = -1.5;
+
+        // Stop rocketing, if touching ground, climbing
+        // or on water
+        if (this.canJump || this.climbing ||
+            this.touchWater) {
+
+            this.rocketActive = false;
+        }
+
+        if (ev.input.action.fire1.state == State.Down &&
+            this.rocketTimer > 0.0) {
+
+            this.speed.y -= ROCKET_SPEED * ev.step;
+            this.speed.y = Math.max(this.speed.y, SPEED_CAP);
+
+            this.rocketTimer -= 1.0 * ev.step;
+            this.dustTimer -= 1.0 * ev.step;
+        }
+    }
+
+
     // Control
     control(ev, extra) {
 
@@ -128,7 +227,9 @@ export class Player extends GameObject {
         const WATER_GRAVITY = 0.5;
         const H_SPEED = 1.0;
         const JUMP_TIME = 15;
+        const SLIDE_TIME = 30;
         const SWIM_SPEED_UP = -1.5;
+        const ROCKET_TIME = 45;
 
         let bgen = extra[0];
 
@@ -136,8 +237,18 @@ export class Player extends GameObject {
         this.target.y = 
             this.touchWater ? WATER_GRAVITY :  GRAVITY;
 
+        // Update dust
+        this.updateDust(ev);
+
+        // Update rocketing
+        if (this.rocketActive) {
+
+            this.updateRocket(ev);
+        }
+
         // Shoot a bullet
         if (this.canShoot &&
+            this.slideTimer <= 0.0 &&
             ev.input.action.fire2.state == State.Pressed) {
             
             this.shootBullet(bgen, ev);
@@ -146,9 +257,15 @@ export class Player extends GameObject {
         // Update jump
         this.updateJump(ev);
 
+        // Update slide
+        if (this.slideTimer > 0) {
+
+            this.updateSlide(ev);
+            return;
+        }
+
         // Check jump button
         let s = ev.input.action.fire1.state;
-
         if (s == State.Down && this.touchWater) {
 
             this.target.y = SWIM_SPEED_UP;
@@ -160,19 +277,35 @@ export class Player extends GameObject {
                 if (this.climbing)
                     this.climbing = false;
 
-                else if( this.canJump && this.jumpTimer <= 0.0) {
+                else if (this.canJump) {
 
-                    this.jumpTimer = JUMP_TIME;
-                    this.canJump = false;
+                    // If down key down, slide
+                    if (ev.input.action.down.state == State.Down) {
 
-                    // Call this to get the proper
-                    // vertical speed
-                    this.updateJump(ev);
+                        this.slideTimer = SLIDE_TIME;
+                        this.shootAnimTimer = 0.0;
+                        this.canShoot = true;
+                    }
+                    else {
+
+                        this.jumpTimer = JUMP_TIME;
+                        this.canJump = false;
+
+                        // Call this to get the proper
+                        // vertical speed
+                        this.updateJump(ev);
+
+                    }
+                }
+                else if (!this.canJump) {
+
+                    this.rocketActive = true;
+                    this.rocketTimer = ROCKET_TIME;
                 }
             }
-            else if(s == State.Released && this.jumpTimer > 0) {
+            else if(s == State.Released) {
 
-                this.jumpTimer = 0.0;
+                this.jumpTimer = 0.0; 
             }
         }
 
@@ -186,7 +319,7 @@ export class Player extends GameObject {
         // Check climbing buttons
         if (this.touchLadder &&
             (ev.input.action.up.state == State.Pressed ||
-            ev.input.action.down.state == State.Down)) {
+            ev.input.action.down.state == State.Pressed)) {
 
             this.pos.x = this.ladderX + 8;
             this.speed.x = 0;
@@ -207,10 +340,12 @@ export class Player extends GameObject {
         if (ev.input.action.left.state == State.Down) {
 
             this.target.x = -H_SPEED;
+            this.slideDir = -1;
         }
         else if (ev.input.action.right.state == State.Down) {
 
             this.target.x = H_SPEED;
+            this.slideDir = 1;
         }
         
     }
@@ -266,6 +401,11 @@ export class Player extends GameObject {
                 this.flip = Flip.Horizontal;
             }    
         }
+        // Sliding
+        else if (this.slideTimer > 0) {
+
+            this.spr.setFrame(2, 3);
+        }
         // On ground
         else if(this.canJump) {
 
@@ -287,10 +427,10 @@ export class Player extends GameObject {
             s = 6;
             if (this.speed.y <= -AIR_FRAME_LIMIT)
                 s = 5;
-            else if(this.speed.y >= AIR_FRAME_LIMIT)
+            else if (this.speed.y >= AIR_FRAME_LIMIT)
                 s = 7;
 
-            this.spr.setFrame(0, s);
+            this.spr.setFrame(this.rocketActive ? 2 : 0, s);
         }
     }
 
@@ -336,6 +476,12 @@ export class Player extends GameObject {
         let py = this.pos.y | 0;
 
         py -= (16 - this.h)/2 -1;
+
+        // Draw dust
+        for (let d of this.dust) {
+
+            d.draw(c);
+        }
 
         let row = this.spr.row;
         if (this.shootAnimTimer > 0 && !this.climbing) {
