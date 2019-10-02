@@ -30,6 +30,11 @@ export class GameObject {
         this.climbing = false;
 
         this.touchWater = false;
+
+        this.dying = false;
+        this.exist = true;
+
+        this.dieOnCollision = false;
     }
 
 
@@ -52,13 +57,22 @@ export class GameObject {
 
 
     // Update game object
-    update(ev) {
+    update(ev, extra) {
+
+        if (!this.exist) return;
+
+        if (this.dying) {
+
+            if (this.die)
+                this.die(ev);
+            return;
+        }
 
         // This is possibly faster than testing
         // if 'control' is a function
         if (this.control != null) {
 
-            this.control(ev);
+            this.control(ev, extra);
         }
         this.move(ev);
 
@@ -75,6 +89,8 @@ export class GameObject {
 
     // Ladder collision
     ladderCollision(x, y, w, h) {
+
+        if (!this.exist || this.dying) return;
 
         let px = this.pos.x;
         let py = this.pos.y;
@@ -98,6 +114,8 @@ export class GameObject {
     // Water collision
     waterCollision(x, y, w, h) {
 
+        if (!this.exist || this.dying) return;
+
         let px = this.pos.x;
         let py = this.pos.y;
 
@@ -114,6 +132,8 @@ export class GameObject {
 
     // Horizontal collision
     horizontalCollision(x, y, d, dir) {
+
+        if (!this.exist || this.dying) return;
 
         let px = this.pos.x;
         let py = this.pos.y;
@@ -138,6 +158,12 @@ export class GameObject {
             this.canJump = true;
             this.jumpTimer = 0;
 
+            if (this.dieOnCollision) {
+
+                this.pos.x = x;
+                this.dying = true;
+            }
+
             return true;
 
         }
@@ -152,6 +178,12 @@ export class GameObject {
             this.speed.y = 0;
             this.jumpTimer = 0.0;
 
+            if (this.dieOnCollision) {
+
+                this.pos.x = x;
+                this.dying = true;
+            }
+
             return true;
         }
 
@@ -165,10 +197,12 @@ export class GameObject {
     // the same.
     verticalCollision(x, y, d, dir) {
 
+        if (!this.exist || this.dying) return;
+
         // With this we avoid the case the object
         // is taking the wall collision before floor
         // collision, and thus getting stuck
-        const MARGIN = 1;
+        let margin = this.dieOnCollision ? 0 : 1;
 
         let px = this.pos.x;
         let py = this.pos.y;
@@ -179,7 +213,7 @@ export class GameObject {
 
         // If not in the horizontal area,
         // stop here
-        if (py+h/2 <= y+MARGIN || py-h/2 >= y+d-MARGIN) 
+        if (py+h/2 <= y+margin || py-h/2 >= y+d-margin) 
             return false;
 
         // Check collision from left
@@ -190,6 +224,12 @@ export class GameObject {
 
             this.pos.x = x - w/2;
             this.speed.x = 0;
+
+            if (this.dieOnCollision) {
+
+                this.pos.x = x;
+                this.dying = true;
+            }
 
             return true;
         }
@@ -202,6 +242,12 @@ export class GameObject {
 
             this.pos.x = x + w/2;
             this.speed.x = 0;
+
+            if (this.dieOnCollision) {
+
+                this.pos.x = x;
+                this.dying = true;
+            }
 
             return true;
         }

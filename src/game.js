@@ -1,6 +1,7 @@
 import { Stage } from "./stage.js";
 import { Vector2 } from "./engine/vector.js";
 import { Player } from "./player.js";
+import { BulletGen } from "./bulletgen.js";
 
 //
 // Game scene
@@ -20,6 +21,7 @@ export class Game {
             w: 160, h: 144
         };
         this.player = new Player(80, 72);
+        this.bgen = new BulletGen(16);
 
         this.cloudPos = [0, 0, 0];
     }
@@ -40,9 +42,12 @@ export class Game {
         const CLOUD_SPEED = [1.5, 1.0, 0.5];
 
         // Update player
-        this.player.update(ev);
+        this.player.update(ev, [this.bgen]);
         // Get collisions with the stage
         this.stage.getCollisions(this.player);
+
+        // Update bullets
+        this.bgen.updateBullets(this.stage, this.cam, ev);
 
         // Update camera
         this.player.updateCamera(this.cam, this.stage);
@@ -98,6 +103,9 @@ export class Game {
 
         // Draw player
         this.player.draw(c);
+
+        // Draw bullets
+        this.bgen.drawBullets(c);
 
         // Reset camera
         c.moveTo(0, 0); 

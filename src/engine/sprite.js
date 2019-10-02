@@ -40,13 +40,17 @@ export class Sprite {
         }
     
         // If outside the animation interval
-        if (start < end && this.frame < start) {
+        if (start < end && 
+            (this.frame < start || this.frame > end)) {
     
             this.frame = start;
+            this.count = 0;
         }
-        else if (end < start && this.frame < end) {
+        else if (end < start && 
+            (this.frame < end || this.frame > start)) {
     
             this.frame = end;
+            this.count = 0;
         }
     
         // Animate

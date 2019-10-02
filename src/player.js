@@ -34,7 +34,7 @@ export class Player extends GameObject {
         this.flip = Flip.None;
 
         this.shootAnimTimer = 0;
-        this.shootDir = 0;
+        this.shootDir = 1;
         this.canShoot = true;
     }
 
@@ -70,17 +70,6 @@ export class Player extends GameObject {
 
                 this.target.y = CLIMB_SPEED;
             }
-
-            // Determine shoot direction
-            if (ev.input.action.left.state == State.Down) {
-
-                this.shootDir = -1;
-            }
-            else if (ev.input.action.right.state == State.Down) {
-
-                this.shootDir = 1;
-            }
-
         }
         
 
@@ -89,15 +78,59 @@ export class Player extends GameObject {
     }
 
 
+    // Shoot a bullet
+    shootBullet(bgen, ev) {
+
+        const SHOOT_ANIM_TIME = 30;
+        const BULLET_SPEED = 3;
+
+        // Determine shoot direction
+         if (ev.input.action.left.state == State.Down) {
+
+            this.shootDir = -1;
+        }
+        else if (ev.input.action.right.state == State.Down) {
+
+            this.shootDir = 1;
+        }
+        else if (!this.climbing) {
+
+            this.shootDir = this.flip == Flip.None ? 1 : -1;
+        }
+
+        this.shootAnimTimer = SHOOT_ANIM_TIME;
+        this.canShoot = false;
+        this.gunSpr.setFrame(0, 0);
+        this.gunSpr.count = 0;
+
+        let p = this.pos.x+12;
+        if (this.shootDir == -1) {
+
+            p -= 24;
+        }
+
+        let b = bgen.createBullet(
+            p, this.pos.y, 
+            BULLET_SPEED*this.shootDir, 0);
+        if (b != null) {
+
+            // This way we prevent bullets
+            // going through walls
+            b.oldPos.x = this.pos.x;
+        }
+    }
+
+
     // Control
-    control(ev) {
+    control(ev, extra) {
 
         const GRAVITY = 2.0;
         const WATER_GRAVITY = 0.5;
         const H_SPEED = 1.0;
         const JUMP_TIME = 15;
         const SWIM_SPEED_UP = -1.5;
-        const SHOOT_ANIM_TIME = 30;
+
+        let bgen = extra[0];
 
         this.target.x = 0;
         this.target.y = 
@@ -107,10 +140,7 @@ export class Player extends GameObject {
         if (this.canShoot &&
             ev.input.action.fire2.state == State.Pressed) {
             
-            this.shootAnimTimer = SHOOT_ANIM_TIME;
-            this.canShoot = false;
-            this.gunSpr.setFrame(0, 0);
-            this.gunSpr.count = 0;
+            this.shootBullet(bgen, ev);
         }
 
         // Update jump
@@ -163,6 +193,9 @@ export class Player extends GameObject {
             this.speed.y = 0;
             this.target.x = 0;
             this.climbing = true;
+            this.shootAnimTimer = 0;
+            this.canShoot = true;
+            this.jumpTimer = 0;
 
             // Required to get the speed
             this.climb(ev);
@@ -317,7 +350,8 @@ export class Player extends GameObject {
         
         if (this.shootAnimTimer > 0) {
 
-            if (this.flip == Flip.Horizontal) {
+            if ((this.climbing && this.shootDir == -1) ||
+                (!this.climbing && this.flip == Flip.Horizontal)) {
 
                 px -= 18;
             }
