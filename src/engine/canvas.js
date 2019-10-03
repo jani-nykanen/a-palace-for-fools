@@ -1,5 +1,5 @@
 import { Vector2 } from "./vector.js";
-import { getColorString } from "./util.js";
+import { getColorString, clamp } from "./util.js";
 
 //
 // Canvas
@@ -273,5 +273,14 @@ export class Canvas {
 
         this.tr.x = x;
         this.tr.y = y;
+    }
+
+
+    // Set global alpha
+    setAlpha(a) {
+
+        if (a == null) a = 1.0;
+
+        this.ctx.globalAlpha = clamp(a, 0, 1);
     }
 }

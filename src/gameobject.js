@@ -205,7 +205,7 @@ export class GameObject {
         if ((!dir || dir < 0) &&
             this.speed.y < 0.0 &&
             py-h/2 <= y+(OFFSET-this.speed.y)*ev.step && 
-            opy-h/2 > y-(OFFSET+this.speed.y)*ev.step) {
+            opy-h/2 > y+(-OFFSET+this.speed.y)*ev.step) {
 
             this.pos.y = y + h/2;
 
@@ -274,8 +274,8 @@ export class GameObject {
         // Check collision from right
         if ((!dir || dir > 0) &&
             this.speed.x < 0.0 &&
-            px-w/2 <= x+(OFFSET-this.speed.x)*ev.step && 
-            opx-w/2 > x-(OFFSET+this.speed.x)*ev.step) {
+            px-w/2 <= x+( OFFSET-this.speed.x)*ev.step && 
+            opx-w/2 > x+(-OFFSET+this.speed.x)*ev.step) {
 
             this.pos.x = x + w/2;
             this.speed.x = 0;

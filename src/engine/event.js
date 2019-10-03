@@ -1,4 +1,6 @@
 import { InputManager } from "./input.js";
+import { AudioPlayer } from "./audio.js";
+import { Transition } from "./transition.js";
 
 //
 // Event
@@ -12,7 +14,7 @@ import { InputManager } from "./input.js";
 export class FrameEvent {
 
 
-    constructor() {
+    constructor(assets) {
 
         this.step = 1;
 
@@ -21,17 +23,21 @@ export class FrameEvent {
         this.activeScene = null;
 
         this.input = new InputManager();
+        this.audio = new AudioPlayer(assets.sounds);
+        this.tr = new Transition();
+
+        this.documents = assets.documents;
     }
 
 
     // Initialize all the scenes
     initScenes() {
 
-        for (let s of this.scenes) {
+        for (let k in this.scenes) {
 
-            if (s.init != null) {
+            if (this.scenes[k].init != null) {
 
-                s.init(this);
+                this.scenes[k].init(this);
             }
         }
     }
@@ -42,6 +48,9 @@ export class FrameEvent {
 
         // Update actions states
         this.input.updateActions();
+
+        // Update transition
+        this.tr.update(this);
 
         // Call user-defined update function
         if (this.activeScene != null && 
@@ -63,14 +72,33 @@ export class FrameEvent {
 
             this.activeScene.draw(c);
         }
+
+        // Draw transition
+        this.tr.draw(c);
     }
 
 
     // Add a scene
-    addScene(s, active) {
+    addScene(s, name, active) {
 
-        this.scenes.push(s);
+        this.scenes[name] = s;
         if (active)
             this.activeScene = s;
+    }
+
+
+    // Change the active scene
+    changeScene(name, params) {
+
+        for (let k in this.scenes) {
+
+            if (k == name)
+                this.activeScene = this.scenes[k];
+        }
+
+        if (this.activeScene.onChange != null) {
+
+            this.activeScene.onChange(params);
+        }
     }
 }

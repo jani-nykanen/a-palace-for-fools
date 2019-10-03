@@ -20,7 +20,7 @@ export class Game {
             x: 0, y: 0,
             w: 160, h: 144
         };
-        this.player = new Player(80, 72);
+        this.player = new Player(56, 58);
         this.bgen = new BulletGen(16);
 
         this.cloudPos = [0, 0, 0];
@@ -41,6 +41,15 @@ export class Game {
 
         const CLOUD_SPEED = [1.5, 1.0, 0.5];
 
+        // Update cloud position
+        for (let i = 0; i < 3; ++ i) {
+
+            this.cloudPos[i] += CLOUD_SPEED[i] * ev.step;
+            this.cloudPos[i] %= 160;
+        }
+
+        if (ev.tr.active) return;
+
         // Update player
         this.player.update(ev, [this.bgen]);
         // Get collisions with the stage
@@ -50,17 +59,10 @@ export class Game {
         this.bgen.updateBullets(this.stage, this.cam, ev);
 
         // Update camera
-        this.player.updateCamera(this.cam, this.stage);
+        this.player.updateCamera(this.cam, this.stage, ev);
 
         // Update stage
         this.stage.update(ev);
-
-        // Update cloud position
-        for (let i = 0; i < 3; ++ i) {
-
-            this.cloudPos[i] += CLOUD_SPEED[i] * ev.step;
-            this.cloudPos[i] %= 160;
-        }
     }
 
 

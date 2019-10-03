@@ -1,5 +1,6 @@
 import { Core } from "./engine/core.js";
 import { Game } from "./game.js";
+import { EnableAudioScreen } from "./audiointro.js";
 
 //
 // Main file
@@ -16,7 +17,8 @@ window.onload = () => {
     });
 
     // Add scenes
-    c.addScenes(new Game());
+    c.addScene(new Game(), "game", false);
+    c.addScene(new EnableAudioScreen(), "audiointro", true);
 
     // Set assets loading
     c.assets.addBitmaps(

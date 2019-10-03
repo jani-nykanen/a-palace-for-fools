@@ -1,6 +1,7 @@
 import { FrameEvent } from "./event.js";
 import { Canvas } from "./canvas.js";
 import { AssetLoader } from "./assets.js";
+import { AudioPlayer } from "./audio.js";
 
 //
 // Game core
@@ -22,16 +23,16 @@ export class Core {
             "canvasHeight", 240);   
 
         // Create components 
-        this.ev = new FrameEvent();
+        
         this.canvas = new Canvas(this.canvasWidth, 
                                  this.canvasHeight);
         this.assets = new AssetLoader();
+        this.ev = new FrameEvent(this.assets);
 
         // Store references to certain assets to certain
         // objects, to we can easily have access to them
         // later
         this.canvas.bitmaps = this.assets.bitmaps;
-        this.ev.documents = this.assets.documents;
 
         // Compute required values
         this.ev.step = 60.0 / this.frameRate;
@@ -61,6 +62,35 @@ export class Core {
             return def;
 
         return conf[param];
+    }
+
+
+    // Draw the loading screen
+    drawLoadingScreen(c) {
+
+        let barWidth = c.w / 4;
+        let barHeight = barWidth / 8;
+    
+        // Black background
+        c.clear(0);
+    
+        let t = this.assets.getLoadRatio();
+        let x = c.w/2 - barWidth/2;
+        let y = c.h/2 - barHeight/2;
+
+        x |= 0;
+        y |= 0;
+    
+        // Draw outlines
+        c.setColor(255);
+        c.fillRect(x-2, y-2, barWidth+4, barHeight+4);
+        c.setColor(0);
+        c.fillRect(x-1, y-1, barWidth+2, barHeight+2);
+    
+        // Draw bar
+        let w = (barWidth*t) | 0;
+        c.setColor(255);
+        c.fillRect(x, y, w, barHeight);
     }
 
 
@@ -115,6 +145,11 @@ export class Core {
                 
                 this.ev.drawScene(this.canvas);
             }
+            else {
+
+                // Draw loading screen
+                this.drawLoadingScreen(this.canvas);
+            }
         }
 
         this.oldTime = ts;
@@ -126,16 +161,10 @@ export class Core {
     }
 
 
-    // Add scenes. The first scene
-    // passed will be made active
-    addScenes() {
+    // Add a scene
+    addScene(scene, name, active) {
 
-        let active = false;
-        for (let a of arguments) {
-
-            this.ev.addScene(a, !active);
-            active = true;
-        }
+        this.ev.addScene(scene, name, active);
     }
 
 

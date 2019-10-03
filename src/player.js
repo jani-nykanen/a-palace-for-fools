@@ -54,13 +54,14 @@ export class Player extends GameObject {
 
             this.dust[i] = new Dust();
         }
-        this.dustTimer = 0;
+        this.dustTimer = 1;
 
         this.hurtTimer = 0;
 
         // Old "can jump" state, required to
         // prevent y knockback in collisions
-        this.canJumpOld = false;
+        this.canJumpOld = true;
+        this.canJump = true;
     }
 
 
@@ -475,14 +476,19 @@ export class Player extends GameObject {
 
 
     // Update camera
-    updateCamera(cam, stage) {
+    updateCamera(cam, stage, ev) {
 
-        if (this.pos.x-8 < cam.x*cam.w) {
+        this.verticalCollision(cam.x*cam.w, cam.y*cam.h, 144, 1, ev);
+        this.verticalCollision((cam.x+1)*cam.w, cam.y*cam.h, 144, -1, ev);
+
+        if (this.flip == Flip.Horizontal &&
+            this.pos.x-8 < cam.x*cam.w) {
 
             this.pos.x -= 16;
             -- cam.x;
         }
-        else if (this.pos.x+8 > (cam.x+1)*cam.w) {
+        else if (this.flip == Flip.None &&
+            this.pos.x+8 > (cam.x+1)*cam.w) {
 
             this.pos.x += 16;
             ++ cam.x;
@@ -499,7 +505,7 @@ export class Player extends GameObject {
             ++ cam.y;
         }
 
-
+        
         this.pos.x = negMod(this.pos.x, stage.w*16);
         this.pos.y = negMod(this.pos.y, stage.h*16);
 
