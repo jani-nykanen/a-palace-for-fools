@@ -83,6 +83,16 @@ export class Bullet extends GameObject {
     }
 
 
+    // Kill
+    kill(ev) {
+
+        // Play sound
+        ev.audio.playSample(ev.audio.sounds.bulletHit, 0.40);
+
+        this.dying = true;
+    }
+
+
     // Draw
     draw(c) {
 

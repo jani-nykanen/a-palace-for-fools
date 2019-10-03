@@ -12,7 +12,7 @@ export class AudioPlayer {
 
         const DEFAULT_VOL = 1.0;
 
-        this.enabled = false;
+        this.enabled = true;
 
         // Volume
         this.sampleVol = DEFAULT_VOL;

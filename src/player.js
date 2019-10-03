@@ -110,6 +110,9 @@ export class Player extends GameObject {
         const SHOOT_ANIM_TIME = 30;
         const BULLET_SPEED = 3;
 
+        // Play shooting sound
+        ev.audio.playSample(ev.audio.sounds.shoot, 0.50);
+
         // Determine shoot direction
          if (ev.input.action.left.state == State.Down) {
 
@@ -201,6 +204,9 @@ export class Player extends GameObject {
                 this.pos.y+2, DUST_SPEED);
 
             this.dustTimer += DUST_TIME;
+
+            // Play gas sound
+            ev.audio.playSample(ev.audio.sounds.gas, 0.40);
         }
     }
 
@@ -323,6 +329,9 @@ export class Player extends GameObject {
                         // Call this to get the proper
                         // vertical speed
                         this.updateJump(ev);
+
+                        // Play jump sound
+                        ev.audio.playSample(ev.audio.sounds.jump, 0.50);
 
                     }
                 }
@@ -515,21 +524,19 @@ export class Player extends GameObject {
 
 
     // Hurt player
-    hurt(cx, cy) {
+    hurt(cx, cy, ev) {
 
-        const KNOCKBACK_X = 2;
-        const KNOCKBACK_Y = 2;
+        const KNOCKBACK_X = 1;
+        const KNOCKBACK_Y = 1;
 
         this.hurtTimer = HURT_TIME + KNOCKBACK_TIME;
 
-        // Determine knockback
-        let dirx = this.speed.x >= 0 ? -1 : 1;
-        let diry = this.speed.y >= 0 ? -1 : 1;
-        let knockY = diry > 0 ? KNOCKBACK_Y/2 : KNOCKBACK_Y;
-        this.speed.x = dirx * KNOCKBACK_X;
+        let dirx = this.pos.x < cx ? -1 : 1;
 
+        // Determine knockback
+        this.speed.x = (this.pos.x-cx)/8.0 * KNOCKBACK_X + dirx*KNOCKBACK_X;
         if (!this.canJumpOld)
-            this.speed.y = diry * knockY * Math.abs(this.pos.y-cy)/8.0;
+            this.speed.y = (this.pos.y-cy)/8.0 * KNOCKBACK_Y;
 
         // Disable flags
         this.climbing = false;
@@ -537,6 +544,9 @@ export class Player extends GameObject {
         this.shootAnimTimer = 0;
         this.canShoot = true;
         this.rocketActive = false;
+
+        // Play hurt sound
+        ev.audio.playSample(ev.audio.sounds.hurt, 0.50);
     }
 
 

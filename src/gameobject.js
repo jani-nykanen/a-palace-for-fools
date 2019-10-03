@@ -135,7 +135,7 @@ export class GameObject {
 
 
     // Hurt collision
-    hurtCollision(x, y, w, h) {
+    hurtCollision(x, y, w, h, ev) {
 
         if (!this.hurt || 
             this.hurtTimer > 0 ||
@@ -155,7 +155,7 @@ export class GameObject {
             py+ph/2 > y &&
             py-ph/2 < y+h) {
 
-            this.hurt(x+w/2, y+h/2);
+            this.hurt(x+w/2, y+h/2, ev);
         }
     }
 
@@ -193,8 +193,9 @@ export class GameObject {
 
             if (this.dieOnCollision) {
 
-                this.pos.x = x;
-                this.dying = true;
+                this.pos.y = y;
+                if (this.kill != null)
+                    this.kill(ev);
             }
 
             return true;
@@ -218,8 +219,9 @@ export class GameObject {
 
             if (this.dieOnCollision) {
 
-                this.pos.x = x;
-                this.dying = true;
+                this.pos.y = y;
+                if (this.kill != null)
+                    this.kill(ev);
             }
 
             return true;
@@ -265,7 +267,8 @@ export class GameObject {
             if (this.dieOnCollision) {
 
                 this.pos.x = x;
-                this.dying = true;
+                if (this.kill != null)
+                    this.kill(ev);
             }
 
             return true;
@@ -283,7 +286,8 @@ export class GameObject {
             if (this.dieOnCollision) {
 
                 this.pos.x = x;
-                this.dying = true;
+                if (this.kill != null)
+                    this.kill(ev);
             }
 
             return true;

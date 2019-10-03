@@ -360,7 +360,7 @@ export class Stage {
 
 
     // Get spike collision
-    getSpikeCollision(o, t, x, y) {
+    getSpikeCollision(o, t, x, y, ev) {
 
         const START_X = [4, 0, 4, 10];
         const START_Y = [10, 2, 0, 2];
@@ -369,7 +369,7 @@ export class Stage {
 
         o.hurtCollision(
             x*16 + START_X[t], y*16 + START_Y[t],
-            WIDTH[t], HEIGHT[t]
+            WIDTH[t], HEIGHT[t], ev
         );
 
     }
@@ -409,7 +409,7 @@ export class Stage {
                 case 5:
                 case 6:
                     
-                    this.getSpikeCollision(o, t-3, x, y);
+                    this.getSpikeCollision(o, t-3, x, y, ev);
                     break;
 
                 // Water

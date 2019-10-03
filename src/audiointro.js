@@ -23,8 +23,6 @@ export class EnableAudioScreen {
     // Initialize
     init(ev) {
 
-        ev.tr.activate(false, TransitionMode.Fade,
-            2.0);
     }
 
 
@@ -44,14 +42,12 @@ export class EnableAudioScreen {
 
             if (this.cursorPos == 1)
                 ev.audio.toggle(false);
+            else
+                ev.audio.playSample(ev.audio.sounds.accept, 0.50);
 
-            ev.tr.activate(true, TransitionMode.Fade, 2.0,
-                (ev) => {
 
-                    ev.tr.mode = TransitionMode.VerticalBar;
-                    ev.tr.speed = 1.0;
-                    ev.changeScene("game");
-                });
+            ev.tr.activate(false, TransitionMode.VerticalBar, 1.0);
+            ev.changeScene("game");
         }
     }
 

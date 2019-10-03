@@ -32,6 +32,15 @@ window.onload = () => {
     c.assets.addDocuments(
         {name: "sewers", src: "assets/maps/sewers.tmx"},
     );
+    c.assets.addSounds(
+        {name: "gas", src: "assets/audio/gas.wav"},
+        {name: "shoot", src: "assets/audio/shoot.wav"},
+        {name: "bulletHit", src: "assets/audio/bullet_hit.wav"},
+        {name: "hit", src: "assets/audio/hit.wav"},
+        {name: "jump", src: "assets/audio/jump.wav"},
+        {name: "accept", src: "assets/audio/accept.wav"},
+        {name: "hurt", src: "assets/audio/hurt.wav"},
+    );
 
     // Configure keys
     c.configActions(

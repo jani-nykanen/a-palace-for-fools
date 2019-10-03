@@ -74,6 +74,32 @@ export class AssetLoader {
         });
     }
 
+    
+    // Load a sound
+    loadSound(src, name) {
+
+        ++ this.total;
+    
+        if (typeof(Howl) != "undefined") {
+
+            this.sounds[name] = new Howl({
+
+                src: [src],
+                onload: () => { ++ this.loaded;}
+            });
+        }
+    }
+
+
+    // Add sounds
+    addSounds(any) {
+
+        for (let a of arguments) {
+
+            this.loadSound(a.src, a.name);
+        }
+    }
+
 
     // Add bitmaps to be loaded
     addBitmaps() {
