@@ -40,6 +40,8 @@ window.onload = () => {
         {name: "jump", src: "assets/audio/jump.wav"},
         {name: "accept", src: "assets/audio/accept.wav"},
         {name: "hurt", src: "assets/audio/hurt.wav"},
+        {name: "slide", src: "assets/audio/slide.wav"},
+        {name: "climb", src: "assets/audio/climb.wav"},
     );
 
     // Configure keys

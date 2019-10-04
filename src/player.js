@@ -246,7 +246,7 @@ export class Player extends GameObject {
         const WATER_GRAVITY = 0.5;
         const H_SPEED = 1.0;
         const JUMP_TIME = 15;
-        const SLIDE_TIME = 30;
+        const SLIDE_TIME = 36;
         const SWIM_SPEED_UP = -1.5;
         const ROCKET_TIME = 45;
         const BASE_HEIGHT = 12;
@@ -301,7 +301,12 @@ export class Player extends GameObject {
 
         // Check jump button
         let s = ev.input.action.fire1.state;
-        if (s == State.Down && this.touchWater) {
+        if ( (s == State.Down || s == State.Pressed) && this.touchWater) {
+
+            if (s == State.Pressed) {
+
+                ev.audio.playSample(ev.audio.sounds.jump, 0.50);
+            }
 
             this.target.y = SWIM_SPEED_UP;
         }
@@ -309,9 +314,11 @@ export class Player extends GameObject {
 
             if (s == State.Pressed) {
 
-                if (this.climbing)
-                    this.climbing = false;
+                if (this.climbing) {
 
+                    ev.audio.playSample(ev.audio.sounds.jump, 0.50);
+                    this.climbing = false;
+                }
                 else if (this.canJump) {
 
                     // If down key down, slide
@@ -320,6 +327,8 @@ export class Player extends GameObject {
                         this.slideTimer = SLIDE_TIME;
                         this.shootAnimTimer = 0.0;
                         this.canShoot = true;
+
+                        ev.audio.playSample(ev.audio.sounds.slide, 0.50);
                     }
                     else {
 
@@ -374,6 +383,8 @@ export class Player extends GameObject {
             // Required to get the speed
             this.climb(ev);
 
+            ev.audio.playSample(ev.audio.sounds.climb, 0.50);
+
             return;
         }
 
@@ -396,7 +407,7 @@ export class Player extends GameObject {
     animate(ev) {
 
         const EPS = 0.01;
-        const CLIMB_SPEED = 8;
+        const CLIMB_SPEED = 10;
         const WALK_SPEED_VARY = 5;
         const WALK_SPEED_BASE = 12;
         const AIR_FRAME_LIMIT = 0.5;
@@ -430,6 +441,8 @@ export class Player extends GameObject {
             }
         }
         let jump = this.shootAnimTimer > 0 ? 1 : 0;
+        let oldFrame = this.spr.frame;
+        let oldRow = this.spr.row;
 
         // Climbing
         if (this.climbing) {
@@ -442,6 +455,14 @@ export class Player extends GameObject {
                 this.spr.animate(2, 
                     Math.min(2*jump, 2),  Math.min(2*jump+s, 2), 
                     CLIMB_SPEED, ev.step);
+
+                if (this.spr.frame != oldFrame &&
+                    this.spr.row == oldRow &&
+                    this.spr.frame == 0 &&
+                    oldFrame < 2) {
+
+                    ev.audio.playSample(ev.audio.sounds.climb, 0.40);
+                }
             }
             
             this.flip = Flip.None;        
@@ -546,7 +567,17 @@ export class Player extends GameObject {
         this.rocketActive = false;
 
         // Play hurt sound
-        ev.audio.playSample(ev.audio.sounds.hurt, 0.50);
+        ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
+    }
+
+
+    // Called when the player hits the ceiling
+    onCeilingHit(ev) {
+
+        const EPS = -0.1;
+
+        if (this.speed.y < EPS)
+            ev.audio.playSample(ev.audio.sounds.hit, 0.40);
     }
 
 

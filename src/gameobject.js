@@ -210,6 +210,11 @@ export class GameObject {
 
             this.pos.y = y + h/2;
 
+            if (this.onCeilingHit) {
+
+                this.onCeilingHit(ev);
+            }    
+
             if (this.forceUp)
                 this.speed.y *= -1;
             else
@@ -222,7 +227,7 @@ export class GameObject {
                 this.pos.y = y;
                 if (this.kill != null)
                     this.kill(ev);
-            }
+            } 
 
             return true;
         }
