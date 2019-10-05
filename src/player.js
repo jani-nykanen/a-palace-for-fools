@@ -25,6 +25,9 @@ export class Player extends GameObject {
         super(x, y);
 
         const DUST_COUNT = 8;
+        const STARTING_HEALTH = 3;
+
+        this.checkpoint = this.pos.clone();
 
         // Set acceleration
         this.acc = new Vector2(
@@ -42,6 +45,8 @@ export class Player extends GameObject {
         this.h = 12;
 
         this.spr = new Sprite(16, 16);
+        this.spr.setFrame(3, 4);
+
         this.gunSpr = new Sprite(8, 8);
         this.flip = Flip.None;
 
@@ -62,6 +67,41 @@ export class Player extends GameObject {
         // prevent y knockback in collisions
         this.canJumpOld = true;
         this.canJump = true;
+
+        this.maxHealth = STARTING_HEALTH;
+        this.health = this.maxHealth;
+    }
+
+
+    // Respawn
+    respawn(cam) {
+
+        // Reset position to the latest checkpoint
+        this.pos = this.checkpoint.clone();
+
+        // Reset frame
+        this.spr.setFrame(3, 4);
+
+        // Reset speed
+        this.speed = new Vector2();
+        this.target = this.speed.clone();
+        
+        // ...and reset flags
+        this.climbing = false;
+        this.touchLadder = false;
+        this.touchWater = false;
+        this.rocketActive = false;
+
+        // ...and other stuff
+        this.health = this.maxHealth;
+        this.hurtTimer = 0;
+        this.shootAnimTimer = 0;
+        this.rocketTimer = 0;
+        this.slideTimer = 0;
+
+        // Set camera
+        cam.x = Math.floor(this.pos.x / cam.w);
+        cam.y = Math.floor(this.pos.y / cam.h);
     }
 
 
@@ -568,6 +608,10 @@ export class Player extends GameObject {
 
         // Play hurt sound
         ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
+
+        // Lose health
+        if (this.health > 0)
+            -- this.health;
     }
 
 
@@ -624,5 +668,13 @@ export class Player extends GameObject {
             c.drawSprite(this.gunSpr, c.bitmaps.gun,
                 px+5, py-3, this.flip);
         }
+    }
+
+
+    // Is the player dead
+    isDead() {
+
+        return this.health <= 0 &&
+            this.hurtTimer <= HURT_TIME;
     }
 }

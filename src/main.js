@@ -28,6 +28,7 @@ window.onload = () => {
         {name: "background",   src: "assets/bitmaps/background.png"},
         {name: "figure",   src: "assets/bitmaps/figure.png"},
         {name: "gun",   src: "assets/bitmaps/gun.png"},
+        {name: "hud",   src: "assets/bitmaps/hud.png"},
     );
     c.assets.addDocuments(
         {name: "sewers", src: "assets/maps/sewers.tmx"},

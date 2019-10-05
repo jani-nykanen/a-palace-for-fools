@@ -2,6 +2,7 @@ import { Stage } from "./stage.js";
 import { Vector2 } from "./engine/vector.js";
 import { Player } from "./player.js";
 import { BulletGen } from "./bulletgen.js";
+import { TransitionMode } from "./engine/transition.js";
 
 //
 // Game scene
@@ -27,12 +28,18 @@ export class Game {
     }
 
 
-
     // Initialize the scene
     // (or the things that need assets, really)
     init(ev) {
 
         this.stage = new Stage(ev.documents.sewers);
+    }
+
+
+    // Reset game
+    reset() {
+
+        this.player.respawn(this.cam);
     }
 
 
@@ -54,6 +61,15 @@ export class Game {
         this.player.update(ev, [this.bgen]);
         // Get collisions with the stage
         this.stage.getCollisions(this.player, ev);
+
+        // Check if the player is dead
+        if (this.player.isDead()) {
+
+            ev.tr.activate(true, TransitionMode.VerticalBar, 2.0,
+                () => {
+                    this.reset();
+                });
+        }
 
         // Update bullets
         this.bgen.updateBullets(this.stage, this.cam, ev);
@@ -88,6 +104,33 @@ export class Game {
     }
 
 
+    // Draw HUD
+    drawHUD(c) {
+
+        const HEART_X = -2;
+        const HEART_Y = -2;
+
+        const LIFE_BAR_X = 12;
+
+        c.drawBitmapRegion(c.bitmaps.hud,
+            0, 0, 16, 16,
+            HEART_X, HEART_Y);
+
+        // Draw health
+        let sx;
+        for (let i = 0; i < this.player.maxHealth; ++ i) {
+
+            sx = 17;
+            if (this.player.health <= i)
+                sx += 8;
+
+            c.drawBitmapRegion(c.bitmaps.hud,
+                sx, 0, 6, 16,
+                LIFE_BAR_X + i * 5, HEART_Y);
+        }
+    }
+
+
     // (Re)draw the scene
     draw(c) {
 
@@ -111,6 +154,9 @@ export class Game {
 
         // Reset camera
         c.moveTo(0, 0); 
+
+        // Draw HUD
+        this.drawHUD(c);
     }
 
 }

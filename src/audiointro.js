@@ -46,7 +46,7 @@ export class EnableAudioScreen {
                 ev.audio.playSample(ev.audio.sounds.accept, 0.50);
 
 
-            ev.tr.activate(false, TransitionMode.VerticalBar, 1.0);
+            ev.tr.activate(false, TransitionMode.VerticalBar, 2.0);
             ev.changeScene("game");
         }
     }

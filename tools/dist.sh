@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 cp ../lib/howler.core.min.js howler.core.min.js
 cp -r ../assets assets
-java -jar closure.jar --js ../src/*.js --js_output_file out.js #--compilation_level ADVANCED_OPTIMIZATIONS --language_out ECMASCRIPT_2018
+java -jar closure.jar --js ../src/engine/*.js ../src/*.js --js_output_file out.js #--compilation_level ADVANCED_OPTIMIZATIONS --language_out ECMASCRIPT_2018
 cat html_up.txt > index.html
 cat out.js >> index.html
 cat html_down.txt >> index.html
@@ -12,3 +12,4 @@ rm index.html
 rm -rf assets
 rm -rf howler.core.min.js
 rm -rf out.js
+
