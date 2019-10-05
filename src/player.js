@@ -15,6 +15,7 @@ import { Dust } from "./dust.js";
 
 const KNOCKBACK_TIME = 30;
 const HURT_TIME = 60;
+const DEATH_TIME = 120;
 
 
 export class Player extends GameObject {
@@ -70,6 +71,8 @@ export class Player extends GameObject {
 
         this.maxHealth = STARTING_HEALTH;
         this.health = this.maxHealth;
+
+        this.deathTimer = 0;
     }
 
 
@@ -91,6 +94,7 @@ export class Player extends GameObject {
         this.touchLadder = false;
         this.touchWater = false;
         this.rocketActive = false;
+        this.dying = false;
 
         // ...and other stuff
         this.health = this.maxHealth;
@@ -98,6 +102,7 @@ export class Player extends GameObject {
         this.shootAnimTimer = 0;
         this.rocketTimer = 0;
         this.slideTimer = 0;
+        this.deathTimer = 0;
 
         // Set camera
         cam.x = Math.floor(this.pos.x / cam.w);
@@ -313,6 +318,17 @@ export class Player extends GameObject {
             this.hurtTimer -= ev.step;
             if (this.hurtTimer >= HURT_TIME)
                 return;
+
+            else if (this.health <= 0) {
+
+                this.dying = true;
+                this.deathTimer = DEATH_TIME;
+
+                // Play sound effect
+                ev.audio.playSample(ev.audio.sounds.die, 0.33);
+
+                return;
+            }
         }
 
         // Update rocketing
@@ -587,7 +603,8 @@ export class Player extends GameObject {
     // Hurt player
     hurt(cx, cy, ev) {
 
-        const KNOCKBACK_X = 1;
+        const KNOCKBACK_X = 1.0;
+        const KNOCKBACK_BASE_X = 0.5;
         const KNOCKBACK_Y = 1;
 
         this.hurtTimer = HURT_TIME + KNOCKBACK_TIME;
@@ -595,7 +612,8 @@ export class Player extends GameObject {
         let dirx = this.pos.x < cx ? -1 : 1;
 
         // Determine knockback
-        this.speed.x = (this.pos.x-cx)/8.0 * KNOCKBACK_X + dirx*KNOCKBACK_X;
+        this.speed.x = (this.pos.x-cx)/8.0 * KNOCKBACK_X + 
+            dirx*KNOCKBACK_BASE_X;
         if (!this.canJumpOld)
             this.speed.y = (this.pos.y-cy)/8.0 * KNOCKBACK_Y;
 
@@ -625,6 +643,45 @@ export class Player extends GameObject {
     }
 
 
+    // Update death
+    die(ev) {
+
+        const FLICKER_SPEED = 4;
+
+        this.deathTimer -= ev.step;
+
+        // Animate death "balls"
+        this.spr.animate(4, 0, 2, FLICKER_SPEED, ev.step);
+    }
+
+
+    // Draw death balls (I could use the word 'orbs', but
+    // gotta loves those balls while you can)
+    drawDeathBalls(c) {
+
+        const LOOP = 8;
+        const RADIUS = 160;
+
+        let px = this.pos.x | 0;
+        let py = this.pos.y | 0;
+
+        let angle = 0;
+        let r = (1.0 - this.deathTimer / DEATH_TIME) * RADIUS;
+        let x, y;
+
+        for (let i = 0; i < LOOP; ++ i) {
+
+            angle = Math.PI * 2 / LOOP * i;
+
+            x = px + Math.cos(angle) * r;
+            y = py + Math.sin(angle) * r;
+
+            c.drawSprite(this.spr, c.bitmaps.figure,
+                x-8, y-8);
+        }
+    }
+
+
     // Draw player
     draw(c) {
 
@@ -637,6 +694,12 @@ export class Player extends GameObject {
         for (let d of this.dust) {
 
             d.draw(c);
+        }
+
+        if (this.dying) {
+
+            this.drawDeathBalls(c);
+            return;
         }
 
         // If hurt, skip some frames
@@ -674,7 +737,9 @@ export class Player extends GameObject {
     // Is the player dead
     isDead() {
 
-        return this.health <= 0 &&
-            this.hurtTimer <= HURT_TIME;
+        const DEATH_LIMIT = 60;
+
+        return this.dying &&
+            this.deathTimer <= DEATH_LIMIT;
     }
 }

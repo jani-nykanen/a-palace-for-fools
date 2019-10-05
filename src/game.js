@@ -55,7 +55,14 @@ export class Game {
             this.cloudPos[i] %= 160;
         }
 
-        if (ev.tr.active) return;
+        if (ev.tr.active) {
+            
+            if (this.player.dying) {
+
+                this.player.die(ev);
+            }
+            return;
+        }
 
         // Update player
         this.player.update(ev, [this.bgen]);
