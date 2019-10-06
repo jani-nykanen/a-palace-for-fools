@@ -315,8 +315,11 @@ export class Player extends GameObject {
 
         // Update shooting related timers
         let s = ev.input.action.fire2.state;
+        let oldShootTimer = this.shootAnimTimer;
         this.shootAnimTimer -= 1.0 * ev.step;
+        // Start charge shot
         if (this.chargeLoadTimer <= 0 &&
+            oldShootTimer > 0 &&
             this.shootAnimTimer <= 0 &&
             this.hurtTimer <= HURT_TIME &&
             s== State.Down) {
