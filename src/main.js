@@ -46,6 +46,7 @@ window.onload = () => {
         {name: "climb", src: "assets/audio/climb.wav"},
         {name: "die", src: "assets/audio/die.wav"},
         {name: "charge", src: "assets/audio/charge.wav"},
+        {name: "shootBig", src: "assets/audio/shoot_big.wav"},
     );
 
     // Configure keys

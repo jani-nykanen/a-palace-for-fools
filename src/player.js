@@ -156,9 +156,10 @@ export class Player extends GameObject {
     shootBullet(bgen, id, ev) {
 
         const BULLET_SPEED = 3;
+        const AUDIO = ["shoot", "shootBig"];
 
         // Play shooting sound
-        ev.audio.playSample(ev.audio.sounds.shoot, 0.50);
+        ev.audio.playSample(ev.audio.sounds[AUDIO[id]], 0.50);
 
         // Determine shoot direction
          if (ev.input.action.left.state == State.Down) {
