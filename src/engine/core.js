@@ -133,6 +133,13 @@ export class Core {
                 // Update frame event
                 this.ev.update();
             }
+            else {
+
+                // To prevent that the user presses enter
+                // in the loading screen and that gets
+                // registered
+                this.ev.input.updateStates();
+            }
 
             this.timeSum -= this.target;
             redraw = true;

@@ -20,18 +20,21 @@ export class Bullet extends GameObject {
         this.w = 8;
         this.h = 1;
 
-        this.spr = new Sprite(8, 8);
+        this.spr = new Sprite(16, 16);
 
         this.dieOnCollision = true;
+
+        this.id = 0;
     }
 
 
     // Die
     die(ev) {
 
-        const DEATH_SPEED = 6;
+        const DEATH_SPEED = 4;
 
-        this.spr.animate(2, 0, 4, DEATH_SPEED, ev.step);
+        this.spr.animate(1 + this.id*2, 
+            0, 4, DEATH_SPEED, ev.step);
         if (this.spr.frame == 4)
             this.exist = false;
     }
@@ -60,13 +63,18 @@ export class Bullet extends GameObject {
     animate(ev) {
 
         const ANIM_SPEED = 2;
+        const END = [3, 2];
 
-        this.spr.animate(1, 0, 3, ANIM_SPEED, ev.step);
+        this.spr.animate(this.id*2, 
+            0, END[this.id], 
+            ANIM_SPEED, ev.step);
     }
 
 
     // Spawn
-    spawn(x, y, sx, sy) {
+    spawn(x, y, sx, sy, id) {
+
+        const HEIGHT = [1, 8];
 
         this.pos.x = x;
         this.pos.y = y;
@@ -76,9 +84,12 @@ export class Bullet extends GameObject {
 
         this.target = this.speed.clone();
 
+        this.id = id;
+        this.h = HEIGHT[this.id];
+
         this.exist = true;
         this.dying = false;
-        this.spr.setFrame(1, 0);
+        this.spr.setFrame(this.id*2, 0);
         
     }
 
@@ -98,8 +109,8 @@ export class Bullet extends GameObject {
 
         if (!this.exist) return;
 
-        c.drawSprite(this.spr, c.bitmaps.gun,
-            (this.pos.x | 0) - 4, 
-            (this.pos.y | 0) - 4 );
+        c.drawSprite(this.spr, c.bitmaps.bullet,
+            (this.pos.x | 0) - 8, 
+            (this.pos.y | 0) - 8);
     }
 }

@@ -21,7 +21,7 @@ export class BulletGen {
 
 
     // Create a bullet
-    createBullet(x, y, sx, sy) {
+    createBullet(x, y, sx, sy, id) {
 
         // Find a bullet that does not exist
         // and spawn it
@@ -36,7 +36,7 @@ export class BulletGen {
         }
         if (b == null) return null;
 
-        b.spawn(x, y, sx, sy);
+        b.spawn(x, y, sx, sy, id);
 
         return b;
     }

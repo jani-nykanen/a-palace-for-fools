@@ -16,6 +16,7 @@ import { Dust } from "./dust.js";
 const KNOCKBACK_TIME = 30;
 const HURT_TIME = 60;
 const DEATH_TIME = 120;
+const SHOOT_ANIM_TIME = 60;
 
 
 export class Player extends GameObject {
@@ -52,6 +53,7 @@ export class Player extends GameObject {
         this.flip = Flip.None;
 
         this.shootAnimTimer = 0;
+        this.chargeLoadTimer = 0;
         this.shootDir = 1;
         this.canShoot = true;
         
@@ -103,6 +105,7 @@ export class Player extends GameObject {
         this.rocketTimer = 0;
         this.slideTimer = 0;
         this.deathTimer = 0;
+        this.chargeLoadTimer = 0.0;
 
         // Set camera
         cam.x = Math.floor(this.pos.x / cam.w);
@@ -150,9 +153,8 @@ export class Player extends GameObject {
 
 
     // Shoot a bullet
-    shootBullet(bgen, ev) {
+    shootBullet(bgen, id, ev) {
 
-        const SHOOT_ANIM_TIME = 30;
         const BULLET_SPEED = 3;
 
         // Play shooting sound
@@ -185,7 +187,8 @@ export class Player extends GameObject {
 
         let b = bgen.createBullet(
             p, this.pos.y, 
-            BULLET_SPEED*this.shootDir, 0);
+            BULLET_SPEED*this.shootDir, 0,
+            id);
         if (b != null) {
 
             // This way we prevent bullets
@@ -295,6 +298,7 @@ export class Player extends GameObject {
         const SWIM_SPEED_UP = -1.5;
         const ROCKET_TIME = 45;
         const BASE_HEIGHT = 12;
+        const CHARGE_TIME_MAX = 60;
 
         let bgen = extra[0];
 
@@ -308,6 +312,39 @@ export class Player extends GameObject {
         // Determine hitbox height
         this.hitbox.y = this.slideTimer > 0 ?
             BASE_HEIGHT/2 : BASE_HEIGHT;
+
+        // Update shooting related timers
+        let s = ev.input.action.fire2.state;
+        this.shootAnimTimer -= 1.0 * ev.step;
+        if (this.chargeLoadTimer <= 0 &&
+            this.shootAnimTimer <= 0 &&
+            this.hurtTimer <= HURT_TIME &&
+            s== State.Down) {
+
+            this.chargeLoadTimer = ev.step;
+            ev.audio.playSample(ev.audio.sounds.charge, 0.50);
+        }
+        else if (this.shootAnimTimer < SHOOT_ANIM_TIME/2 &&
+            s != State.Down) {
+
+            this.shootAnimTimer = 0.0;
+        }
+        if (this.chargeLoadTimer > 0) {
+
+            this.chargeLoadTimer += ev.step;
+            // It never goes zero this way, but not too big
+            // either
+            if (this.chargeLoadTimer > CHARGE_TIME_MAX) {
+
+                this.chargeLoadTimer -= CHARGE_TIME_MAX;
+            }
+
+            if (s == State.Released) {
+
+                this.chargeLoadTimer = 0.0;
+                this.shootBullet(bgen, 1, ev);
+            }
+        }
 
         // Update dust
         this.updateDust(ev);
@@ -342,7 +379,7 @@ export class Player extends GameObject {
             this.slideTimer <= 0.0 &&
             ev.input.action.fire2.state == State.Pressed) {
             
-            this.shootBullet(bgen, ev);
+            this.shootBullet(bgen, 0, ev);
         }
 
         // Update jump
@@ -356,7 +393,7 @@ export class Player extends GameObject {
         }
 
         // Check jump button
-        let s = ev.input.action.fire1.state;
+        s = ev.input.action.fire1.state;
         if ( (s == State.Down || s == State.Pressed) && this.touchWater) {
 
             if (s == State.Pressed) {
@@ -483,10 +520,8 @@ export class Player extends GameObject {
             this.flip = this.target.x > 0 ? 
                     Flip.None : Flip.Horizontal;
 
-        // Update shoot animation timer
+        // Update shoot animation
         if (this.shootAnimTimer > 0) {
-
-            this.shootAnimTimer -= 1.0 * ev.step;
 
             // Update gun animation
             if (!this.canShoot) {
@@ -623,6 +658,7 @@ export class Player extends GameObject {
         this.shootAnimTimer = 0;
         this.canShoot = true;
         this.rocketActive = false;
+        this.chargeLoadTimer = 0;
 
         // Play hurt sound
         ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
@@ -712,6 +748,11 @@ export class Player extends GameObject {
         if (this.shootAnimTimer > 0 && !this.climbing) {
 
             row += 1;
+        }
+        else if (this.chargeLoadTimer > 0.0 &&
+            Math.floor(this.chargeLoadTimer/4) % 2 == 0) {
+
+            row += 5;
         }
 
         c.drawSpriteFrame(this.spr, c.bitmaps.figure,

@@ -29,6 +29,7 @@ window.onload = () => {
         {name: "figure",   src: "assets/bitmaps/figure.png"},
         {name: "gun",   src: "assets/bitmaps/gun.png"},
         {name: "hud",   src: "assets/bitmaps/hud.png"},
+        {name: "bullet",   src: "assets/bitmaps/bullet.png"},
     );
     c.assets.addDocuments(
         {name: "sewers", src: "assets/maps/sewers.tmx"},
@@ -44,6 +45,7 @@ window.onload = () => {
         {name: "slide", src: "assets/audio/slide.wav"},
         {name: "climb", src: "assets/audio/climb.wav"},
         {name: "die", src: "assets/audio/die.wav"},
+        {name: "charge", src: "assets/audio/charge.wav"},
     );
 
     // Configure keys
