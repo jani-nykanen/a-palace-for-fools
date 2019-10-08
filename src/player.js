@@ -108,8 +108,9 @@ export class Player extends GameObject {
         this.chargeLoadTimer = 0.0;
 
         // Set camera
-        cam.x = Math.floor(this.pos.x / cam.w);
-        cam.y = Math.floor(this.pos.y / cam.h);
+        cam.forceMoveTo(
+            Math.floor(this.pos.x / cam.w),
+            Math.floor(this.pos.y / cam.h));
     }
 
 
@@ -603,39 +604,43 @@ export class Player extends GameObject {
     // Update camera
     updateCamera(cam, stage, ev) {
 
+        const CAM_SPEED = 1.5;
+
+        if (cam.moving) return;
+
         this.verticalCollision(cam.x*cam.w, cam.y*cam.h, 144, 1, ev);
         this.verticalCollision((cam.x+1)*cam.w, cam.y*cam.h, 144, -1, ev);
 
-        if (this.flip == Flip.Horizontal &&
-            this.pos.x-8 < cam.x*cam.w) {
+        let dx = 0;
+        let dy = 0;
 
-            this.pos.x -= 16;
-            -- cam.x;
+        if (this.flip == Flip.Horizontal &&
+            this.pos.x-8 < cam.top.x) {
+
+            dx = -1;
         }
         else if (this.flip == Flip.None &&
-            this.pos.x+8 > (cam.x+1)*cam.w) {
+            this.pos.x+8 > cam.top.x + cam.w) {
 
-            this.pos.x += 16;
-            ++ cam.x;
+            dx = 1;
         }
 
-        if (this.pos.y-8 < cam.y*cam.h) {
+        if (this.pos.y-8 < cam.top.y) {
 
-            this.pos.y -= 16;
-            -- cam.y;
+            dy = -1
         }
-        else if (this.pos.y+8 > (cam.y+1)*cam.h) {
+        else if (this.pos.y+8 > cam.top.y + cam.h) {
 
-            this.pos.y += 16;
-            ++ cam.y;
+            dy = 1;
         }
-
         
-        this.pos.x = negMod(this.pos.x, stage.w*16);
-        this.pos.y = negMod(this.pos.y, stage.h*16);
+        let sw = (stage.w*16 / cam.w) | 0;
+        let sh = (stage.h*16 / cam.h) | 0;
 
-        cam.x = negMod(cam.x, (stage.w*16 / cam.w) | 0);
-        cam.y = negMod(cam.y, (stage.h*16 / cam.h) | 0);
+        if (dx != 0 || dy != 0) {
+
+            cam.move(dx, dy, sw, sh, CAM_SPEED);
+        }
     }
 
 
@@ -695,6 +700,22 @@ export class Player extends GameObject {
     }
 
 
+    // Update movement while the camera is moving
+    updateCamMovement(cam, stage, ev) {
+
+        let speed = 16.0/60.0 * cam.speed;
+
+        let dx = cam.target.x - cam.pos.x;
+        let dy = cam.target.y - cam.pos.y;
+
+        this.pos.x += dx * speed * ev.step;
+        this.pos.y += dy * speed * ev.step;
+
+        this.pos.x = negMod(this.pos.x, stage.w*16);
+        this.pos.y = negMod(this.pos.y, stage.h*16);
+    }
+
+
     // Draw death balls (I could use the word 'orbs', but
     // gotta loves those balls while you can)
     drawDeathBalls(c) {
@@ -722,8 +743,10 @@ export class Player extends GameObject {
     }
 
 
-    // Draw player
-    draw(c) {
+    // Draw player to the translate coordinates
+    drawTranslated(c, tx, ty) {
+
+        c.move(tx, ty);
 
         let px = this.pos.x | 0;
         let py = this.pos.y | 0;
@@ -776,6 +799,26 @@ export class Player extends GameObject {
             c.drawSprite(this.gunSpr, c.bitmaps.gun,
                 px+5, py-3, this.flip);
         }
+
+        c.move(-tx, -ty);
+    }
+
+
+    // Draw the player
+    draw(c, cam, stage) {
+
+        // If the camera is moving, draw looped
+        // sprite, in the case the camera is 
+        // looping
+        if (cam.moving) {
+
+            if (cam.dir.x > 0)
+                this.drawTranslated(c, -stage.w*16, 0);
+            else if (cam.dir.x < 0)
+                this.drawTranslated(c, stage.w*16, 0);
+        }
+
+        this.drawTranslated(c, 0, 0);
     }
 
 

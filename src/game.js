@@ -3,6 +3,7 @@ import { Vector2 } from "./engine/vector.js";
 import { Player } from "./player.js";
 import { BulletGen } from "./bulletgen.js";
 import { TransitionMode } from "./engine/transition.js";
+import { Camera } from "./camera.js";
 
 //
 // Game scene
@@ -16,11 +17,7 @@ export class Game {
 
     constructor() {
 
-        // No reason to make a class for this
-        this.cam = {
-            x: 0, y: 0,
-            w: 160, h: 144
-        };
+        this.cam = new Camera(0, 0, 160, 144);
         this.player = new Player(56, 58);
         this.bgen = new BulletGen(16);
 
@@ -61,6 +58,14 @@ export class Game {
 
                 this.player.die(ev);
             }
+            return;
+        }
+
+        // Update camera
+        if (this.cam.update(ev)) {
+
+            this.player.updateCamMovement(
+                this.cam, this.stage, ev);
             return;
         }
 
@@ -147,14 +152,13 @@ export class Game {
         this.drawBackground(c);
 
         // Move to camera
-        c.moveTo(-(this.cam.x*160) | 0, 
-                 -(this.cam.y*144) | 0);
+        this.cam.use(c);
 
         // Draw map
-        this.stage.draw(c, this.cam.x, this.cam.y);
+        this.stage.draw(c, this.cam);
 
         // Draw player
-        this.player.draw(c);
+        this.player.draw(c, this.cam, this.stage);
 
         // Draw bullets
         this.bgen.drawBullets(c);

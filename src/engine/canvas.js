@@ -276,6 +276,14 @@ export class Canvas {
     }
 
 
+    // Translate the rendering point
+    move(x, y) {
+
+        this.tr.x += x;
+        this.tr.y += y;
+    }
+
+
     // Set global alpha
     setAlpha(a) {
 

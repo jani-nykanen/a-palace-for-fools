@@ -45,14 +45,11 @@ export class Bullet extends GameObject {
 
         let cam = extra[0];
 
-        let cx = cam.x * cam.w;
-        let cy = cam.y * cam.h;
-
         // Check if outside the camera
-        if (this.pos.x-this.w/2 > cx+cam.w ||
-            this.pos.x+this.w/2 < cx ||
-            this.pos.y-this.h/2 > cy+cam.h ||
-            this.pos.y+this.h/2 < cy) {
+        if (this.pos.x-this.w/2 > cam.top.x+cam.w ||
+            this.pos.x+this.w/2 < cam.top.x ||
+            this.pos.y-this.h/2 > cam.top.y+cam.h ||
+            this.pos.y+this.h/2 < cam.top.y) {
 
             this.exist = false;
         }

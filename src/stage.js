@@ -268,12 +268,14 @@ export class Stage {
 
 
     // Render the current visible map area
-    draw(c, x, y) {
+    draw(c, cam) {
 
-        this.drawTiles(c,
-            (x*10) | 0, 
-            (y*9) | 0, 
-            10, 9);
+        let x = Math.floor(cam.top.x / 16) -1;
+        let y = Math.floor(cam.top.y / 16) -1;
+        let w = cam.w/16 + 2;
+        let h = cam.h/16 + 2;
+
+        this.drawTiles(c, x, y, w, h);
     }
 
 
