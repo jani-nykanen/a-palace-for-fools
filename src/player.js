@@ -604,7 +604,7 @@ export class Player extends GameObject {
     // Update camera
     updateCamera(cam, stage, ev) {
 
-        const CAM_SPEED = 1.5;
+        const CAM_SPEED = 4;
 
         if (cam.moving) return;
 
@@ -703,7 +703,7 @@ export class Player extends GameObject {
     // Update movement while the camera is moving
     updateCamMovement(cam, stage, ev) {
 
-        let speed = 16.0/60.0 * cam.speed;
+        let speed = 16.0 * cam.speed;
 
         let dx = cam.target.x - cam.pos.x;
         let dy = cam.target.y - cam.pos.y;

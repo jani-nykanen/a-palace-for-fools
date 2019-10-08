@@ -9,9 +9,6 @@ import { negMod } from "./engine/util.js";
 //
 
 
-const MOVE_TIME = 60;
-
-
 export class Camera {
 
 
@@ -44,13 +41,9 @@ export class Camera {
         this.target.x = this.pos.x + dx;
         this.target.y = this.pos.y + dy;
 
-        // Modify the speed with the length
-        // of delta (i.e. if moving downwards,
-        // the speed is slightly slower)
-        let lx = 1;
-        let ly = this.h / this.w;
-        let len = Math.hypot(dx*lx, dy*ly);
-        this.speed = speed * len;
+        // Determine movement speed
+        let len = Math.hypot(dx*this.w, dy*this.h);
+        this.speed = 1.0 / (len / speed);
 
         // Handle looping
         if (this.target.x < 0) {
@@ -95,24 +88,23 @@ export class Camera {
     // Update camera
     update(ev) {
 
-        let t = 0;
+        
         // Update move timer
         if (this.moving) {
 
-            t = this.moveTimer / MOVE_TIME;
-            if (( this.moveTimer += this.speed * ev.step) >= MOVE_TIME) {
+            if (( this.moveTimer += this.speed * ev.step) >= 1.0) {
 
                 this.moveTimer = 0;
                 this.moving = false;
-                t = 0;
 
                 this.pos = this.target.clone();
             }
         }
 
         // Compute top corner position
-        this.top.x = ((this.pos.x * (1-t) + this.target.x * t) * this.w) | 0;
-        this.top.y = ((this.pos.y * (1-t) + this.target.y * t) * this.h) | 0;
+        let t = this.moveTimer;
+        this.top.x = Math.round((this.pos.x * (1-t) + this.target.x * t) * this.w) | 0;
+        this.top.y = Math.round((this.pos.y * (1-t) + this.target.y * t) * this.h) | 0;
 
         return this.moving;
     }
