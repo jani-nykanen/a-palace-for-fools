@@ -1,6 +1,7 @@
 import { Tilemap } from "./engine/tilemap.js";
 import { negMod } from "./engine/util.js";
 import { Sprite } from "./engine/sprite.js";
+import { Dust } from "./dust.js";
 
 //
 // Handles the game stage rendering
@@ -15,11 +16,51 @@ export class Stage {
 
     constructor(map) {
 
+        const DUST_COUNT = 4;
+
         this.map = new Tilemap(map);
         this.w = this.map.w;
         this.h = this.map.h;
 
         this.waterSurface = new Sprite(16, 16);
+
+        // Dust for breaking tiles
+        this.dust = new Array(DUST_COUNT);
+        for (let i = 0; i < DUST_COUNT; ++ i) {
+
+            this.dust[i] = new Dust();
+        }
+    }
+
+
+    // Spawn dust
+    spawnDust(x, y) {
+
+        const DUST_SPEED = 6;
+
+        let dust = null;
+        for (let d of this.dust) {
+
+            if (!d.exist) {
+
+                dust = d;
+                break;
+            }
+        }
+        if (dust == null) return;
+
+        dust.spawn(x*16 + 8, y*16 + 8, DUST_SPEED, 1);
+    }
+
+
+    // Is the tile solid
+    isSolid(x, y, loop) {
+
+        const SOLID = [1, 8];
+
+        let t = this.map.getTile(0, x, y, loop);
+
+        return SOLID.includes(t);
     }
 
 
@@ -214,6 +255,36 @@ export class Stage {
     }
 
 
+    // Draw breaking wall
+    drawBreakingWall(c, x, y) {
+
+        let ts = c.bitmaps.tileset;
+
+        let sx = 0;
+
+        if (!this.isSolid(x, y-1, true) &&
+            !this.isSolid(x, y+1, true)) {
+
+            sx = 48;
+        }
+        else if (this.map.getTile(0, x, y-1) != 1) {
+
+            sx = 16
+        }
+        else if (!this.isSolid(x, y+1, true)) {
+
+            sx = 32;
+        }
+        else {
+
+            sx = 0;
+        }
+
+        c.drawBitmapRegion(ts, sx, 16, 16, 16,
+            x*16, y*16);
+    }
+
+
     // Draw the (mostly static) tiles
     drawTiles(c, sx, sy, w, h) {
 
@@ -252,6 +323,12 @@ export class Stage {
                     this.drawWater(c, x, y);
                     break;
 
+                // Breaking tile
+                case 8:
+                    
+                    this.drawBreakingWall(c, x, y);
+                    break;
+
                 default:
                     break;
                 }
@@ -264,6 +341,12 @@ export class Stage {
     update(ev) {
 
         this.waterSurface.animate(0, 11, 13, 12, ev.step);
+
+        // Update dust
+        for (let d of this.dust) {
+
+            d.update(ev);
+        }
     }
 
 
@@ -276,28 +359,44 @@ export class Stage {
         let h = cam.h/16 + 2;
 
         this.drawTiles(c, x, y, w, h);
+
+        // Draw dust
+        for (let d of this.dust) {
+
+            d.draw(c);
+        }
     }
 
 
     // Get wall collision with an object
-    getWallCollision(o, x, y, ev) {
+    getWallCollision(o, x, y, breakable, ev) {
 
         const MARGIN = 2;
 
-        // Left
-        if (this.map.getTile(0, x-1, y, true) != 1) {
+        let w;
 
-            o.verticalCollision(x*16, y*16, 16, -1, ev);
+        // Left
+        if (!this.isSolid(x-1, y, true)) {
+
+            w = o.verticalCollision(x*16, y*16, 16, -1, ev);
         }
 
         // Right
-        if (this.map.getTile(0, x+1, y, true) != 1) {
+        if (!this.isSolid(x+1, y, true)) {
 
-            o.verticalCollision((x+1)*16, y*16, 16, 1, ev);
+            w = w || o.verticalCollision((x+1)*16, y*16, 16, 1, ev);
+        }
+
+        // Break the wall
+        if (o.breakWall && breakable && w) {
+
+            this.map.setTile(0, x, y, 0);
+            this.spawnDust(x, y);
+            return;
         }
 
         // Top
-        if (this.map.getTile(0, x, y-1, true) != 1) {
+        if (!this.isSolid(x, y-1, true)) {
 
             // If touched ground while climbing downwards, stop
             // climbing
@@ -312,7 +411,7 @@ export class Stage {
         }
 
         // Bottom
-        if (this.map.getTile(0, x, y+1, true) != 1) {
+        if (!this.isSolid(x, y+1, true)) {
 
             o.horizontalCollision(x*16, (y+1) *16, 16, -1, ev);
         }
@@ -395,8 +494,9 @@ export class Stage {
 
                 // Wall
                 case 1:
+                case 8:
 
-                    this.getWallCollision(o, x, y, ev);
+                    this.getWallCollision(o, x, y, t == 8, ev);
                     break; 
 
                 // Ladder

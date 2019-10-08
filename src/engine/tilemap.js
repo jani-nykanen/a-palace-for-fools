@@ -52,4 +52,14 @@ export class Tilemap {
 
         return this.layers[layer][y*this.w+x];
     }
+
+
+    // Set tile value
+    setTile(layer, x, y, v) {
+
+        x = negMod(x, this.w);
+        y = negMod(y, this.h);
+
+        this.layers[layer][y*this.w+x] = v;
+    }
 }

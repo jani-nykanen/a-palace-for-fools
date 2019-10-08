@@ -23,10 +23,12 @@ export class Dust {
 
 
     // Spawn
-    spawn(x, y, speed) {
+    spawn(x, y, speed, row) {
+
+        if (row == null) row = 0;
 
         this.pos = new Vector2(x, y);
-        this.spr.setFrame(3, 0);
+        this.spr.setFrame(row, 0);
         this.speed = speed;
 
         this.exist = true;
@@ -38,7 +40,8 @@ export class Dust {
 
         if (!this.exist) return;
 
-        this.spr.animate(3, 0, 4, this.speed, ev.step);
+        this.spr.animate(this.spr.row, 
+            0, 4, this.speed, ev.step);
         if (this.spr.frame == 4)
             this.exist = false;
     }
@@ -49,7 +52,7 @@ export class Dust {
 
         if (!this.exist) return;
 
-        c.drawSprite(this.spr, c.bitmaps.figure,
+        c.drawSprite(this.spr, c.bitmaps.dust,
             (this.pos.x-8) | 0,
             (this.pos.y-8) | 0);
     }

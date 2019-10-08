@@ -82,6 +82,8 @@ export class Camera {
         this.target = this.pos.clone();
         this.moving = false;
         this.moveTimer = 0;
+
+        this.top = new Vector2(x*this.w, y*this.h);
     }
 
 

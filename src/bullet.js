@@ -88,6 +88,7 @@ export class Bullet extends GameObject {
         this.dying = false;
         this.spr.setFrame(this.id*2, 0);
         
+        this.breakWall = id == 1;
     }
 
 
