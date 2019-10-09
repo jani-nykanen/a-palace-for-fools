@@ -1,9 +1,7 @@
 import { Stage } from "./stage.js";
-import { Vector2 } from "./engine/vector.js";
-import { Player } from "./player.js";
-import { BulletGen } from "./bulletgen.js";
 import { TransitionMode } from "./engine/transition.js";
 import { Camera } from "./camera.js";
+import { ObjectManager } from "./objectmanager.js";
 
 //
 // Game scene
@@ -18,8 +16,7 @@ export class Game {
     constructor() {
 
         this.cam = new Camera(0, 0, 160, 144);
-        this.player = new Player(56, 58);
-        this.bgen = new BulletGen(16);
+        this.objm = new ObjectManager();
 
         this.cloudPos = [0, 0, 0];
     }
@@ -29,14 +26,19 @@ export class Game {
     // (or the things that need assets, really)
     init(ev) {
 
-        this.stage = new Stage(ev.documents.sewers);
+        this.stage = new Stage(ev.documents.sewers, 
+            this.objm);
+
+        this.stage.parseObjects(this.objm);
     }
 
 
     // Reset game
     reset() {
 
-        this.player.respawn(this.cam);
+        this.stage.reset();
+        this.objm.reset(this.cam);
+        this.stage.parseObjects(this.objm);
     }
 
 
@@ -54,28 +56,24 @@ export class Game {
 
         if (ev.tr.active) {
             
-            if (this.player.dying) {
-
-                this.player.die(ev);
-            }
+            // I don't remember what this does
+            this.objm.checkDeath(ev);
             return;
         }
 
         // Update camera
         if (this.cam.update(ev)) {
 
-            this.player.updateCamMovement(
+            this.objm.updateCamMovement(
                 this.cam, this.stage, ev);
             return;
         }
 
         // Update player
-        this.player.update(ev, [this.bgen]);
-        // Get collisions with the stage
-        this.stage.getCollisions(this.player, ev);
+        this.objm.update(this.stage, this.cam, ev);
 
         // Check if the player is dead
-        if (this.player.isDead()) {
+        if (this.objm.playerDead()) {
 
             ev.tr.activate(true, TransitionMode.VerticalBar, 2.0,
                 () => {
@@ -83,11 +81,8 @@ export class Game {
                 });
         }
 
-        // Update bullets
-        this.bgen.updateBullets(this.stage, this.cam, ev);
-
         // Update camera
-        this.player.updateCamera(this.cam, this.stage, ev);
+        this.objm.updateCamera(this.cam, this.stage, ev);
 
         // Update stage
         this.stage.update(ev);
@@ -130,10 +125,10 @@ export class Game {
 
         // Draw health
         let sx;
-        for (let i = 0; i < this.player.maxHealth; ++ i) {
+        for (let i = 0; i < this.objm.player.maxHealth; ++ i) {
 
             sx = 17;
-            if (this.player.health <= i)
+            if (this.objm.player.health <= i)
                 sx += 8;
 
             c.drawBitmapRegion(c.bitmaps.hud,
@@ -157,11 +152,8 @@ export class Game {
         // Draw map
         this.stage.draw(c, this.cam);
 
-        // Draw player
-        this.player.draw(c, this.cam, this.stage);
-
-        // Draw bullets
-        this.bgen.drawBullets(c);
+        // Draw game objects
+        this.objm.draw(c, this.cam, this.stage);
 
         // Reset camera
         c.moveTo(0, 0); 

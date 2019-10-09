@@ -18,6 +18,7 @@ export class Stage {
 
         const DUST_COUNT = 4;
 
+        this.baseMap = map;
         this.map = new Tilemap(map);
         this.w = this.map.w;
         this.h = this.map.h;
@@ -33,10 +34,17 @@ export class Stage {
     }
 
 
+    // Reset
+    reset() {
+
+        this.map = new Tilemap(this.baseMap);
+    }
+
+
     // Spawn dust
     spawnDust(x, y) {
 
-        const DUST_SPEED = 6;
+        const DUST_SPEED = 5;
 
         let dust = null;
         for (let d of this.dust) {
@@ -523,6 +531,34 @@ export class Stage {
                     
                 default:
                     break;
+                }
+            }
+        }
+    }
+
+
+    // Parse objects
+    parseObjects(objm) {
+
+        let t;
+        for (let y = 0; y < this.h; ++ y) {
+
+            for (let x = 0; x < this.w; ++ x) {
+
+                t = this.map.getTile(1, x, y);
+                t -= 16;
+                if (t <= 0) continue; 
+
+                switch(t) {
+
+                // Player
+                case 1:
+
+                    objm.setPlayerPosition(x, y);
+                    break;
+
+                default:
+                    break; 
                 }
             }
         }
