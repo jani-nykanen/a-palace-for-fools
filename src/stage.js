@@ -2,6 +2,7 @@ import { Tilemap } from "./engine/tilemap.js";
 import { negMod } from "./engine/util.js";
 import { Sprite } from "./engine/sprite.js";
 import { Dust } from "./dust.js";
+import { Bat } from "./bat.js";
 
 //
 // Handles the game stage rendering
@@ -555,6 +556,14 @@ export class Stage {
                 case 1:
 
                     objm.setPlayerPosition(x, y);
+                    break;
+
+                // Bat
+                case 2:
+
+                    objm.addEnemy(
+                        new Bat(x*16 + 8, y*16 + 8)
+                    );
                     break;
 
                 default:

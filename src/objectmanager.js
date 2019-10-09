@@ -15,6 +15,7 @@ export class ObjectManager {
     constructor() {
 
         this.player = new Player(0, 0);
+        this.enemies = new Array();
         this.bgen = new BulletGen(16);
     }
 
@@ -27,8 +28,21 @@ export class ObjectManager {
     }
 
 
+    // Add an enemy
+    addEnemy(enemy) {
+
+        this.enemies.push(enemy);
+    }
+
+
     // Update 
     update(stage, cam, ev) {
+
+        for (let e of this.enemies) {
+
+            e.isInCamera(cam);
+            e.update(ev, [this.player]);
+        }
 
         // Update player
         this.player.update(ev, [this.bgen]);
@@ -43,6 +57,12 @@ export class ObjectManager {
     // Draw
     draw(c, cam, stage) {
 
+        // Draw enemies
+        for (let e of this.enemies) {
+
+            e.draw(c, stage, cam);
+        }
+
         // Draw player
         this.player.draw(c, cam, stage);
         // Draw bullets
@@ -55,6 +75,11 @@ export class ObjectManager {
 
         this.player.updateCamMovement(
             cam, stage, ev);
+
+        for (let e of this.enemies) {
+
+            e.isInCamera(cam);
+        }
     }
 
 
@@ -69,6 +94,7 @@ export class ObjectManager {
     reset(cam) {
 
         this.player.respawn(cam);
+        this.enemies = new Array();
     }
 
 
