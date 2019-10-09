@@ -42,6 +42,7 @@ export class ObjectManager {
 
             e.isInCamera(cam);
             e.update(ev, [this.player]);
+            stage.getCollisions(e, ev);
         }
 
         // Update player
@@ -115,3 +116,4 @@ export class ObjectManager {
         this.player.updateCamera(cam, stage, ev);
     }
 }
+

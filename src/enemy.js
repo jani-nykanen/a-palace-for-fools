@@ -1,6 +1,7 @@
 import { GameObject } from "./gameobject.js";
 import { Sprite } from "./engine/sprite.js";
 import { Flip } from "./engine/canvas.js";
+import { Vector2 } from "./engine/vector.js";
 
 //
 // A base enemy class
@@ -26,6 +27,7 @@ export class Enemy extends GameObject {
         this.exist = true;
         this.dying = false;
         this.inCamera = false;
+        this.returned = false;
 
         this.flip = Flip.None;
     }
@@ -47,20 +49,33 @@ export class Enemy extends GameObject {
 
         let px = this.pos.x;
         let py = this.pos.y;
-        let w = 8;
-        let h = 8;
+        let w = this.spr.w/2;
+        let h = this.spr.h/2;
 
-        let ostate = this.inCamera;
         this.inCamera =
             px+w >= cam.top.x &&
             px-w <= cam.top.x + cam.w &&
             py+h >= cam.top.y &&
             py-h <= cam.top.y + cam.h;
 
-        if (ostate && !this.inCamera) {
+        // This happens every frame for every enemy
+        // if camera is not moving, so maybe some 
+        // trigger for this?
+        if (!this.returned &&
+            !this.inCamera && !cam.moving) {
 
             this.pos = this.startPoint.clone();
+            this.speed = new Vector2();
+            this.target = new Vector2();
+
+            if (this.reset != null)
+                this.reset();
+
+            this.returned = true;
         }
+
+        if (this.inCamera)
+            this.returned = false;
     }
 
 

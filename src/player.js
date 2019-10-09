@@ -629,7 +629,7 @@ export class Player extends GameObject {
 
             dy = -1
         }
-        else if (this.pos.y+8 > cam.top.y + cam.h) {
+        else if (this.pos.y+6 > cam.top.y + cam.h) {
 
             dy = 1;
         }
@@ -703,7 +703,9 @@ export class Player extends GameObject {
     // Update movement while the camera is moving
     updateCamMovement(cam, stage, ev) {
 
-        let speed = 16.0 * cam.speed;
+        const SPEED_MOD = 1.1;
+
+        let speed = SPEED_MOD * 16.0 * cam.speed;
 
         let dx = cam.target.x - cam.pos.x;
         let dy = cam.target.y - cam.pos.y;
