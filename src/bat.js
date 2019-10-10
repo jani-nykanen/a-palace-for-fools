@@ -1,4 +1,5 @@
 import { Enemy } from "./enemy.js";
+import { Vector2 } from "./engine/vector.js";
 
 //
 // Bat enemy
@@ -17,11 +18,18 @@ export class Bat extends Enemy {
         this.w = 12;
         this.h = 12;
 
+        this.hitArea = new Vector2(4, 4);
+
         this.acc.x = 0.01;
         this.acc.y = 0.01;
 
         this.active = false;
         this.falling = false;
+
+        this.maxHealth = 2;
+        this.health = this.maxHealth;
+
+        this.spr.setFrame(1, 4);
     }
 
 
@@ -62,9 +70,11 @@ export class Bat extends Enemy {
             this.target.y = 0;
 
             if (!this.falling &&
-                pl.pos.y > this.pos.y &&
+                ((pl.pos.y > this.pos.y &&
                 pl.pos.y - this.pos.y < TRIGGER_DIST_Y &&
-                dist <= TRIGGER_DIST_X) {
+                dist <= TRIGGER_DIST_X) || 
+                this.health < this.maxHealth)
+                ) {
 
                 this.speed.y = FALL_SPEED;
                 this.falling = true;
@@ -83,9 +93,9 @@ export class Bat extends Enemy {
     animate(ev) {
 
         if (this.active)
-            this.spr.animate(0, 0, 3, 6, ev.step);
+            this.spr.animate(1, 0, 3, 6, ev.step);
         
         else 
-            this.spr.setFrame(0, this.falling ? 5 : 4);
+            this.spr.setFrame(1, this.falling ? 5 : 4);
     }
 }

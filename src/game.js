@@ -56,6 +56,10 @@ export class Game {
 
         if (ev.tr.active) {
             
+            // To make sure all the required objects all
+            // drawn
+            this.objm.updateCamMovement(this.cam, this.stage, ev);
+
             // I don't remember what this does
             this.objm.checkDeath(ev);
             return;

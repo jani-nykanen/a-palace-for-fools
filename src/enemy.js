@@ -18,11 +18,14 @@ export class Enemy extends GameObject {
         super(x, y);
 
         this.startPoint = this.pos.clone();
+        this.hitArea = new Vector2();
         
         this.spr = new Sprite(16, 16);
-        this.spr.setFrame(id, 0);
+        this.spr.setFrame(id+1, 0);
 
         this.id = id;
+        this.health = 1;
+        this.maxHealth = 1;
 
         this.exist = true;
         this.dying = false;
@@ -33,15 +36,45 @@ export class Enemy extends GameObject {
     }
 
 
+    // Hurt player
+    hurtPlayer(pl, ev) {
+
+        let px = this.pos.x;
+        let py = this.pos.y;
+        let w = this.hitArea.x/2;
+        let h = this.hitArea.y/2;
+
+        pl.hurtCollision(px-w, py-h, w*2, h*2, ev);
+    }
+
+
     // Control, i.e AI
     control(ev, extra) {
 
+        // Update logic
         if (this.inCamera &&
             this.updateAI != null) {
 
             this.updateAI(extra[0], ev);
+            this.hurtPlayer(extra[0], ev);
         }
+
+        // Update timers
+        if (this.hurtTimer > 0)
+            this.hurtTimer -= ev.step;
     }
+
+
+    // Die
+    die(ev) {
+
+        const DEATH_SPEED = 5;
+
+        this.spr.animate(0, 0, 4, DEATH_SPEED, ev.step);
+        if (this.spr.frame == 4)
+            this.exist = false;
+    }
+
 
 
     // Check if in camera
@@ -79,6 +112,54 @@ export class Enemy extends GameObject {
     }
 
 
+    // Bullet collision
+    bulletCollision(b, ev) {
+
+        const HURT_TIME = 30;
+        const KNOCKBACK_SPEED = 0.75;
+
+        if (!b.exist || b.dying || 
+            !this.exist || this.dying)
+            return;
+
+        let px = this.pos.x;
+        let py = this.pos.y;
+        let pw = this.w/2;
+        let ph = this.h/2;
+
+        let bx = b.pos.x;
+        let by = b.pos.y;
+        let bw = b.w/2;
+        let bh = b.h/2;
+
+        let col = 
+            px+pw >= bx-bw &&
+            px-pw <= bx+bw &&
+            py+ph >= by-bh &&
+            py-ph <= by+bh;
+
+        let angle;
+        let knockback = KNOCKBACK_SPEED * b.power;
+        if (col) {
+
+            b.kill(ev);
+
+            this.hurtTimer = HURT_TIME;
+            if ( (this.health -= b.power) <= 0) {
+
+                this.dying = true;
+                this.spr.setFrame(0, 0);
+            }
+            else {
+
+                angle = Math.atan2(py-by, px-bx);
+                this.speed.x = Math.cos(angle) * knockback;
+                this.speed.y = Math.sin(angle) * knockback;
+            }
+        }
+    }
+
+
     // Draw to the translated position
     drawTranslated(c, tx, ty) {
 
@@ -93,10 +174,44 @@ export class Enemy extends GameObject {
     }
 
 
+    // Enemy-to-enemy collision
+    enemyToEnemyCollision(e) {
+
+        if (!this.exist || this.dying ||
+            !e.exist || e.dying) return;
+
+        let r1 = Math.hypot(this.w/2, this.h/2);
+        let r2 = Math.hypot(e.w/2, e.h/2);
+
+        let dist = Math.hypot(this.pos.x-e.pos.x, 
+            this.pos.y-e.pos.y);
+
+        let angle;
+        let r;
+        if (dist < r1 + r2) {
+
+            r = r1 + r2 - dist;
+            angle = Math.atan2(this.pos.y-e.pos.y, 
+                this.pos.x-e.pos.x);
+
+            this.pos.x += Math.cos(angle) * r/2;
+            this.pos.y += Math.sin(angle) * r/2;
+
+            e.pos.x -= Math.cos(angle) * r/2;
+            e.pos.y -= Math.sin(angle) * r/2;
+        }
+    }
+
+
     // Draw
     draw(c, stage, cam) {
 
         if (!this.exist) return;
+
+        // If hurt, skip some frames
+        if (this.hurtTimer > 0 && 
+            Math.floor(this.hurtTimer/4) % 2 == 0)
+            return;
 
         if (cam.moving) {
 

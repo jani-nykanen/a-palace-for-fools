@@ -43,6 +43,24 @@ export class ObjectManager {
             e.isInCamera(cam);
             e.update(ev, [this.player]);
             stage.getCollisions(e, ev);
+
+            // Bullet collision
+            if (e.exist) {
+
+                for (let b of this.bgen.bullets) {
+
+                    e.bulletCollision(b, ev);
+                }
+
+                // Enemy-to-enemy collision
+                for (let e2 of this.enemies) {
+
+                    if (e2 == e) continue;
+
+                    e.enemyToEnemyCollision(e2);
+                }
+            }
+            
         }
 
         // Update player

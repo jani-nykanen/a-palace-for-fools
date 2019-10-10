@@ -25,6 +25,7 @@ export class Bullet extends GameObject {
         this.dieOnCollision = true;
 
         this.id = 0;
+        this.power = 1;
     }
 
 
@@ -72,6 +73,7 @@ export class Bullet extends GameObject {
     spawn(x, y, sx, sy, id) {
 
         const HEIGHT = [1, 8];
+        const POWER = [1, 2];
 
         this.pos.x = x;
         this.pos.y = y;
@@ -82,6 +84,7 @@ export class Bullet extends GameObject {
         this.target = this.speed.clone();
 
         this.id = id;
+        this.power = POWER[this.id];
         this.h = HEIGHT[this.id];
 
         this.exist = true;
