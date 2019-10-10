@@ -187,7 +187,7 @@ export class Player extends GameObject {
             p -= 24;
         }
 
-        let b = bgen.createBullet(
+        let b = bgen.createElement(
             p, this.pos.y, 
             BULLET_SPEED*this.shootDir, 0,
             id);

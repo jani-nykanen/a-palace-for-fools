@@ -1,5 +1,7 @@
 import { Player } from "./player.js";
-import { BulletGen } from "./bulletgen.js";
+import { Gem } from "./gem.js";
+import { Generator } from "./generator.js";
+import { Bullet } from "./bullet.js";
 
 //
 // Object manager. Handles the game objects,
@@ -14,9 +16,13 @@ export class ObjectManager {
 
     constructor() {
 
+        const GEM_COUNT = 8;
+        const BULLET_COUNT = 16;
+
         this.player = new Player(0, 0);
         this.enemies = new Array();
-        this.bgen = new BulletGen(16);
+        this.bgen = new Generator(Bullet.prototype, BULLET_COUNT);
+        this.gemGen = new Generator(Gem.prototype, GEM_COUNT);
     }
 
 
@@ -38,16 +44,17 @@ export class ObjectManager {
     // Update 
     update(stage, cam, ev) {
 
+        // Update enemies
         for (let e of this.enemies) {
 
             e.isInCamera(cam);
-            e.update(ev, [this.player]);
+            e.update(ev, [this.player, this.gemGen]);
             stage.getCollisions(e, ev);
 
             // Bullet collision
             if (e.exist) {
 
-                for (let b of this.bgen.bullets) {
+                for (let b of this.bgen.elements) {
 
                     e.bulletCollision(b, ev);
                 }
@@ -63,13 +70,17 @@ export class ObjectManager {
             
         }
 
+
         // Update player
         this.player.update(ev, [this.bgen]);
         // Get collisions with the stage
         stage.getCollisions(this.player, ev);
 
         // Update bullets
-        this.bgen.updateBullets(stage, cam, ev);
+        this.bgen.updateElements(stage, cam, ev);
+        // Update gems
+        this.gemGen.updateElements(stage, cam, ev);
+        this.gemGen.playerCollision(this.player, ev);
     }
 
 
@@ -84,17 +95,23 @@ export class ObjectManager {
 
         // Draw player
         this.player.draw(c, cam, stage);
+        // Draw gems
+        this.gemGen.drawElements(c);
         // Draw bullets
-        this.bgen.drawBullets(c);
+        this.bgen.drawElements(c);
     }
 
 
     // Update camera movement actions
     updateCamMovement(cam, stage, ev) {
 
+        // Make the player move if the camera
+        // is moving, too
         this.player.updateCamMovement(
             cam, stage, ev);
 
+        // Check if other objects outside
+        // the camera area
         for (let e of this.enemies) {
 
             e.isInCamera(cam);
@@ -114,6 +131,9 @@ export class ObjectManager {
 
         this.player.respawn(cam);
         this.enemies = new Array();
+
+        this.bgen.reset();
+        this.gemGen.reset();
     }
 
 

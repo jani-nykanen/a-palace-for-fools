@@ -11,9 +11,9 @@ import { Sprite } from "./engine/sprite.js";
 export class Bullet extends GameObject {
 
     
-    constructor(x, y) {
+    constructor() {
 
-        super(x, y);
+        super(0, 0);
 
         this.exist = false;
 
@@ -72,7 +72,7 @@ export class Bullet extends GameObject {
     // Spawn
     spawn(x, y, sx, sy, id) {
 
-        const HEIGHT = [1, 8];
+        const HEIGHT = [2, 8];
         const POWER = [1, 2];
 
         this.pos.x = x;

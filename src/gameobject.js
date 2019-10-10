@@ -41,6 +41,9 @@ export class GameObject {
         this.hitbox = new Vector2(this.w, this.h);
 
         this.breakWall = false;
+
+        this.bounce = false;
+        this.bounceFactor = new Vector2(0, 0);
     }
 
 
@@ -70,7 +73,7 @@ export class GameObject {
         if (this.dying) {
 
             if (this.die)
-                this.die(ev);
+                this.die(ev, extra);
             return;
         }
 
@@ -189,7 +192,7 @@ export class GameObject {
             opy+h/2 < y+(OFFSET+this.speed.y)*ev.step) {
 
             this.pos.y = y - h/2;
-            this.speed.y = 0;
+            
             this.canJump = true;
             this.jumpTimer = 0;
 
@@ -198,6 +201,16 @@ export class GameObject {
                 this.pos.y = y;
                 if (this.kill != null)
                     this.kill(ev);
+            }
+
+            // Bounce
+            if (this.bounce) {
+
+                this.speed.y *= -this.bounceFactor.y;
+            }
+            else {
+
+                this.speed.y = 0;
             }
 
             return true;
@@ -269,13 +282,21 @@ export class GameObject {
             opx+w/2 < x+(OFFSET+this.speed.x)*ev.step) {
 
             this.pos.x = x - w/2;
-            this.speed.x = 0;
 
             if (this.dieOnCollision) {
 
                 this.pos.x = x;
                 if (this.kill != null)
                     this.kill(ev);
+            }
+
+            if (this.bounce) {
+
+                this.speed.x *= -this.bounceFactor.x;
+            }
+            else {
+
+                this.speed.x = 0;
             }
 
             return true;
@@ -288,13 +309,21 @@ export class GameObject {
             opx-w/2 > x+(-OFFSET+this.speed.x)*ev.step) {
 
             this.pos.x = x + w/2;
-            this.speed.x = 0;
 
             if (this.dieOnCollision) {
 
                 this.pos.x = x;
                 if (this.kill != null)
                     this.kill(ev);
+            }
+
+            if (this.bounce) {
+
+                this.speed.x *= -this.bounceFactor.x;
+            }
+            else {
+
+                this.speed.x = 0;
             }
 
             return true;

@@ -33,6 +33,10 @@ export class Enemy extends GameObject {
         this.returned = false;
 
         this.flip = Flip.None;
+
+        this.gemCreated = false;
+
+        this.plAngle = 0;
     }
 
 
@@ -66,13 +70,25 @@ export class Enemy extends GameObject {
 
 
     // Die
-    die(ev) {
+    die(ev, extra) {
 
         const DEATH_SPEED = 5;
+        const GEM_SPEED = 1;
 
         this.spr.animate(0, 0, 4, DEATH_SPEED, ev.step);
         if (this.spr.frame == 4)
             this.exist = false;
+
+        let gemGen = extra[1];
+        if (!this.gemCreated) {
+
+            gemGen.createElement(
+                this.pos.x, this.pos.y,
+                Math.cos(this.plAngle) * GEM_SPEED,
+                Math.sin(this.plAngle) * GEM_SPEED);
+
+            this.gemCreated = true;
+        }
     }
 
 
@@ -138,7 +154,6 @@ export class Enemy extends GameObject {
             py+ph >= by-bh &&
             py-ph <= by+bh;
 
-        let angle;
         let knockback = KNOCKBACK_SPEED * b.power;
         if (col) {
 
@@ -152,9 +167,9 @@ export class Enemy extends GameObject {
             }
             else {
 
-                angle = Math.atan2(py-by, px-bx);
-                this.speed.x = Math.cos(angle) * knockback;
-                this.speed.y = Math.sin(angle) * knockback;
+                this.plAngle = Math.atan2(py-by, px-bx);
+                this.speed.x = Math.cos(this.plAngle) * knockback;
+                this.speed.y = Math.sin(this.plAngle) * knockback;
             }
         }
     }
