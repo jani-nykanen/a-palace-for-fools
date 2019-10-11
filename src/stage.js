@@ -43,9 +43,9 @@ export class Stage {
 
 
     // Spawn dust
-    spawnDust(x, y) {
+    spawnDust(x, y, id) {
 
-        const DUST_SPEED = 5;
+        const DUST_SPEED = 4;
 
         let dust = null;
         for (let d of this.dust) {
@@ -58,14 +58,14 @@ export class Stage {
         }
         if (dust == null) return;
 
-        dust.spawn(x*16 + 8, y*16 + 8, DUST_SPEED, 1);
+        dust.spawn(x*16 + 8, y*16 + 8, DUST_SPEED, 1+id);
     }
 
 
     // Is the tile solid
     isSolid(x, y, loop) {
 
-        const SOLID = [1, 8];
+        const SOLID = [1, 8, 9];
 
         let t = this.map.getTile(0, x, y, loop);
 
@@ -265,7 +265,7 @@ export class Stage {
 
 
     // Draw breaking wall
-    drawBreakingWall(c, x, y) {
+    drawBreakingWall(c, x, y, id) {
 
         let ts = c.bitmaps.tileset;
 
@@ -289,7 +289,9 @@ export class Stage {
             sx = 0;
         }
 
-        c.drawBitmapRegion(ts, sx, 16, 16, 16,
+        c.drawBitmapRegion(ts, 
+            sx + id*64, 16, 
+            16, 16,
             x*16, y*16);
     }
 
@@ -334,8 +336,9 @@ export class Stage {
 
                 // Breaking tile
                 case 8:
+                case 9:
                     
-                    this.drawBreakingWall(c, x, y);
+                    this.drawBreakingWall(c, x, y, t-8);
                     break;
 
                 default:
@@ -397,10 +400,14 @@ export class Stage {
         }
 
         // Break the wall
-        if (o.breakWall && breakable && w) {
+        if (breakable && o.breakWall > 0 &&
+            o.breakWall <= breakable && w) {
 
             this.map.setTile(0, x, y, 0);
-            this.spawnDust(x, y);
+            this.spawnDust(x, y, breakable-1);
+
+            ev.audio.playSample(ev.audio.sounds.breakWall, 0.40);
+
             return;
         }
 
@@ -504,8 +511,11 @@ export class Stage {
                 // Wall
                 case 1:
                 case 8:
+                case 9:
 
-                    this.getWallCollision(o, x, y, t == 8, ev);
+                    this.getWallCollision(o, x, y, 
+                        (t == 8 || t == 9) ? (t-7) : false, 
+                        ev);
                     break; 
 
                 // Ladder

@@ -16,7 +16,7 @@ import { Dust } from "./dust.js";
 const KNOCKBACK_TIME = 30;
 const HURT_TIME = 60;
 const DEATH_TIME = 120;
-const SHOOT_ANIM_TIME = 60;
+const SHOOT_ANIM_TIME = 45;
 
 
 export class Player extends GameObject {
@@ -328,11 +328,6 @@ export class Player extends GameObject {
 
             this.chargeLoadTimer = ev.step;
             ev.audio.playSample(ev.audio.sounds.charge, 0.50);
-        }
-        else if (this.shootAnimTimer < SHOOT_ANIM_TIME/2 &&
-            s != State.Down) {
-
-            this.shootAnimTimer = 0.0;
         }
         if (this.chargeLoadTimer > 0) {
 

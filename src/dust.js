@@ -17,7 +17,7 @@ export class Dust {
 
         this.pos = new Vector2();
         this.exist = false;
-        this.spr = new Sprite(16, 16);
+        this.spr = new Sprite(32, 32);
         this.speed = 0;
     }
 
@@ -53,8 +53,8 @@ export class Dust {
         if (!this.exist) return;
 
         c.drawSprite(this.spr, c.bitmaps.dust,
-            (this.pos.x-8) | 0,
-            (this.pos.y-8) | 0);
+            (this.pos.x-16) | 0,
+            (this.pos.y-16) | 0);
     }
 
 }

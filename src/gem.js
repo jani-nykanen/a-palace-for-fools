@@ -117,6 +117,8 @@ export class Gem extends GameObject {
         if (col) {
 
             this.exist = false;
+
+            ev.audio.playSample(ev.audio.sounds.gem, 0.80);
         }
     }
 

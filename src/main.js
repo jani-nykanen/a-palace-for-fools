@@ -50,6 +50,8 @@ window.onload = () => {
         {name: "die", src: "assets/audio/die.wav"},
         {name: "charge", src: "assets/audio/charge.wav"},
         {name: "shootBig", src: "assets/audio/shoot_big.wav"},
+        {name: "gem", src: "assets/audio/gem.wav"},
+        {name: "breakWall", src: "assets/audio/break.wav"},
     );
 
     // Configure keys
