@@ -75,6 +75,9 @@ export class Player extends GameObject {
         this.health = this.maxHealth;
 
         this.deathTimer = 0;
+
+        // Amounts of stuff
+        this.gems = 0;
     }
 
 

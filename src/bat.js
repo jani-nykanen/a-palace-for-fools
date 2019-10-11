@@ -30,6 +30,9 @@ export class Bat extends Enemy {
         this.health = this.maxHealth;
 
         this.spr.setFrame(1, 4);
+
+        this.bounce = true;
+        this.bounceFactor = new Vector2(1, 1);
     }
 
 

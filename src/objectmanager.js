@@ -153,5 +153,26 @@ export class ObjectManager {
         // Update camera
         this.player.updateCamera(cam, stage, ev);
     }
+
+
+    // Get gem count
+    getGemCount() {
+
+        return this.player.gems;
+    }
+
+
+    // Get player health
+    getPlayerHealth() {
+
+        return this.player.health;
+    }
+
+
+    // Get player max health
+    getPlayerMaxHealth() {
+
+        return this.player.maxHealth;
+    }
 }
 

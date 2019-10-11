@@ -120,8 +120,10 @@ export class Game {
 
         const HEART_X = -2;
         const HEART_Y = -2;
-
         const LIFE_BAR_X = 12;
+
+        const GEM_OFF = 2;
+        const TEXT_X_OFF = 1;
 
         c.drawBitmapRegion(c.bitmaps.hud,
             0, 0, 16, 16,
@@ -129,16 +131,30 @@ export class Game {
 
         // Draw health
         let sx;
-        for (let i = 0; i < this.objm.player.maxHealth; ++ i) {
+        for (let i = 0; i < this.objm.getPlayerMaxHealth(); ++ i) {
 
             sx = 17;
-            if (this.objm.player.health <= i)
+            if (this.objm.getPlayerHealth() <= i)
                 sx += 8;
 
             c.drawBitmapRegion(c.bitmaps.hud,
                 sx, 0, 6, 16,
                 LIFE_BAR_X + i * 5, HEART_Y);
         }
+
+        // Draw gems
+        let gemStr = String.fromCharCode(2) +
+                     String(this.objm.getGemCount()) ;
+        let len = gemStr.length * (8+TEXT_X_OFF);
+
+        let gemX = c.w - len - 16;
+
+        c.drawText(c.bitmaps.font, gemStr, 
+            c.w-len-GEM_OFF, GEM_OFF, TEXT_X_OFF, 0, false);
+
+        c.drawBitmapRegion(c.bitmaps.hud,
+            0, 16, 16, 16,
+            gemX, -GEM_OFF);
     }
 
 
