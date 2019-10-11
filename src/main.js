@@ -52,6 +52,7 @@ window.onload = () => {
         {name: "shootBig", src: "assets/audio/shoot_big.wav"},
         {name: "gem", src: "assets/audio/gem.wav"},
         {name: "breakWall", src: "assets/audio/break.wav"},
+        {name: "life", src: "assets/audio/life.wav"},
     );
 
     // Configure keys

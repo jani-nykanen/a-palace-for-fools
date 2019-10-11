@@ -28,11 +28,13 @@ export class Gem extends GameObject {
 
         this.bounce = true;
         this.bounceFactor = new Vector2(1, 0.9);
+
+        this.id = 0;
     }
 
 
     // Spawn
-    spawn(x, y, sx, sy) {
+    spawn(x, y, sx, sy, id) {
 
         const GRAVITY = 2.0;
 
@@ -49,6 +51,8 @@ export class Gem extends GameObject {
         this.pos.y = y;
 
         this.oldPos = this.pos.clone();
+
+        this.id = id;
     } 
 
 
@@ -62,14 +66,31 @@ export class Gem extends GameObject {
     // Animate
     animate(ev) {
 
-        if (this.canJump) return;
+        const BASE_SPEED = 8;
+        const WAIT_FRAME = 0;
+        const WAIT_LENGTH = 60;
+        const END = [5, 3];
 
-        let speed = 16-Math.floor(this.speed.x)*8;
+        if (this.canJump && this.id != 1) return;
 
-        if (this.speed.x >= 0)
-            this.spr.animate(0, 0, 5, speed, ev.step);
+        // Determine speed
+        let speed = BASE_SPEED;
+        if (this.id == 0) {
+
+            speed = 2*BASE_SPEED - 
+                Math.floor(this.speed.x)*BASE_SPEED;
+        }
+        else if (this.id == 1 && 
+            this.spr.frame == WAIT_FRAME) {
+
+            speed = WAIT_LENGTH;
+        }
+            
+        if (this.speed.x >= 0 || this.id == 1)
+            this.spr.animate(this.id, 
+                0, END[this.id], speed, ev.step);
         else 
-            this.spr.animate(0, 5, 0, speed, ev.step);
+            this.spr.animate(this.id, 5, 0, speed, ev.step);
     }
 
 
@@ -117,9 +138,23 @@ export class Gem extends GameObject {
         if (col) {
 
             this.exist = false;
-            ++ pl.gems;
 
-            ev.audio.playSample(ev.audio.sounds.gem, 0.60);
+            // Gem
+            if (this.id == 0) {
+
+                ++ pl.gems;
+            }
+            // Health up
+            else if (this.id == 1) {
+
+                pl.health = Math.min(pl.maxHealth, pl.health+1);
+            }
+
+            // Play sound
+            ev.audio.playSample(
+                this.id == 1 ? ev.audio.sounds.life :
+                ev.audio.sounds.gem,
+                 0.60);
         }
     }
 

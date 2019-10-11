@@ -74,18 +74,30 @@ export class Enemy extends GameObject {
 
         const DEATH_SPEED = 5;
         const GEM_SPEED = 1;
+        const H_UP_PROB_BASE = 0.75;
 
         this.spr.animate(0, 0, 4, DEATH_SPEED, ev.step);
         if (this.spr.frame == 4)
             this.exist = false;
 
         let gemGen = extra[1];
+        let pl = extra[0];
+        let healthProb = H_UP_PROB_BASE * (1.0 - pl.health/pl.maxHealth);
+        let id;
         if (!this.gemCreated) {
+
+            id = 0;
+            if (pl.health < pl.maxHealth && 
+                Math.random() < healthProb) {
+
+                id = 1;
+            }
 
             gemGen.createElement(
                 this.pos.x, this.pos.y,
                 Math.cos(this.plAngle) * GEM_SPEED,
-                Math.sin(this.plAngle) * GEM_SPEED);
+                Math.sin(this.plAngle) * GEM_SPEED,
+                id);
 
             this.gemCreated = true;
         }
