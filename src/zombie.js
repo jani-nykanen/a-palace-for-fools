@@ -21,7 +21,7 @@ export class Zombie extends Enemy {
 
         this.hitArea = new Vector2(4, 4);
 
-        this.acc.x = 0.025;
+        this.acc.x = 0.05;
         this.acc.y = 0.1;
 
         this.maxHealth = 2;
@@ -31,7 +31,7 @@ export class Zombie extends Enemy {
 
         this.dir = ((x/16)|0) % 2 == 0 ? -1 : 1;
 
-        this.center.y = -1;
+        this.center.y = 0;
         this.pos.y += (16 - this.h) + this.center.y;
         this.startPoint.y = this.pos.y;
         this.canJump = true;
