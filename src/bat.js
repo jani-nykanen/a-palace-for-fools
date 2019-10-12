@@ -20,8 +20,8 @@ export class Bat extends Enemy {
 
         this.hitArea = new Vector2(4, 4);
 
-        this.acc.x = 0.01;
-        this.acc.y = 0.01;
+        this.acc.x = 0.015;
+        this.acc.y = 0.015;
 
         this.active = false;
         this.falling = false;

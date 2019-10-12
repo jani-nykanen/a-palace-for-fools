@@ -1,9 +1,9 @@
 import { Tilemap } from "./engine/tilemap.js";
-import { negMod } from "./engine/util.js";
 import { Sprite } from "./engine/sprite.js";
 import { Dust } from "./dust.js";
 import { Bat } from "./bat.js";
 import { Beetle } from "./beetle.js";
+import { Zombie } from "./zombie.js";
 
 //
 // Handles the game stage rendering
@@ -585,7 +585,11 @@ export class Stage {
                     objm.addEnemy(Beetle.prototype, dx, dy);
                     break;
                     
-                    
+                // Zombie
+                case 4:
+
+                    objm.addEnemy(Zombie.prototype, dx, dy);
+                    break;    
 
                 default:
                     break; 

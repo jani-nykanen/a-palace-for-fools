@@ -117,7 +117,7 @@ export class Gem extends GameObject {
     // Player collision
     playerCollision(pl, ev) {
 
-        if (!this.exist) return;
+        if (!this.exist || pl.dying) return;
 
         let px = this.pos.x;
         let py = this.pos.y;

@@ -145,7 +145,7 @@ export class Enemy extends GameObject {
     bulletCollision(b, ev) {
 
         const HURT_TIME = 30;
-        const KNOCKBACK_SPEED = 0.75;
+        const KNOCKBACK_SPEED = 1.0;
 
         if (!b.exist || b.dying || 
             !this.exist || this.dying)
