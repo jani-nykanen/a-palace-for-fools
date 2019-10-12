@@ -44,6 +44,8 @@ export class GameObject {
 
         this.bounce = false;
         this.bounceFactor = new Vector2(0, 0);
+
+        this.dir = 0;
     }
 
 
@@ -293,6 +295,7 @@ export class GameObject {
             if (this.bounce) {
 
                 this.speed.x *= -this.bounceFactor.x;
+                this.dir = -1;
             }
             else {
 
@@ -317,9 +320,11 @@ export class GameObject {
                     this.kill(ev);
             }
 
+            // Bounce
             if (this.bounce) {
 
                 this.speed.x *= -this.bounceFactor.x;
+                this.dir = 1;
             }
             else {
 

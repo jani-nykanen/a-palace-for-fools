@@ -24,6 +24,7 @@ export class Camera {
         this.moving = false;
         this.moveTimer = 0;
         this.moveSpeed = 0;
+        this.stopped = false;
 
         this.top = new Vector2(x*w, y*h);
 
@@ -90,6 +91,7 @@ export class Camera {
     // Update camera
     update(ev) {
 
+        this.stopped = false;
         
         // Update move timer
         if (this.moving) {
@@ -100,6 +102,8 @@ export class Camera {
                 this.moving = false;
 
                 this.pos = this.target.clone();
+
+                this.stopped = true;
             }
         }
 

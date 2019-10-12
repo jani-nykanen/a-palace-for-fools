@@ -3,6 +3,7 @@ import { negMod } from "./engine/util.js";
 import { Sprite } from "./engine/sprite.js";
 import { Dust } from "./dust.js";
 import { Bat } from "./bat.js";
+import { Beetle } from "./beetle.js";
 
 //
 // Handles the game stage rendering
@@ -552,13 +553,17 @@ export class Stage {
     parseObjects(objm) {
 
         let t;
+        let dx, dy;
         for (let y = 0; y < this.h; ++ y) {
 
             for (let x = 0; x < this.w; ++ x) {
 
                 t = this.map.getTile(1, x, y);
                 t -= 16;
+                
                 if (t <= 0) continue; 
+                dx = x*16 + 8;
+                dy = y*16 + 8;
 
                 switch(t) {
 
@@ -571,10 +576,16 @@ export class Stage {
                 // Bat
                 case 2:
 
-                    objm.addEnemy(
-                        new Bat(x*16 + 8, y*16 + 8)
-                    );
+                    objm.addEnemy(Bat.prototype, dx, dy);
                     break;
+
+                // Beetle
+                case 3:
+
+                    objm.addEnemy(Beetle.prototype, dx, dy);
+                    break;
+                    
+                    
 
                 default:
                     break; 

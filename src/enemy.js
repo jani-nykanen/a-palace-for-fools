@@ -19,6 +19,7 @@ export class Enemy extends GameObject {
 
         this.startPoint = this.pos.clone();
         this.hitArea = new Vector2();
+        this.center = new Vector2();
         
         this.spr = new Sprite(16, 16);
         this.spr.setFrame(id+1, 0);
@@ -123,7 +124,7 @@ export class Enemy extends GameObject {
         // if camera is not moving, so maybe some 
         // trigger for this?
         if (!this.returned &&
-            !this.inCamera && !cam.moving) {
+            !this.inCamera && cam.stopped) {
 
             this.pos = this.startPoint.clone();
             this.speed = new Vector2();
@@ -193,8 +194,8 @@ export class Enemy extends GameObject {
         c.move(tx, ty);
 
         c.drawSprite(this.spr, c.bitmaps.enemy,
-            (this.pos.x-8) | 0,
-            (this.pos.y-8) | 0,
+            (this.pos.x-8 + this.center.x) | 0,
+            (this.pos.y-8 + this.center.y) | 0,
             this.flip);
 
         c.move(-tx, -ty);

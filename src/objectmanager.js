@@ -35,9 +35,9 @@ export class ObjectManager {
 
 
     // Add an enemy
-    addEnemy(enemy) {
+    addEnemy(type, x, y) {
 
-        this.enemies.push(enemy);
+        this.enemies.push(new type.constructor(x, y));
     }
 
 
