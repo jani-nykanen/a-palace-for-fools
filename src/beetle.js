@@ -36,13 +36,13 @@ export class Beetle extends Enemy {
         this.center.y = -1;
         this.pos.y += (16 - this.h) + this.center.y;
         this.startPoint.y = this.pos.y;
-        this.canJump = true;
 
         this.bounce = true;
         this.bounceFactor.x = 1;
         this.bounceFactor.y = 0;
 
         this.oldCanJump = true;
+        this.canJump = true;
     }
 
 
@@ -68,8 +68,6 @@ export class Beetle extends Enemy {
             this.speed.x = 0.0;
         }
         this.target.y = GRAVITY;
-
-        this.oldCanJump = this.canJump;
     }
 
 

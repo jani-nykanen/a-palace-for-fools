@@ -35,10 +35,6 @@ export class Zombie extends Enemy {
         this.pos.y += (16 - this.h) + this.center.y;
         this.startPoint.y = this.pos.y;
         this.canJump = true;
-
-        this.bounce = true;
-        this.bounceFactor.x = 1;
-        this.bounceFactor.y = 0;
     }
 
 
@@ -54,11 +50,21 @@ export class Zombie extends Enemy {
 
         const SPEED = 0.5;
         const GRAVITY = 2.0;
+        const JUMP_HEIGHT = -2.0;
 
-        this.dir = pl.pos.x < this.pos.x ? -1 : 1;
+        if (this.canJump || this.oldCanJump) {
+
+            this.dir = pl.pos.x < this.pos.x ? -1 : 1;
+        }
 
         this.target.x = this.dir * SPEED;
         this.target.y = GRAVITY;
+
+        if (this.oldCanJump && !this.canJump) {
+
+            this.speed.y = JUMP_HEIGHT;
+            this.speed.x = this.target.x;
+        }
     }
 
 
@@ -68,6 +74,17 @@ export class Zombie extends Enemy {
         const ANIM_SPEED = 8;
 
         this.flip = this.dir == 1 ? Flip.Horizontal : Flip.None;
-        this.spr.animate(3, 0, 3, ANIM_SPEED, ev.step);
+
+        if (this.canJump) {
+
+            this.spr.animate(3, 0, 3, ANIM_SPEED, ev.step);
+        }
+        else {
+
+            this.spr.setFrame(
+                3,
+                this.speed.y < 0 ? 4 : 5
+            );
+        }
     }
 }

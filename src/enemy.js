@@ -38,6 +38,9 @@ export class Enemy extends GameObject {
         this.gemCreated = false;
 
         this.plAngle = 0;
+
+        this.oldCanJump = false;
+        this.canJump = false;
     }
 
 
@@ -67,6 +70,8 @@ export class Enemy extends GameObject {
         // Update timers
         if (this.hurtTimer > 0)
             this.hurtTimer -= ev.step;
+
+        this.oldCanJump = this.canJump;
     }
 
 
