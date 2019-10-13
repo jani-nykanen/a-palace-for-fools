@@ -4,6 +4,7 @@ import { Dust } from "./dust.js";
 import { Bat } from "./bat.js";
 import { Beetle } from "./beetle.js";
 import { Zombie } from "./zombie.js";
+import { Bee } from "./bee.js";
 
 //
 // Handles the game stage rendering
@@ -447,8 +448,7 @@ export class Stage {
         let s = this.map.getTile(0, x, y-1);
         if (s != 2 && s != 1) {
 
-        
-            if (!o.climbing)
+            if (!o.climbing && !o.ignoreLadder)
                 o.horizontalCollision(x*16, y*16, 16, 1, ev);  
 
             o.ladderCollision(x*16, (y-1)*16+TOP_OFF, 16, 16-TOP_OFF);
@@ -590,6 +590,12 @@ export class Stage {
 
                     objm.addEnemy(Zombie.prototype, dx, dy);
                     break;    
+
+                // Bee
+                case 5:
+
+                    objm.addEnemy(Bee.prototype, dx, dy);
+                    break;
 
                 default:
                     break; 

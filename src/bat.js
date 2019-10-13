@@ -2,7 +2,8 @@ import { Enemy } from "./enemy.js";
 import { Vector2 } from "./engine/vector.js";
 
 //
-// Bat enemy
+// Bat. Flies towards the player,
+// but sleeps at first.
 //
 // (c) 2019 Jani Nykänen
 //
@@ -33,6 +34,8 @@ export class Bat extends Enemy {
 
         this.bounce = true;
         this.bounceFactor = new Vector2(1, 1);
+
+        this.ignoreLadder = true;
     }
 
 
