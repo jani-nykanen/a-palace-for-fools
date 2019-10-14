@@ -55,9 +55,7 @@ export class Enemy extends GameObject {
         let w = this.hitArea.x/2;
         let h = this.hitArea.y/2;
 
-        let angle;
-        let kb;
-
+        let angle, kb;
         if (pl.hurtCollision(px-w, py-h, w*2, h*2, ev)) {
 
             // Compute knockback
@@ -66,10 +64,8 @@ export class Enemy extends GameObject {
 
             kb = KNOCKBACK_BASE * Math.sqrt(Math.min(this.acc.x, this.acc.y) / KNOCKBACK_COMPARE);
 
-            this.speed.x = Math.cos(angle) * 
-                (kb );
-            this.speed.y = Math.sin(angle) * 
-                (kb );
+            this.speed.x = Math.cos(angle) * kb;
+            this.speed.y = Math.sin(angle) * kb;
         }
     }
 
