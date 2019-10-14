@@ -14,7 +14,7 @@ import { Bullet } from "./bullet.js";
 export class ObjectManager {
 
 
-    constructor(stage) {
+    constructor() {
 
         const GEM_COUNT = 8;
         const BULLET_COUNT = 16;
@@ -112,10 +112,13 @@ export class ObjectManager {
     // Update camera movement actions
     updateCamMovement(cam, stage, ev) {
 
-        // Make the player move if the camera
-        // is moving, too
-        this.player.updateCamMovement(
-            cam, stage, ev);
+        if (stage != null) {
+            
+            // Make the player move if the camera
+            // is moving, too
+            this.player.updateCamMovement(
+                cam, stage, ev);
+        }
 
         // Check if other objects outside
         // the camera area
@@ -141,6 +144,11 @@ export class ObjectManager {
 
         this.bgen.reset();
         this.gemGen.reset();
+
+        for (let e of this.enemies) {
+
+            e.isInCamera(cam);
+        }
     }
 
 

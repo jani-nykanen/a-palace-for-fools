@@ -23,13 +23,13 @@ export class Beetle extends Enemy {
 
         this.hitArea = new Vector2(4, 4);
 
-        this.acc.x = 0.1;
-        this.acc.y = 0.1;
+        this.acc.x = 0.05;
+        this.acc.y = 0.05;
 
         this.maxHealth = 3;
         this.health = this.maxHealth;
 
-        this.spr.setFrame(2, 4);
+        this.spr.setFrame(2, 0);
 
         this.dir = ((x/16)|0) % 2 == 0 ? -1 : 1;
 

@@ -148,7 +148,7 @@ export class GameObject {
         if (!this.hurt || 
             this.hurtTimer > 0 ||
             !this.exist || 
-            this.dying) return;
+            this.dying) return false;
 
         let px = this.pos.x;
         let py = this.pos.y;
@@ -164,7 +164,10 @@ export class GameObject {
             py-ph/2 < y+h) {
 
             this.hurt(x+w/2, y+h/2, ev);
+            return true;
         }
+
+        return false;
     }
 
 

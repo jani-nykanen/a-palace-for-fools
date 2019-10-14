@@ -22,7 +22,7 @@ export class Bee extends Enemy {
         this.w = 12;
         this.h = 12;
 
-        this.hitArea = new Vector2(4, 4);
+        this.hitArea = new Vector2(8, 8);
 
         this.acc.x = 0.010;
         this.acc.y = 0.010;

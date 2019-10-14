@@ -47,12 +47,30 @@ export class Enemy extends GameObject {
     // Hurt player
     hurtPlayer(pl, ev) {
 
+        const KNOCKBACK_COMPARE = 0.01;
+        const KNOCKBACK_BASE = 0.5;
+
         let px = this.pos.x;
         let py = this.pos.y;
         let w = this.hitArea.x/2;
         let h = this.hitArea.y/2;
 
-        pl.hurtCollision(px-w, py-h, w*2, h*2, ev);
+        let angle;
+        let kb;
+
+        if (pl.hurtCollision(px-w, py-h, w*2, h*2, ev)) {
+
+            // Compute knockback
+            angle = Math.atan2(this.pos.y-pl.pos.y, 
+                               this.pos.x-pl.pos.x);
+
+            kb = KNOCKBACK_BASE * Math.sqrt(Math.min(this.acc.x, this.acc.y) / KNOCKBACK_COMPARE);
+
+            this.speed.x = Math.cos(angle) * 
+                (kb );
+            this.speed.y = Math.sin(angle) * 
+                (kb );
+        }
     }
 
 

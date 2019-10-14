@@ -27,7 +27,7 @@ export class Zombie extends Enemy {
         this.maxHealth = 2;
         this.health = this.maxHealth;
 
-        this.spr.setFrame(2, 4);
+        this.spr.setFrame(3, 0);
 
         this.dir = ((x/16)|0) % 2 == 0 ? -1 : 1;
 
@@ -51,6 +51,7 @@ export class Zombie extends Enemy {
         const SPEED = 0.5;
         const GRAVITY = 2.0;
         const JUMP_HEIGHT = -2.0;
+        const DIF = 12;
 
         if (this.canJump || this.oldCanJump) {
 
@@ -60,10 +61,10 @@ export class Zombie extends Enemy {
         this.target.x = this.dir * SPEED;
         this.target.y = GRAVITY;
 
-        if (this.oldCanJump && !this.canJump) {
+        if (this.oldCanJump && !this.canJump &&
+            pl.pos.y <= this.pos.y-DIF) {
 
-            this.speed.y = JUMP_HEIGHT;
-            this.speed.x = this.target.x;
+            this.speed.y += JUMP_HEIGHT;
         }
     }
 

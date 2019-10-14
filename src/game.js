@@ -29,6 +29,8 @@ export class Game {
         this.stage = new Stage(ev.documents.sewers);
         this.stage.setGemCallback(this.objm.getGemGenerator());
         this.stage.parseObjects(this.objm);
+
+        this.objm.updateCamMovement(this.cam, null, ev);
     }
 
 
