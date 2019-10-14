@@ -14,7 +14,7 @@ import { Bullet } from "./bullet.js";
 export class ObjectManager {
 
 
-    constructor() {
+    constructor(stage) {
 
         const GEM_COUNT = 8;
         const BULLET_COUNT = 16;
@@ -23,6 +23,13 @@ export class ObjectManager {
         this.enemies = new Array();
         this.bgen = new Generator(Bullet.prototype, BULLET_COUNT);
         this.gemGen = new Generator(Gem.prototype, GEM_COUNT);
+    }
+
+
+    // Get gem generator
+    getGemGenerator() {
+
+        return this.gemGen;
     }
 
 

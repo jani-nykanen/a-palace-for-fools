@@ -43,6 +43,8 @@ export class Player extends GameObject {
         this.rocketTimer = 0.0;
         this.rocketActive = false;
 
+        this.oldTouchWater = false;
+
         this.w = 8;
         this.h = 12;
 
@@ -109,6 +111,7 @@ export class Player extends GameObject {
         this.slideTimer = 0;
         this.deathTimer = 0;
         this.chargeLoadTimer = 0.0;
+        this.oldTouchWater = false;
 
         // Set camera
         cam.forceMoveTo(
@@ -299,6 +302,7 @@ export class Player extends GameObject {
         const WATER_GRAVITY = 0.5;
         const H_SPEED = 1.0;
         const JUMP_TIME = 15;
+        const WATER_JUMP_TIME = 5;
         const SLIDE_TIME = 36;
         const SWIM_SPEED_UP = -1.5;
         const ROCKET_TIME = 45;
@@ -397,14 +401,19 @@ export class Player extends GameObject {
 
         // Check jump button
         s = ev.input.action.fire1.state;
-        if ( (s == State.Down || s == State.Pressed) && this.touchWater) {
+        if ( (s == State.Down || s == State.Pressed) 
+            && (this.oldTouchWater || this.touchWater)) {
 
             if (s == State.Pressed) {
 
                 ev.audio.playSample(ev.audio.sounds.jump, 0.50);
             }
 
-            this.target.y = SWIM_SPEED_UP;
+            if (this.touchWater)
+                this.target.y = SWIM_SPEED_UP;
+            
+            else
+                this.jumpTimer = WATER_JUMP_TIME;
         }
         else if (!this.touchWater) {
 
@@ -495,7 +504,8 @@ export class Player extends GameObject {
             this.target.x = H_SPEED;
             this.slideDir = 1;
         }
-        
+
+        this.oldTouchWater = this.touchWater;
     }
 
 

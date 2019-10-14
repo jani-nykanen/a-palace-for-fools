@@ -34,6 +34,31 @@ export class Stage {
 
             this.dust[i] = new Dust();
         }
+
+        this.gemCB = null;
+    }
+
+
+    // Set gem callback
+    setGemCallback(gemGen) {
+
+        this.gemCB = (o, x, y) => {
+
+            const GEM_SPEED_X = 0.5;
+            const GEM_SPEED_Y = 0;
+            const GEM_PROB = 0.5;
+
+            if (Math.random() > GEM_PROB) return;
+
+            let dir = o.pos.x < x ? 1 : -1;
+            
+            gemGen.createElement(
+                x, y,
+                dir * GEM_SPEED_X,
+                -GEM_SPEED_Y,
+                0);
+
+        }
     }
 
 
@@ -409,6 +434,12 @@ export class Stage {
             this.spawnDust(x, y, breakable-1);
 
             ev.audio.playSample(ev.audio.sounds.breakWall, 0.40);
+
+            // Spawn gem
+            if (this.gemCB != null) {
+
+                this.gemCB(o, x*16 + 8, y*16 + 8);
+            }
 
             return;
         }

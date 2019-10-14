@@ -26,9 +26,8 @@ export class Game {
     // (or the things that need assets, really)
     init(ev) {
 
-        this.stage = new Stage(ev.documents.sewers, 
-            this.objm);
-
+        this.stage = new Stage(ev.documents.sewers);
+        this.stage.setGemCallback(this.objm.getGemGenerator());
         this.stage.parseObjects(this.objm);
     }
 
