@@ -51,14 +51,19 @@ export class ObjectManager {
     // Update 
     update(stage, cam, ev) {
 
+        // Check enemy-to-enemy collision
+        // before other updates
+        for (let e of this.enemies) {
+
+        }
+
         // Update enemies
         for (let e of this.enemies) {
 
             e.isInCamera(cam);
             e.update(ev, [this.player, this.gemGen]);
-            stage.getCollisions(e, ev);
 
-            // Bullet collision
+            // Collisions
             if (e.exist) {
 
                 for (let b of this.bgen.elements) {
@@ -74,6 +79,7 @@ export class ObjectManager {
                     e.enemyToEnemyCollision(e2);
                 }
             }
+            stage.getCollisions(e, ev);
             
         }
 

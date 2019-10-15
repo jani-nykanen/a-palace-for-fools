@@ -62,7 +62,9 @@ export class Enemy extends GameObject {
             angle = Math.atan2(this.pos.y-pl.pos.y, 
                                this.pos.x-pl.pos.x);
 
-            kb = KNOCKBACK_BASE * Math.sqrt(Math.min(this.acc.x, this.acc.y) / KNOCKBACK_COMPARE);
+            kb = KNOCKBACK_BASE * 
+                Math.sqrt(Math.min(this.acc.x, this.acc.y) / 
+                KNOCKBACK_COMPARE);
 
             this.speed.x = Math.cos(angle) * kb;
             this.speed.y = Math.sin(angle) * kb;
@@ -133,15 +135,17 @@ export class Enemy extends GameObject {
         let w = this.spr.w/2;
         let h = this.spr.h/2;
 
+        let wasInCamera = this.inCamera;
+
         this.inCamera =
             px+w >= cam.top.x &&
             px-w <= cam.top.x + cam.w &&
             py+h >= cam.top.y &&
             py-h <= cam.top.y + cam.h;
 
-        // This happens every frame for every enemy
-        // if camera is not moving, so maybe some 
-        // trigger for this?
+        // Return to the original position,
+        // if outside the camera and the camera
+        // has stopped moving
         if (!this.returned &&
             !this.inCamera && cam.stopped) {
 
@@ -157,6 +161,14 @@ export class Enemy extends GameObject {
 
         if (this.inCamera)
             this.returned = false;
+
+        // This prevent some nasty bugs where
+        // enemies suddenly reappear
+        else if (wasInCamera &&
+            !cam.moving && !cam.stopped) {
+
+            this.exist = false;
+        }
     }
 
 
