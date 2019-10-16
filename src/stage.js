@@ -219,17 +219,18 @@ export class Stage {
         let ts = c.bitmaps.tileset;
 
         let up = this.map.getTile(0, x, y - 1);
-        if (up != 2 && up != 1) {
+        let drawUp = up != 2 && up != 1;
+        if (drawUp) {
 
             // Draw ladder top
             c.drawBitmapRegion(ts, 
-                96, 0, 16, 16,
+                112, 0, 16, 16,
                 x*16, (y-1)*16);  
         }
 
         // Draw ladder base
         c.drawBitmapRegion(ts, 
-            80, 0, 16, 16,
+            drawUp ? 96 : 80, 0, 16, 16,
             x*16, y*16);  
     }
 
@@ -260,7 +261,7 @@ export class Stage {
         for (let i = 0; i < 2; ++ i) {
 
             c.drawBitmapRegion(ts, 
-                112 + t*16 + dx * jump, 
+                128 + t*16 + dx * jump, 
                 dy * jump, 
                 8 + DIR_Y[t]*8, 
                 8 + DIR_X[t]*8,
@@ -285,7 +286,7 @@ export class Stage {
         }
         else {
 
-            c.drawBitmapRegion(ts, 14*16, 0, 16, 16,
+            c.drawBitmapRegion(ts, 15*16, 0, 16, 16,
                 x*16, y*16);
         }
     }
@@ -379,7 +380,7 @@ export class Stage {
     // Update stage
     update(ev) {
 
-        this.waterSurface.animate(0, 11, 13, 12, ev.step);
+        this.waterSurface.animate(0, 12, 14, 12, ev.step);
 
         // Update dust
         for (let d of this.dust) {
