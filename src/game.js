@@ -19,6 +19,8 @@ export class Game {
         this.objm = new ObjectManager();
 
         this.cloudPos = [0, 0, 0];
+        this.snowTimer = [0.0, 0.0];
+        this.snowFloat = [0.0, 0.0];
 
         this.mapID = 0;
     }
@@ -49,12 +51,33 @@ export class Game {
     update(ev) {
 
         const CLOUD_SPEED = [1.5, 1.0, 0.5];
+        const SNOW_MAX = 64;
+        const SNOW_SPEED_BASE = [0.30, 0.40];
+        const SNOW_SPEED_VARY = [0.20, 0.30];
+        const SNOW_FLOAT_SPEED = [0.025, 0.030];
 
         // Update cloud position
         for (let i = 0; i < 3; ++ i) {
 
             this.cloudPos[i] += CLOUD_SPEED[i] * ev.step;
             this.cloudPos[i] %= 160;
+        }
+
+        // Update snow timer & floating
+        let s;
+        if (this.mapID == 1) {
+
+            for (let i = 0; i < 2; ++ i) {
+
+                s = SNOW_SPEED_BASE[i] + 
+                    SNOW_SPEED_VARY[i] * Math.sin(this.snowFloat[i]);
+
+                this.snowTimer[i] += s * ev.step;
+                this.snowTimer[i] %= SNOW_MAX;
+
+                this.snowFloat[i] += SNOW_FLOAT_SPEED[i] * ev.step;
+                this.snowFloat[i] %= Math.PI * 2;
+            }
         }
 
         if (ev.tr.active) {
@@ -93,6 +116,35 @@ export class Game {
 
         // Update stage
         this.stage.update(ev);
+    }
+
+
+    // Draw snowing
+    drawSnowing(c) {
+
+        const FLOAT_X = [16, 24];
+
+        let w = (c.w / 64) | 0;
+        let h = (c.h / 64) | 0;
+
+        // Compute floating
+        let p = 0;
+        let fx = 0;
+        for (let i = 0; i < 2; ++ i) {
+
+            fx = Math.sin(this.snowFloat[i]) * FLOAT_X[i];
+            p = this.snowTimer[i];
+
+            for (let x = -1; x < w+1; ++ x) {
+
+                for (let y = -1; y < h+1; ++ y) {
+
+                    c.drawBitmapRegion(c.bitmaps.snow,
+                        0, 64*i, 64, 64,
+                        x*64 -p*i + fx, y*64 + p);
+                }
+            }
+        }
     }
 
 
@@ -210,6 +262,12 @@ export class Game {
 
         // Draw HUD
         this.drawHUD(c);
+
+        // Draw snow
+        if (this.mapID == 1) {
+
+            this.drawSnowing(c);
+        }
     }
 
 }

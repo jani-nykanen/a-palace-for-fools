@@ -21,7 +21,7 @@ export class Stage {
 
         const DUST_COUNT = 4;
 
-        this.maps = [ev.documents.sewers, ev.documents.sewers];
+        this.maps = [ev.documents.present, ev.documents.past];
         this.baseMap = this.maps[id];
         this.map = new Tilemap(this.maps[id]);
         this.w = this.map.w;

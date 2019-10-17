@@ -24,7 +24,7 @@ export class Beetle extends Enemy {
         this.hitArea = new Vector2(4, 4);
 
         this.acc.x = 0.05;
-        this.acc.y = 0.05;
+        this.acc.y = 0.15;
 
         this.maxHealth = 3;
         this.health = this.maxHealth;

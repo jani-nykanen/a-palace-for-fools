@@ -37,9 +37,11 @@ window.onload = () => {
         {name: "enemy",   src: "assets/bitmaps/enemies.png"},
         {name: "gem",   src: "assets/bitmaps/gem.png"},
         {name: "forest",   src: "assets/bitmaps/forest.png"},
+        {name: "snow",   src: "assets/bitmaps/snow.png"},
     );
     c.assets.addDocuments(
-        {name: "sewers", src: "assets/maps/sewers.tmx"},
+        {name: "past", src: "assets/maps/past.tmx"},
+        {name: "present", src: "assets/maps/present.tmx"},
     );
     c.assets.addSounds(
         {name: "gas", src: "assets/audio/gas.wav"},
