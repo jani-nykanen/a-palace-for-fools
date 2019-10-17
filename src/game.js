@@ -19,14 +19,16 @@ export class Game {
         this.objm = new ObjectManager();
 
         this.cloudPos = [0, 0, 0];
+
+        this.mapID = 0;
     }
 
 
     // Initialize the scene
     // (or the things that need assets, really)
-    init(ev) {
+    init(ev, assets) {
 
-        this.stage = new Stage(ev.documents.sewers);
+        this.stage = new Stage(this.mapID, assets, ev);
         this.stage.setGemCallback(this.objm.getGemGenerator());
         this.stage.parseObjects(this.objm);
 
@@ -97,21 +99,48 @@ export class Game {
     // Draw the background
     drawBackground(c) {
 
-        c.drawBitmap(c.bitmaps.background, 0, 0);
+        const CLOUD_POS_Y_A = 64;
+        const CLOUD_OFFSET_A = 16;
+        const CLOUD_POS_Y_B = 16;
+
+        let bmp = 
+            [c.bitmaps.backgroundA, c.bitmaps.backgroundB] [this.mapID];
+
+        let clouds =
+            [c.bitmaps.cloudsA, c.bitmaps.cloudsB] [this.mapID];
+
+        c.drawBitmap(bmp, 0, 0);
 
         // Draw clouds
         let x;
-        for (let i = 2; i >= 0; -- i) {
+        let end = [0, 2] [this.mapID];
+        for (let i = 2; i >= end; -- i) {
 
             x = this.cloudPos[i] | 0;
+            
             for (let j = 0; j < 2; ++ j) {
 
-                c.drawBitmapRegion(c.bitmaps.clouds,  
-                    0, 72*i, 160, 72,
-                    -x + j*160,
-                    64 + 16*(2-i)
-                    );
+                if (this.mapID == 0) {
+                c.drawBitmapRegion(clouds,  
+                        0, 72*i, 160, 72,
+                        -x + j*160,
+                        CLOUD_POS_Y_A + CLOUD_OFFSET_A*(2-i)
+                        );
+                }
+                else {
+                
+                    c.drawBitmapRegion(clouds,  
+                        0, 0, 160, 96,
+                        -x + j*160, CLOUD_POS_Y_B);
+                }
             }
+            
+        }
+        
+        if (this.mapID == 1) {
+
+            c.drawBitmap(c.bitmaps.forest, 0,
+                    144-80);
         }
     }
 

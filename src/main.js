@@ -23,9 +23,12 @@ window.onload = () => {
     // Set assets loading
     c.assets.addBitmaps(
         {name: "font",   src: "assets/bitmaps/font.png"},
-        {name: "tileset",   src: "assets/bitmaps/tileset.png"},
-        {name: "clouds",   src: "assets/bitmaps/clouds.png"},
-        {name: "background",   src: "assets/bitmaps/background.png"},
+        {name: "tilesetA",   src: "assets/bitmaps/tileset.png"},
+        {name: "tilesetB",   src: "assets/bitmaps/tileset_b.png"},
+        {name: "cloudsA",   src: "assets/bitmaps/clouds.png"},
+        {name: "cloudsB",   src: "assets/bitmaps/clouds_b.png"},
+        {name: "backgroundA",   src: "assets/bitmaps/background.png"},
+        {name: "backgroundB",   src: "assets/bitmaps/background_b.png"},
         {name: "figure",   src: "assets/bitmaps/figure.png"},
         {name: "gun",   src: "assets/bitmaps/gun.png"},
         {name: "hud",   src: "assets/bitmaps/hud.png"},
@@ -33,6 +36,7 @@ window.onload = () => {
         {name: "dust",   src: "assets/bitmaps/dust.png"},
         {name: "enemy",   src: "assets/bitmaps/enemies.png"},
         {name: "gem",   src: "assets/bitmaps/gem.png"},
+        {name: "forest",   src: "assets/bitmaps/forest.png"},
     );
     c.assets.addDocuments(
         {name: "sewers", src: "assets/maps/sewers.tmx"},

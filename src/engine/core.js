@@ -125,7 +125,7 @@ export class Core {
                 if (!this.initialized) {
 
                     // Initialize scenes
-                    this.ev.initScenes(this.canvas);
+                    this.ev.initScenes(this.canvas, this.assets);
 
                     this.initialized = true;
                 }

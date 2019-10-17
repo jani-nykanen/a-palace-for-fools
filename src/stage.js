@@ -17,16 +17,23 @@ import { Bee } from "./bee.js";
 export class Stage {
 
 
-    constructor(map) {
+    constructor(id, assets, ev) {
 
         const DUST_COUNT = 4;
 
-        this.baseMap = map;
-        this.map = new Tilemap(map);
+        this.maps = [ev.documents.sewers, ev.documents.sewers];
+        this.baseMap = this.maps[id];
+        this.map = new Tilemap(this.maps[id]);
         this.w = this.map.w;
         this.h = this.map.h;
 
         this.waterSurface = new Sprite(16, 16);
+
+        if (id != null) {
+
+            this.tileset = 
+                [assets.bitmaps.tilesetA, assets.bitmaps.tilesetB] [id];
+        }
 
         // Dust for breaking tiles
         this.dust = new Array(DUST_COUNT);
@@ -103,7 +110,7 @@ export class Stage {
     // Draw a wall tile
     drawWallTile(c, x, y) {
 
-        let ts = c.bitmaps.tileset;
+        let ts = this.tileset;
 
         let tl = this.map.getTile(0, x-1, y-1, true);
         let tr = this.map.getTile(0, x+1, y-1, true);
@@ -216,9 +223,9 @@ export class Stage {
     // Draw ladder
     drawLadder(c, x, y) {
 
-        let ts = c.bitmaps.tileset;
+        let ts = this.tileset;
 
-        let up = this.map.getTile(0, x, y - 1);
+        let up = this.map.getTile(0, x, y - 1, true);
         let drawUp = up != 2 && up != 1;
         if (drawUp) {
 
@@ -238,7 +245,7 @@ export class Stage {
     // Draw spikes
     drawSpikes(c, t, x, y) {
 
-        let ts = c.bitmaps.tileset;
+        let ts = this.tileset;
 
         const DIR_X = [1, 0, 1, 0];
         const DIR_Y = [0, 1, 0, 1];
@@ -277,7 +284,7 @@ export class Stage {
     // Draw water
     drawWater(c, x, y) {
 
-        let ts = c.bitmaps.tileset;
+        let ts = this.tileset;
 
         if (this.map.getTile(0, x, y-1, true) != 7) {
 
@@ -295,7 +302,7 @@ export class Stage {
     // Draw breaking wall
     drawBreakingWall(c, x, y, id) {
 
-        let ts = c.bitmaps.tileset;
+        let ts = this.tileset;
 
         let sx = 0;
 
