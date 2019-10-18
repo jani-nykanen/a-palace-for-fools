@@ -713,6 +713,8 @@ export class Player extends GameObject {
 
         const SPEED_MOD = 1.1;
 
+        if (!cam.moving) return;
+
         let speed = SPEED_MOD * 16.0 * cam.speed;
 
         let dx = cam.target.x - cam.pos.x;

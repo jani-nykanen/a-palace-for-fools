@@ -2,6 +2,7 @@ import { Player } from "./player.js";
 import { Gem } from "./gem.js";
 import { Generator } from "./generator.js";
 import { Bullet } from "./bullet.js";
+import { Portal } from "./portal.js";
 
 //
 // Object manager. Handles the game objects,
@@ -21,6 +22,8 @@ export class ObjectManager {
 
         this.player = new Player(0, 0);
         this.enemies = new Array();
+        this.portals = new Array();
+
         this.bgen = new Generator(Bullet.prototype, BULLET_COUNT);
         this.gemGen = new Generator(Gem.prototype, GEM_COUNT);
     }
@@ -45,6 +48,15 @@ export class ObjectManager {
     addEnemy(type, x, y) {
 
         this.enemies.push(new type.constructor(x, y));
+    }
+
+
+    // Add a portal
+    addPortal(x, y) {
+
+        this.portals.push(
+            new Portal(x*16 + 8, y*16 + 16)
+        );
     }
 
 
@@ -83,7 +95,6 @@ export class ObjectManager {
             
         }
 
-
         // Update player
         this.player.update(ev, [this.bgen]);
         // Get collisions with the stage
@@ -94,11 +105,24 @@ export class ObjectManager {
         // Update gems
         this.gemGen.updateElements(stage, cam, ev);
         this.gemGen.playerCollision(this.player, ev);
+
+        // Update portals
+        for (let p of this.portals) {
+
+            p.isInCamera(cam);
+            p.update(ev);
+        }
     }
 
 
     // Draw
     draw(c, cam, stage) {
+
+        // Draw portals
+        for (let p of this.portals) {
+
+            p.draw(c);
+        }
 
         // Draw enemies
         for (let e of this.enemies) {
@@ -132,6 +156,10 @@ export class ObjectManager {
 
             e.isInCamera(cam);
         }
+        for (let p of this.portals) {
+
+            p.isInCamera(cam);
+        }
     }
 
 
@@ -146,6 +174,8 @@ export class ObjectManager {
     reset(cam) {
 
         this.player.respawn(cam);
+
+        this.portals = new Array();
         this.enemies = new Array();
 
         this.bgen.reset();
@@ -194,6 +224,16 @@ export class ObjectManager {
     getPlayerMaxHealth() {
 
         return this.player.maxHealth;
+    }
+
+
+    // Set initial camera position
+    setInitialCamera(cam) {
+
+        cam.pos.x = (this.player.pos.x / cam.w) | 0;
+        cam.pos.y = (this.player.pos.y / cam.h) | 0;
+
+        cam.update(null);
     }
 }
 

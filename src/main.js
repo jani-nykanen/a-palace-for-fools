@@ -38,6 +38,7 @@ window.onload = () => {
         {name: "gem",   src: "assets/bitmaps/gem.png"},
         {name: "forest",   src: "assets/bitmaps/forest.png"},
         {name: "snow",   src: "assets/bitmaps/snow.png"},
+        {name: "door",   src: "assets/bitmaps/door.png"},
     );
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past.tmx"},
@@ -73,6 +74,8 @@ window.onload = () => {
 
         {name: "start", key: 13},
         {name: "back", key: 27},
+
+        {name: "debug", key: 80},
     )
 
     c.run();

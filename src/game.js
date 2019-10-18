@@ -2,6 +2,7 @@ import { Stage } from "./stage.js";
 import { TransitionMode } from "./engine/transition.js";
 import { Camera } from "./camera.js";
 import { ObjectManager } from "./objectmanager.js";
+import { State } from "./engine/input.js";
 
 //
 // Game scene
@@ -34,16 +35,32 @@ export class Game {
         this.stage.setGemCallback(this.objm.getGemGenerator());
         this.stage.parseObjects(this.objm);
 
+        // Set initial camera position
+        this.objm.setInitialCamera(this.cam);
+
+        // Make sure enemies appear while the transition
+        // effect is still happening
         this.objm.updateCamMovement(this.cam, null, ev);
     }
 
 
     // Reset game
-    reset() {
+    reset(id) {
 
-        this.stage.reset();
+        this.stage.reset(id);
         this.objm.reset(this.cam);
         this.stage.parseObjects(this.objm);
+
+        // Set initial camera position
+        this.objm.setInitialCamera(this.cam);
+    }
+
+
+    // Change time
+    changeTime() {
+
+        this.mapID = this.mapID == 1 ? 0 : 1;
+        this.stage.reset(this.mapID);
     }
 
 
@@ -116,6 +133,11 @@ export class Game {
 
         // Update stage
         this.stage.update(ev);
+
+        if (ev.input.action.debug.state == State.Pressed) {
+
+            this.changeTime();
+        }
     }
 
 

@@ -21,6 +21,8 @@ export class Stage {
 
         const DUST_COUNT = 4;
 
+        this.id = id;
+
         this.maps = [ev.documents.present, ev.documents.past];
         this.baseMap = this.maps[id];
         this.map = new Tilemap(this.maps[id]);
@@ -29,11 +31,9 @@ export class Stage {
 
         this.waterSurface = new Sprite(16, 16);
 
-        if (id != null) {
-
-            this.tileset = 
-                [assets.bitmaps.tilesetA, assets.bitmaps.tilesetB] [id];
-        }
+        this.tilesets = 
+             [assets.bitmaps.tilesetA, assets.bitmaps.tilesetB];
+        this.tileset = this.tilesets[id];
 
         // Dust for breaking tiles
         this.dust = new Array(DUST_COUNT);
@@ -70,7 +70,16 @@ export class Stage {
 
 
     // Reset
-    reset() {
+    reset(id) {
+
+        if (id != null) {
+
+            this.id = id;
+
+            this.tileset = this.tilesets[id];
+            this.baseMap = this.maps[id];
+            this.map = new Tilemap(this.maps[id]);
+        }
 
         this.map = new Tilemap(this.baseMap);
     }
@@ -634,6 +643,12 @@ export class Stage {
                 case 5:
 
                     objm.addEnemy(Bee.prototype, dx, dy);
+                    break;
+
+                // Portal
+                case 17:
+
+                    objm.addPortal(x, y);
                     break;
 
                 default:
