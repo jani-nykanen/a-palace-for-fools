@@ -15,7 +15,7 @@ import { Portal } from "./portal.js";
 export class ObjectManager {
 
 
-    constructor() {
+    constructor(portalCB) {
 
         const GEM_COUNT = 8;
         const BULLET_COUNT = 16;
@@ -24,8 +24,12 @@ export class ObjectManager {
         this.enemies = new Array();
         this.portals = new Array();
 
+        this.playerCreated = false;
+
         this.bgen = new Generator(Bullet.prototype, BULLET_COUNT);
         this.gemGen = new Generator(Gem.prototype, GEM_COUNT);
+
+        this.portalCB = portalCB;
     }
 
 
@@ -39,8 +43,20 @@ export class ObjectManager {
     // Set player position
     setPlayerPosition(x, y) {
 
+        // TODO: This hurts so bad
+        if (this.playerCreated)  {
+
+            this.player.setPortalPose(false);
+            return;
+        }
+
+        this.playerCreated = true;
+
+        // TODO: setPos for player?
         this.player.pos.x = x*16 + 8;
         this.player.pos.y = (y+1)*16 -6;
+
+        this.player.checkpoint = this.player.pos.clone();
     }
 
 
@@ -52,10 +68,10 @@ export class ObjectManager {
 
 
     // Add a portal
-    addPortal(x, y) {
+    addPortal(x, y, id) {
 
         this.portals.push(
-            new Portal(x*16 + 8, y*16 + 16)
+            new Portal(x*16 + 8, y*16 + 16, id, this.portalCB)
         );
     }
 
@@ -111,6 +127,7 @@ export class ObjectManager {
 
             p.isInCamera(cam);
             p.update(ev);
+            p.playerCollision(this.player, ev);
         }
     }
 
@@ -121,7 +138,7 @@ export class ObjectManager {
         // Draw portals
         for (let p of this.portals) {
 
-            p.draw(c);
+            p.draw(c, stage, cam);
         }
 
         // Draw enemies
@@ -158,7 +175,7 @@ export class ObjectManager {
         }
         for (let p of this.portals) {
 
-            p.isInCamera(cam);
+            p.isInCamera(cam, ev, true);
         }
     }
 
@@ -171,9 +188,10 @@ export class ObjectManager {
 
 
     // Reset
-    reset(cam) {
+    reset(cam, id) {
 
-        this.player.respawn(cam);
+        if (id == null)
+            this.player.respawn(cam);
 
         this.portals = new Array();
         this.enemies = new Array();

@@ -842,4 +842,24 @@ export class Player extends GameObject {
         return this.dying &&
             this.deathTimer <= DEATH_LIMIT;
     }
+
+
+    // Set portal pose
+    setPortalPose(goIn) {
+
+        // To make sure this won't happen if the player
+        // is respawning
+        if (!goIn && (this.spr.frame != 1 || this.spr.row != 3))
+            return;
+
+        this.spr.setFrame(3, goIn ? 1 : 0);
+
+        this.chargeLoadTimer = 0;
+        this.hurtTimer = 0;
+        this.shootAnimTimer = 0;
+
+        this.slideTimer = 0;
+        this.speed.x = 0;
+        this.speed.y = 0;
+    }
 }

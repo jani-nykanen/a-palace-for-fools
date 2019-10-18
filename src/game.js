@@ -17,11 +17,19 @@ export class Game {
     constructor() {
 
         this.cam = new Camera(0, 0, 160, 144);
-        this.objm = new ObjectManager();
+        this.objm = new ObjectManager(
+            (ev) => {
+
+                ev.tr.activate(true, TransitionMode.VerticalBar,
+                    2.0, (ev) => {
+                        this.changeTime();
+                    }, 255, 255, 255);
+            }
+        );
 
         this.cloudPos = [0, 0, 0];
         this.snowTimer = [0.0, 0.0];
-        this.snowFloat = [0.0, 0.0];
+        this.snowFloat = [0.0, Math.PI];
 
         this.mapID = 0;
     }
@@ -48,8 +56,8 @@ export class Game {
     reset(id) {
 
         this.stage.reset(id);
-        this.objm.reset(this.cam);
-        this.stage.parseObjects(this.objm);
+        this.objm.reset(this.cam, id);
+        this.stage.parseObjects(this.objm, id);
 
         // Set initial camera position
         this.objm.setInitialCamera(this.cam);
@@ -60,7 +68,7 @@ export class Game {
     changeTime() {
 
         this.mapID = this.mapID == 1 ? 0 : 1;
-        this.stage.reset(this.mapID);
+        this.reset(this.mapID);
     }
 
 

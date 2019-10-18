@@ -48,11 +48,17 @@ export class Dust {
 
 
     // Draw
-    draw(c) {
+    draw(c, id) {
 
         if (!this.exist) return;
 
-        c.drawSprite(this.spr, c.bitmaps.dust,
+        let t = c.bitmaps.dustA;
+        if (id == 1) {
+
+            t = c.bitmaps.dustB;
+        }
+
+        c.drawSprite(this.spr, t,
             (this.pos.x-16) | 0,
             (this.pos.y-16) | 0);
     }

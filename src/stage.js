@@ -419,7 +419,7 @@ export class Stage {
         // Draw dust
         for (let d of this.dust) {
 
-            d.draw(c);
+            d.draw(c, this.id);
         }
     }
 
@@ -598,7 +598,7 @@ export class Stage {
 
 
     // Parse objects
-    parseObjects(objm) {
+    parseObjects(objm, id) {
 
         let t;
         let dx, dy;
@@ -648,7 +648,7 @@ export class Stage {
                 // Portal
                 case 17:
 
-                    objm.addPortal(x, y);
+                    objm.addPortal(x, y, id);
                     break;
 
                 default:
