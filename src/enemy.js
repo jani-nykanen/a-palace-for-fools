@@ -58,7 +58,8 @@ export class Enemy extends GameObject {
         let h = this.hitArea.y/2;
 
         let angle, kb;
-        if (pl.hurtCollision(px-w, py-h, w*2, h*2, ev)) {
+        if (pl.hurtCollision(px-w, py-h, w*2, h*2, ev) &&
+            !this.isStatic) {
 
             // Compute knockback
             angle = Math.atan2(this.pos.y-pl.pos.y, 

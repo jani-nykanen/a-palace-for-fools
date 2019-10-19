@@ -20,7 +20,7 @@ export class Thwomp extends Enemy {
         super(x, y, 0);
 
         this.w = 16;
-        this.h = 16;
+        this.h = 14;
 
         this.hitArea = new Vector2(8, 8);
 
@@ -76,6 +76,17 @@ export class Thwomp extends Enemy {
 
             if (this.returning) {
 
+                // If we returned to the original position
+                if (this.pos.y <= this.startPoint.y) {
+
+                    this.active = false;
+                    this.returning = false;
+
+                    this.pos.y = this.startPoint.y;
+
+                    return;
+                }
+
                 this.target.y = RETURN_SPEED;
                 this.speed.y = RETURN_SPEED;
             }
@@ -86,6 +97,9 @@ export class Thwomp extends Enemy {
 
                     this.returning = true;
                     this.waitTimer = WAIT_TIME;
+
+                    this.target.y = RETURN_SPEED;
+                    this.speed.y = RETURN_SPEED;
                 }
             }
         }
