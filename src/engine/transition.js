@@ -1,3 +1,5 @@
+import { Vector2 } from "./vector.js";
+
 //
 // Transition manager. For managing
 // (and rendering) scene etc. transitions
@@ -13,6 +15,7 @@ export const TransitionMode = {
     Fade: 0,
     VerticalBar: 1,
     HorizontalBar: 2,
+    CircleOutside: 3,
 }
 
 
@@ -28,6 +31,8 @@ export class Transition {
         this.speed = 1;
         this.fadeIn = false;
         this.mode = TransitionMode.Fade;
+
+        this.center = null;
     }
 
 
@@ -49,6 +54,20 @@ export class Transition {
         this.mode = mode;
 
         this.active = true;
+    }
+
+
+    // Set center
+    setCenter(cx, cy) {
+
+        if (cx == null || cy == null) {
+
+            this.center = null;
+        }
+        else {
+
+            this.center = new Vector2(cx, cy);
+        }
     }
 
 
@@ -114,6 +133,19 @@ export class Transition {
             c.setColor(this.color.r, this.color.g, this.color.b);
             c.fillRect(0, 0, w, h);
             c.fillRect(c.w-w, 0, w, h);
+
+            break;
+
+        case TransitionMode.CircleOutside:
+
+            if (this.center == null) {
+
+                this.center = new Vector2(c.w/2, c.h/2);
+            }
+
+            w = (1-t) * Math.hypot(c.w-cx, c.h-cy);
+            c.setColor(this.color.r, this.color.g, this.color.b);
+            c.fillCircleOutside(w, this.center.x, this.center.y);
 
             break;
 

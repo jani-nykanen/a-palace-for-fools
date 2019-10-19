@@ -1,5 +1,5 @@
 import { Sprite } from "./engine/sprite.js";
-import { Vector2 } from "./engine/vector.js";
+import { Vector2, Vector3 } from "./engine/vector.js";
 import { State } from "./engine/input.js";
 
 //
@@ -19,6 +19,9 @@ export class Portal {
         // Collision dimensions
         this.w = 4;
         this.h = 32;
+
+        if (id == null)
+            id = 0;
 
         this.spr = new Sprite(24, 32);
         this.spr.setFrame(id, 0);
@@ -102,6 +105,8 @@ export class Portal {
     // Check the collision with the player
     playerCollision(pl, ev) {
 
+        const COLOR = [[170, 170, 0], [85, 170, 255]];
+
         if (!this.inCamera || !this.active || 
             !pl.canJump || pl.dying ||
             ev.input.action.up.state != State.Pressed) return;
@@ -127,13 +132,15 @@ export class Portal {
             pl.pos.x = this.pos.x;
             pl.checkpoint = pl.pos.clone();
 
+            
+
             // Set player pose
             pl.setPortalPose(true);
 
             // Call callback function, if any
             if (this.cb != null) {
 
-                this.cb(ev);
+                this.cb(ev, pl, COLOR[this.id]);
             }
         }
     }

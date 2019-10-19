@@ -291,4 +291,63 @@ export class Canvas {
 
         this.ctx.globalAlpha = clamp(a, 0, 1);
     }
+
+
+    // Fill the area outside a circle
+    fillCircleOutside(r, cx, cy) {
+
+        if (r <= 0) {
+
+            this.fillRect(0, 0, this.w, this.h);
+            return;
+        }
+        else if (r*r >= this.w*this.w + this.h*this.h) {
+
+            return;
+        }
+
+        if (cx == null)
+            cx = this.w / 2;
+        if (cy == null)
+            cy = this.h / 2;
+
+        
+        let start = Math.max(0, cy - r) | 0;
+        let end = Math.min(this.h, cy + r) | 0;
+
+        // Draw rectangle areas
+        if (start > 0)
+            this.fillRect(0, 0, this.w, start);
+
+        if (end < this.h)
+            this.fillRect(0, end, this.w, this.h-end);
+
+        // Draw the  circle area line by line
+        let dy;
+        let px1, px2;
+        for (let y = start; y < end; ++ y) {
+
+            dy = y - cy;
+
+            // A full line
+            if (Math.abs(dy) >= r) {
+
+                this.fillRect(0, y, this.w, 1);
+                continue;
+            }
+
+            px1 = cx - Math.sqrt(r*r - dy*dy);
+            px2 = cx + Math.sqrt(r*r - dy*dy);
+
+            px1 |= 0;
+            px2 |= 0;
+
+            // Fill left
+            if (px1 > 0)
+                this.fillRect(0, y, px1, 1);
+            // Fill right
+            if (px2 < this.w)
+                this.fillRect(px2, y, this.w-px1, 1);
+        }
+    }
 }

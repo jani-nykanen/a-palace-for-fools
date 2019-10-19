@@ -18,12 +18,16 @@ export class Game {
 
         this.cam = new Camera(0, 0, 160, 144);
         this.objm = new ObjectManager(
-            (ev) => {
+            (ev, pl, col) => {
 
-                ev.tr.activate(true, TransitionMode.VerticalBar,
-                    2.0, (ev) => {
+                let x = pl.pos.x % this.cam.w;
+                let y = pl.pos.y % this.cam.h;
+
+                ev.tr.setCenter(x, y);
+                ev.tr.activate(true, TransitionMode.CircleOutside,
+                    2, (ev) => {
                         this.changeTime();
-                    }, 255, 255, 255);
+                    }, ...col);
             }
         );
 
@@ -57,7 +61,7 @@ export class Game {
 
         this.stage.reset(id);
         this.objm.reset(this.cam, id);
-        this.stage.parseObjects(this.objm, id);
+        this.stage.parseObjects(this.objm, this.mapID);
 
         // Set initial camera position
         this.objm.setInitialCamera(this.cam);
