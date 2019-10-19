@@ -62,6 +62,7 @@ window.onload = () => {
         {name: "breakWall", src: "assets/audio/break.wav"},
         {name: "life", src: "assets/audio/life.wav"},
         {name: "teleport", src: "assets/audio/teleport.wav"},
+        {name: "quake", src: "assets/audio/quake.wav"},
     );
 
     // Configure keys

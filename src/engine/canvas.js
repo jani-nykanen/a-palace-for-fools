@@ -37,6 +37,9 @@ export class Canvas {
 
         // Transformation
         this.tr = new Vector2(0, 0);
+        // Shaking
+        this.shakeTimer = 0;
+        this.shakeMagnitude = 0;
 
         // Create the canvas
         this.createHtml5Canvas(w, h);
@@ -106,6 +109,26 @@ export class Canvas {
         c.style.width = String(width | 0) + "px";
         c.style.top = top;
         c.style.left = left;
+    }
+
+
+    // Set shaking
+    setShake(time, mag) {
+
+        if (this.shakeTimer > 0) return;
+
+        this.shakeTimer = time;
+        this.shakeMagnitude = mag;
+    }
+
+
+    // Update canvas
+    update(ev) {
+
+        if (this.shakeTimer > 0) {
+
+            this.shakeTimer -= ev.step;
+        }
     }
 
 
@@ -281,6 +304,18 @@ export class Canvas {
 
         this.tr.x += x;
         this.tr.y += y;
+    }
+
+
+    // Use shaking
+    useShake() {
+
+        if (this.shakeTimer <= 0) return;
+
+        let dx = ( (Math.random()-0.5)*2 * this.shakeMagnitude);
+        let dy = ( (Math.random()-0.5)*2 * this.shakeMagnitude);
+
+        this.move(dx, dy);
     }
 
 

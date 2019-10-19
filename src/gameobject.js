@@ -143,7 +143,7 @@ export class GameObject {
 
 
     // Hurt collision
-    hurtCollision(x, y, w, h, ev) {
+    hurtCollision(x, y, w, h, ev, dmg) {
 
         if (!this.hurt || 
             this.hurtTimer > 0 ||
@@ -163,7 +163,9 @@ export class GameObject {
             py+ph/2 > y &&
             py-ph/2 < y+h) {
 
-            this.hurt(x+w/2, y+h/2, ev);
+            if (dmg == null) dmg = 1;
+
+            this.hurt(x+w/2, y+h/2, ev, dmg);
             return true;
         }
 

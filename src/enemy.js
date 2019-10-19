@@ -27,6 +27,7 @@ export class Enemy extends GameObject {
         this.id = id;
         this.health = 1;
         this.maxHealth = 1;
+        this.power = 1;
 
         this.exist = true;
         this.dying = false;
@@ -58,7 +59,7 @@ export class Enemy extends GameObject {
         let h = this.hitArea.y/2;
 
         let angle, kb;
-        if (pl.hurtCollision(px-w, py-h, w*2, h*2, ev) &&
+        if (pl.hurtCollision(px-w, py-h, w*2, h*2, ev, this.power) &&
             !this.isStatic) {
 
             // Compute knockback
@@ -301,5 +302,31 @@ export class Enemy extends GameObject {
 
         if (this.inCamera)
             this.drawTranslated(c, 0, 0);
+    }
+
+
+    // "Pre-render"
+    preRenderAll(c, stage, cam) {
+
+        if (!this.exist || this.dying || 
+            this.preRender == null) return;
+
+        if (cam.moving) {
+
+            let dx;
+
+            if (cam.dir.x > 0)
+                dx = -stage.w*16;
+            else if (cam.dir.x < 0)
+                dx =  stage.w*16;
+
+            c.move(dx, 0);
+            this.preRender(c);
+            c.move(-dx, 0);
+        }
+
+        // We do not do camera checks here,
+        // to avoid certain elements disappearing
+        this.preRender(c);
     }
 }

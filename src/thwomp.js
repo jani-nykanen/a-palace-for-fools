@@ -25,7 +25,7 @@ export class Thwomp extends Enemy {
         this.hitArea = new Vector2(8, 8);
 
         this.acc.x = 0.0;
-        this.acc.y = 0.1;
+        this.acc.y = 0.20;
 
         this.maxHealth = 3;
         this.health = this.maxHealth;
@@ -38,13 +38,20 @@ export class Thwomp extends Enemy {
         this.active = false;
         this.returning = false;
         this.waitTimer = 0;
+
+        // TODO: Different damage, if not active
+        this.power = 2;
+
+        this.applyShake = false;
     }
 
 
     // Reset
     reset() {
 
-        // ...
+        this.active = false;
+        this.returning = false;
+        this.waitTimer = 0;
     }
 
 
@@ -54,17 +61,16 @@ export class Thwomp extends Enemy {
         const WAIT_TIME = 60;
 
         const EPS = 32;
-        const GRAVITY = 4.0;
-        const RETURN_SPEED = -0.5;
+        const GRAVITY = 5.0;
+        const RETURN_SPEED = -0.75;
 
+        // Update wait timer
         if (this.waitTimer > 0) {
 
             this.waitTimer -= 1.0 * ev.step;
-            this.target.y = 0;
-            this.speed.y = 0;
-            return;
         }
 
+        // Not active, wait until player close enough
         if (!this.active) {
 
             if (Math.abs(pl.pos.x-this.pos.x) < EPS) {
@@ -74,14 +80,14 @@ export class Thwomp extends Enemy {
         }
         else {
 
-            if (this.returning) {
+            if (this.returning && this.waitTimer <= 0) {
 
                 // If we returned to the original position
                 if (this.pos.y <= this.startPoint.y) {
 
                     this.active = false;
                     this.returning = false;
-
+                    
                     this.pos.y = this.startPoint.y;
 
                     return;
@@ -93,13 +99,15 @@ export class Thwomp extends Enemy {
             else {
 
                 this.target.y = GRAVITY;
-                if (this.canJump) {
+                if (this.canJump && !this.returning) {
 
                     this.returning = true;
                     this.waitTimer = WAIT_TIME;
 
-                    this.target.y = RETURN_SPEED;
-                    this.speed.y = RETURN_SPEED;
+                    this.applyShake = true;
+
+                    // Play quake sound
+                    ev.audio.playSample(ev.audio.sounds.quake, 0.50);
                 }
             }
         }
@@ -116,6 +124,43 @@ export class Thwomp extends Enemy {
         else {
 
             this.spr.setFrame(5, 2);
+        }
+    }
+
+
+    // "Pre-render", i.e render the chain
+    preRender(c) {
+
+        const SHAKE_TIME = 60;
+        const SHAKE_MAG = 2;
+
+        // Apply shaking (i.e. "quake")
+        if (this.applyShake) {
+
+            c.setShake(SHAKE_TIME, SHAKE_MAG);
+            this.applyShake = false;
+        }
+
+        if (!this.active) return;
+
+        let dy = ((this.pos.y/16) | 0);
+
+        for (let y = 0; y < dy -1; ++ y) {
+
+            c.drawBitmapRegion(c.bitmaps.enemy, 
+                48, 80, 16, 16,
+                (this.pos.x-8) | 0, 
+                this.startPoint.y-8 + 16*y);
+        }
+
+        // Draw the partial chain
+        let h = (this.pos.y - dy*16) | 0;
+        if (h > 0) {
+
+            c.drawBitmapRegion(c.bitmaps.enemy, 
+                48, 80, 16, h,
+                (this.pos.x-8) | 0, 
+                this.startPoint.y-8 + 16*(dy-1));
         }
     }
 }

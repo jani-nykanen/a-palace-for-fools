@@ -141,6 +141,15 @@ export class ObjectManager {
             p.draw(c, stage, cam);
         }
 
+        // "Pre-render" specific enemy parts
+        for (let e of this.enemies) {
+
+            if (e.preRender != null) {
+
+                e.preRenderAll(c, stage, cam);
+            }
+        }
+
         // Draw enemies
         for (let e of this.enemies) {
 

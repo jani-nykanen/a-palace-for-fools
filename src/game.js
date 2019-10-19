@@ -284,6 +284,8 @@ export class Game {
 
         // Move to camera
         this.cam.use(c);
+        // Shake
+        c.useShake();
 
         // Draw map
         this.stage.draw(c, this.cam);

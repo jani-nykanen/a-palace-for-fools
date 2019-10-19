@@ -130,6 +130,8 @@ export class Core {
                     this.initialized = true;
                 }
 
+                // Update canvas events
+                this.canvas.update(this.ev);
                 // Update frame event
                 this.ev.update();
             }

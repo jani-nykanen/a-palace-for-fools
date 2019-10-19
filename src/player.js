@@ -656,7 +656,7 @@ export class Player extends GameObject {
 
 
     // Hurt player
-    hurt(cx, cy, ev) {
+    hurt(cx, cy, ev, dmg) {
 
         const KNOCKBACK_X = 1.0;
         const KNOCKBACK_BASE_X = 0.5;
@@ -685,7 +685,7 @@ export class Player extends GameObject {
 
         // Lose health
         if (this.health > 0)
-            -- this.health;
+            this.health = Math.max(0, this.health-dmg);
     }
 
 

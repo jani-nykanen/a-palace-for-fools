@@ -83,6 +83,8 @@ export class Stage {
         }
 
         this.map = new Tilemap(this.baseMap);
+        this.w = this.map.w;
+        this.h = this.map.h;
     }
 
 
