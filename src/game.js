@@ -45,7 +45,7 @@ export class Game {
 
         this.stage = new Stage(this.mapID, assets, ev);
         this.stage.setGemCallback(this.objm.getGemGenerator());
-        this.stage.parseObjects(this.objm);
+        this.stage.parseObjects(this.objm, this.mapID, true);
 
         // Set initial camera position
         this.objm.setInitialCamera(this.cam);
@@ -61,7 +61,7 @@ export class Game {
 
         this.stage.reset(id);
         this.objm.reset(this.cam, id);
-        this.stage.parseObjects(this.objm, this.mapID);
+        this.stage.parseObjects(this.objm, this.mapID, id == null);
 
         // Set initial camera position
         this.objm.setInitialCamera(this.cam);

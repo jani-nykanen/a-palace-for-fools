@@ -5,6 +5,7 @@ import { Bat } from "./bat.js";
 import { Beetle } from "./beetle.js";
 import { Zombie } from "./zombie.js";
 import { Bee } from "./bee.js";
+import { Thwomp } from "./thwomp.js";
 
 //
 // Handles the game stage rendering
@@ -598,7 +599,7 @@ export class Stage {
 
 
     // Parse objects
-    parseObjects(objm, id) {
+    parseObjects(objm, id, respawn) {
 
         let t;
         let dx, dy;
@@ -618,7 +619,7 @@ export class Stage {
                 // Player
                 case 1:
 
-                    objm.setPlayerPosition(x, y);
+                    objm.setPlayerPosition(x, y, respawn);
                     break;
 
                 // Bat
@@ -643,6 +644,12 @@ export class Stage {
                 case 5:
 
                     objm.addEnemy(Bee.prototype, dx, dy);
+                    break;
+
+                // Thwomp
+                case 6:
+
+                    objm.addEnemy(Thwomp.prototype, dx, dy);
                     break;
 
                 // Portal

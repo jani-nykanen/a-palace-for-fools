@@ -41,6 +41,8 @@ export class Enemy extends GameObject {
 
         this.oldCanJump = false;
         this.canJump = false;
+
+        this.isStatic = false;
     }
 
 
@@ -209,7 +211,7 @@ export class Enemy extends GameObject {
                 this.dying = true;
                 this.spr.setFrame(0, 0);
             }
-            else {
+            else if (!this.isStatic) {
 
                 this.plAngle = Math.atan2(py-by, px-bx);
                 this.speed.x = Math.cos(this.plAngle) * knockback;
@@ -258,6 +260,13 @@ export class Enemy extends GameObject {
 
             e.pos.x -= Math.cos(angle) * r/2;
             e.pos.y -= Math.sin(angle) * r/2;
+
+            // Modify speed
+            e.speed.x = -Math.abs(e.speed.x) * Math.cos(angle);
+            e.speed.y = -Math.abs(e.speed.y) * Math.sin(angle);
+
+            this.speed.x = Math.abs(this.speed.x) * Math.cos(angle);
+            this.speed.y = Math.abs(this.speed.y) * Math.sin(angle);
         }
     }
 

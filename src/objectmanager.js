@@ -41,15 +41,19 @@ export class ObjectManager {
 
 
     // Set player position
-    setPlayerPosition(x, y) {
+    setPlayerPosition(x, y, respawn) {
 
-        // TODO: This hurts so bad
-        if (this.playerCreated)  {
+        // If not respawning, set player pose
+        if (!respawn)  {
 
             this.player.setPortalPose(false);
             return;
         }
 
+        if (this.playerCreated) {
+
+            return;
+        }
         this.playerCreated = true;
 
         // TODO: setPos for player?
@@ -57,6 +61,8 @@ export class ObjectManager {
         this.player.pos.y = (y+1)*16 -6;
 
         this.player.checkpoint = this.player.pos.clone();
+
+        
     }
 
 
@@ -78,12 +84,6 @@ export class ObjectManager {
 
     // Update 
     update(stage, cam, ev) {
-
-        // Check enemy-to-enemy collision
-        // before other updates
-        for (let e of this.enemies) {
-
-        }
 
         // Update enemies
         for (let e of this.enemies) {
