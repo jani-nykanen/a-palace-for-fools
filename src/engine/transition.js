@@ -102,7 +102,7 @@ export class Transition {
         c.moveTo(0, 0);
 
         let t = this.getScaledTime();
-        let w, h;
+        let r, w, h;
 
         switch(this.mode) {
 
@@ -142,10 +142,18 @@ export class Transition {
 
                 this.center = new Vector2(c.w/2, c.h/2);
             }
-
-            w = (1-t) * Math.hypot(c.w-cx, c.h-cy);
+            
+            // Radius must be great enough to make sure the
+            // "the complement of circle" area does not disappear 
+            // before the animation is finished
+            r = (1-t) * Math.max(
+                Math.hypot(this.center.x, this.center.y),
+                Math.hypot(c.w-this.center.x, this.center.y),
+                Math.hypot(c.w-this.center.x, c.h-this.center.y),
+                Math.hypot(this.center.x, c.h-this.center.y)
+            );
             c.setColor(this.color.r, this.color.g, this.color.b);
-            c.fillCircleOutside(w, this.center.x, this.center.y);
+            c.fillCircleOutside(r, this.center.x, this.center.y);
 
             break;
 

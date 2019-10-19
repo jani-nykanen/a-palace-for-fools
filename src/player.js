@@ -80,6 +80,8 @@ export class Player extends GameObject {
 
         // Amounts of stuff
         this.gems = 0;
+
+        this.teleporting = false;
     }
 
 
@@ -317,6 +319,7 @@ export class Player extends GameObject {
 
         this.forceUp = false;
         this.canJumpOld = this.canJump;
+        this.teleporting = false;
 
         // Determine hitbox height
         this.hitbox.y = this.slideTimer > 0 ?
@@ -844,15 +847,17 @@ export class Player extends GameObject {
     }
 
 
+    // Set respawn pose
+    setRespawnPose() {
+
+        this.spr.setFrame(3, 4);
+    }
+
+
     // Set portal pose
     setPortalPose(goIn) {
 
-        // To make sure this won't happen if the player
-        // is respawning
-        if (!goIn && (this.spr.frame != 1 || this.spr.row != 3))
-            return;
-
-        this.spr.setFrame(3, goIn ? 1 : 0);
+        this.spr.setFrame(goIn ? 9 : 10, 0);
 
         this.chargeLoadTimer = 0;
         this.hurtTimer = 0;
@@ -861,5 +866,19 @@ export class Player extends GameObject {
         this.slideTimer = 0;
         this.speed.x = 0;
         this.speed.y = 0;
+
+        this.teleporting = true;
+    }
+
+
+    // Animate teleporting
+    animateTeleporting(ev) {
+
+        const ANIM_SPEED = 4;
+
+        if (!this.teleporting) return;
+
+        if (this.spr.frame < 5)
+            this.spr.animate(this.spr.row, 0, 5, ANIM_SPEED, ev.step);
     }
 }

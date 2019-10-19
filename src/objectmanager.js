@@ -157,7 +157,12 @@ export class ObjectManager {
 
 
     // Update camera movement actions
+    // TODO: Rename this
     updateCamMovement(cam, stage, ev) {
+
+        // If teleporting, animate player teleporting
+        // animation
+        this.player.animateTeleporting(ev);
 
         if (stage != null) {
             
@@ -192,6 +197,8 @@ export class ObjectManager {
 
         if (id == null)
             this.player.respawn(cam);
+
+        // this.player.setRespawnPose();
 
         this.portals = new Array();
         this.enemies = new Array();

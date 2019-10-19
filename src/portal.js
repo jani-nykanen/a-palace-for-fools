@@ -128,11 +128,13 @@ export class Portal {
             py+ph/2 > ty &&
             py-ph/2 < ty+this.h) {
 
+            // Play sound
+            ev.audio.playSample(ev.audio.sounds.teleport,
+                0.50);
+
             // Set player position
             pl.pos.x = this.pos.x;
             pl.checkpoint = pl.pos.clone();
-
-            
 
             // Set player pose
             pl.setPortalPose(true);
