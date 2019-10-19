@@ -16,7 +16,7 @@ import { Dust } from "./dust.js";
 const KNOCKBACK_TIME = 30;
 const HURT_TIME = 60;
 const DEATH_TIME = 120;
-const SHOOT_ANIM_TIME = 45;
+const SHOOT_ANIM_TIME = 30;
 
 
 export class Player extends GameObject {

@@ -255,18 +255,25 @@ export class Enemy extends GameObject {
             angle = Math.atan2(this.pos.y-e.pos.y, 
                 this.pos.x-e.pos.x);
 
-            this.pos.x += Math.cos(angle) * r/2;
-            this.pos.y += Math.sin(angle) * r/2;
+            // Modify speed & position
+            if (!this.isStatic) {
 
-            e.pos.x -= Math.cos(angle) * r/2;
-            e.pos.y -= Math.sin(angle) * r/2;
+                this.pos.x += Math.cos(angle) * r/2;
+                this.pos.y += Math.sin(angle) * r/2;
 
-            // Modify speed
-            e.speed.x = -Math.abs(e.speed.x) * Math.cos(angle);
-            e.speed.y = -Math.abs(e.speed.y) * Math.sin(angle);
+                this.speed.x = Math.abs(this.speed.x) * Math.cos(angle);
+                this.speed.y = Math.abs(this.speed.y) * Math.sin(angle);
+            }
 
-            this.speed.x = Math.abs(this.speed.x) * Math.cos(angle);
-            this.speed.y = Math.abs(this.speed.y) * Math.sin(angle);
+            if (!e.isStatic) {
+
+                e.pos.x -= Math.cos(angle) * r/2;
+                e.pos.y -= Math.sin(angle) * r/2;
+
+                e.speed.x = -Math.abs(e.speed.x) * Math.cos(angle);
+                e.speed.y = -Math.abs(e.speed.y) * Math.sin(angle);
+            }
+
         }
     }
 

@@ -35,6 +35,9 @@ export class Thwomp extends Enemy {
         this.flip = Flip.None;
 
         this.isStatic = true;
+        this.active = false;
+        this.returning = false;
+        this.waitTimer = 0;
     }
 
 
@@ -48,13 +51,57 @@ export class Thwomp extends Enemy {
     // Update AI
     updateAI(pl, ev) {
 
-        // ...
+        const WAIT_TIME = 60;
+
+        const EPS = 32;
+        const GRAVITY = 4.0;
+        const RETURN_SPEED = -0.5;
+
+        if (this.waitTimer > 0) {
+
+            this.waitTimer -= 1.0 * ev.step;
+            this.target.y = 0;
+            this.speed.y = 0;
+            return;
+        }
+
+        if (!this.active) {
+
+            if (Math.abs(pl.pos.x-this.pos.x) < EPS) {
+
+                this.active = true;
+            }
+        }
+        else {
+
+            if (this.returning) {
+
+                this.target.y = RETURN_SPEED;
+                this.speed.y = RETURN_SPEED;
+            }
+            else {
+
+                this.target.y = GRAVITY;
+                if (this.canJump) {
+
+                    this.returning = true;
+                    this.waitTimer = WAIT_TIME;
+                }
+            }
+        }
     }
 
 
     // Animate
     animate(ev) {
 
-        // ...
+        if (!this.active) {
+
+            this.spr.setFrame(5, 0);
+        }
+        else {
+
+            this.spr.setFrame(5, 2);
+        }
     }
 }
