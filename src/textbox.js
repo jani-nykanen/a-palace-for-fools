@@ -19,6 +19,8 @@ export class Textbox {
         this.charPos = 0;
         this.active = false;
 
+        this.endSymbolFloat = 0.0;
+
         this.w = w;
         this.h = h;
     }
@@ -47,12 +49,15 @@ export class Textbox {
     // Update
     update(ev) {
 
-        const CHAR_WAIT = 4;
+        const FLOAT_SPEED = 0.1;
+        const CHAR_WAIT = 2;
 
         if (!this.active) return;
 
-        let action = ev.input.action.start.state == State.Pressed ||
-            ev.input.action.fire1.state == State.Pressed;
+        let action = ev.input.anyPressed;
+            //ev.input.action.start.state == State.Pressed ||
+            //ev.input.action.fire1.state == State.Pressed;
+        let c;
 
         // Update character timer
         if (this.charPos < this.queue[0].length) {
@@ -68,8 +73,9 @@ export class Textbox {
                     this.charTimer -= CHAR_WAIT;
                     ++ this.charPos;
 
+                    c = this.queue[0].charCodeAt(this.charPos);
                     if (this.charPos < this.queue[0].length && 
-                        this.queue[0].charCodeAt(this.charPos) == '\n') {
+                        c == '\n') {
 
                         ++ this.charPos;
                     }
@@ -85,11 +91,18 @@ export class Textbox {
                 this.charPos = 0;
                 this.charTimer = 0;
 
+                ev.audio.playSample(ev.audio.sounds.next, 0.60);
+
                 if (this.queue.length == 0) {
 
                     this.active = false;
                 }
             }
+
+            // Update end symbol floating
+            this.endSymbolFloat = 
+                (this.endSymbolFloat + FLOAT_SPEED*ev.step) % 
+                (Math.PI*2);
         }
     }
 
@@ -101,6 +114,7 @@ export class Textbox {
         const TEXT_OFF_X = 0;
         const TEXT_OFF_Y = 2;
         const COLORS = [255, 0, 85];
+        const END_FLOAT = 1.1;
 
         if (!this.active) return;
 
@@ -115,13 +129,23 @@ export class Textbox {
                 this.w+i*2, this.h+i*2);
         }
 
-        
-
         // Draw current message
         c.drawText(c.bitmaps.font, 
             this.queue[0].substr(0, this.charPos),
             tx + CORNER_OFF, ty + CORNER_OFF,
             TEXT_OFF_X, TEXT_OFF_Y);
+
+        // Draw finish symbol
+        let y;
+        if (this.charPos == this.queue[0].length) {
+
+            y = Math.floor(Math.sin(this.endSymbolFloat) * END_FLOAT) | 0;
+            c.drawBitmapRegion(
+                c.bitmaps.font, 
+                24, 0, 8, 8,
+                tx + this.w - 8, 
+                ty + this.h - 8 + y);
+        }
     }
 
 }

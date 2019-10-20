@@ -90,7 +90,9 @@ export class Game {
             "thing your mother\n"+
             "told you before\n"+
             "she died.",
-            "You never liked\nyour mother very\nmuch."
+            "You never liked\nyour mother very\n" +
+            "much. She was a\n" +
+            "bitch. Literally."
         );
         this.textbox.activate();
     }

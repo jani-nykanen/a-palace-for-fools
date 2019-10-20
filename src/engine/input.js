@@ -31,6 +31,8 @@ export class InputManager {
         // This keys will be "preventDefault"ed.
         this.prevent = [];
 
+        this.anyPressed = false;
+
         // Set listeners
         window.addEventListener("keydown", 
             (e) => {
@@ -62,8 +64,12 @@ export class InputManager {
     // Calledn when a key pressed
     keyPressed(key) {
 
-        if (this.keys[key] != State.Down)
+        if (this.keys[key] != State.Down) {
+
+            this.anyPressed = true;
             this.keys[key] = State.Pressed;
+        }
+            
 
         return this.prevent[key];
     }
@@ -101,7 +107,7 @@ export class InputManager {
                 this.keys[k] = State.Up;
         }
 
-        
+        this.anyPressed = false;
     }
 
 
