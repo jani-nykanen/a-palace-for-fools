@@ -123,7 +123,8 @@ export class Thwomp extends Enemy {
         }
         else {
 
-            this.spr.setFrame(5, 2);
+            this.spr.setFrame(5, 
+                (this.returning && this.waitTimer <= 0) ? 1 : 2);
         }
     }
 

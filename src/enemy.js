@@ -311,9 +311,9 @@ export class Enemy extends GameObject {
         if (!this.exist || this.dying || 
             this.preRender == null) return;
 
-        if (cam.moving) {
+        if (cam.moving && cam.dir.x != 0) {
 
-            let dx;
+            let dx = 0;
 
             if (cam.dir.x > 0)
                 dx = -stage.w*16;
