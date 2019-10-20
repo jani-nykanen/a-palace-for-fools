@@ -57,10 +57,10 @@ export class EnableAudioScreen {
 
         c.clear(0);
 
-        let str = ["@YES\n NO", " YES\n@NO"][this.cursorPos];
+        let str = ["@Yes\n No", " Yes\n@No"][this.cursorPos];
         
         c.drawText(c.bitmaps.font, 
-            "ENABLE AUDIO?\n(PRESS ENTER TO\nCONFIRM.)",
+            "Enable audio?\n(Press ENTER to\nconfirm.)",
             24, 32, 0, 2);
 
         c.drawText(c.bitmaps.font,

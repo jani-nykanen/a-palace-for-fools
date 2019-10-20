@@ -63,6 +63,7 @@ window.onload = () => {
         {name: "life", src: "assets/audio/life.wav"},
         {name: "teleport", src: "assets/audio/teleport.wav"},
         {name: "quake", src: "assets/audio/quake.wav"},
+        {name: "kill", src: "assets/audio/kill.wav"},
     );
 
     // Configure keys

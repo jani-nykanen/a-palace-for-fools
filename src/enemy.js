@@ -207,13 +207,16 @@ export class Enemy extends GameObject {
         let knockback = KNOCKBACK_SPEED * b.power;
         if (col) {
 
-            b.kill(ev);
+            this.health -= b.power
+            b.kill(ev, this.health <= 0);
 
             this.hurtTimer = HURT_TIME;
-            if ( (this.health -= b.power) <= 0) {
+            if (this.health <= 0) {
 
                 this.dying = true;
                 this.spr.setFrame(0, 0);
+
+                ev.audio.playSample(ev.audio.sounds.kill, 0.50);
             }
             else if (!this.isStatic) {
 
