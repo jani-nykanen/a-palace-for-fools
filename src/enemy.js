@@ -44,6 +44,8 @@ export class Enemy extends GameObject {
         this.canJump = false;
 
         this.isStatic = false;
+
+        this.dir = 0;
     }
 
 
@@ -274,6 +276,8 @@ export class Enemy extends GameObject {
 
                 e.speed.x = -Math.abs(e.speed.x) * Math.cos(angle);
                 e.speed.y = -Math.abs(e.speed.y) * Math.sin(angle);
+
+                e.dir *= -1;
             }
 
         }

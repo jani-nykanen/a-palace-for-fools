@@ -61,6 +61,8 @@ export class Bat extends Enemy {
 
         this.acc.y = this.active ? 0.01 : 0.05;
 
+        this.isStatic = !this.active;
+
         if (this.active) {
 
             angle = Math.atan2(
