@@ -3,6 +3,7 @@ import { TransitionMode } from "./engine/transition.js";
 import { Camera } from "./camera.js";
 import { ObjectManager } from "./objectmanager.js";
 import { State } from "./engine/input.js";
+import { Textbox } from "./textbox.js";
 
 //
 // Game scene
@@ -16,6 +17,8 @@ export class Game {
 
     constructor() {
 
+        // Create components that do not require
+        // assets (at least not initially)
         this.cam = new Camera(0, 0, 160, 144);
         this.objm = new ObjectManager(
             (ev, pl, col) => {
@@ -30,6 +33,8 @@ export class Game {
                     }, ...col);
             }
         );
+
+        this.textbox = new Textbox(144, 64);
 
         this.cloudPos = [0, 0, 0];
         this.snowTimer = [0.0, 0.0];
@@ -76,6 +81,21 @@ export class Game {
     }
 
 
+    // Pop test message box
+    popTestMessage() {
+
+        this.textbox.addMessage(
+            "\"u suck git gud\"\n"+
+            "was the last\n"+
+            "thing your mother\n"+
+            "told you before\n"+
+            "she died.",
+            "You never liked\nyour mother very\nmuch."
+        );
+        this.textbox.activate();
+    }
+
+
     // Update the scene
     update(ev) {
 
@@ -84,6 +104,13 @@ export class Game {
         const SNOW_SPEED_BASE = [0.30, 0.40];
         const SNOW_SPEED_VARY = [0.20, 0.30];
         const SNOW_FLOAT_SPEED = [0.025, 0.030];
+
+        // Update text box
+        if (this.textbox.active) {
+
+            this.textbox.update(ev);
+            return;
+        }
 
         // Update cloud position
         for (let i = 0; i < 3; ++ i) {
@@ -146,9 +173,10 @@ export class Game {
         // Update stage
         this.stage.update(ev);
 
+        // DEBUG KEY
         if (ev.input.action.debug.state == State.Pressed) {
 
-            this.changeTime();
+            this.popTestMessage();
         }
     }
 
@@ -306,6 +334,9 @@ export class Game {
 
             this.drawSnowing(c);
         }
+
+        // Draw text box
+        this.textbox.draw(c);
     }
 
 }
