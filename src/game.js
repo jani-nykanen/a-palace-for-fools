@@ -82,17 +82,10 @@ export class Game {
 
 
     // Pop test message box
-    popTestMessage() {
+    popTestMessage(ev) {
 
         this.textbox.addMessage(
-            "\"u suck git gud\"\n"+
-            "was the last\n"+
-            "thing your mother\n"+
-            "told you before\n"+
-            "she died.",
-            "You never liked\nyour mother very\n" +
-            "much. She was a\n" +
-            "bitch. Literally."
+            ...ev.loc.dialogue.npc1
         );
         this.textbox.activate();
     }
@@ -178,7 +171,7 @@ export class Game {
         // DEBUG KEY
         if (ev.input.action.debug.state == State.Pressed) {
 
-            this.popTestMessage();
+            this.popTestMessage(ev);
         }
     }
 

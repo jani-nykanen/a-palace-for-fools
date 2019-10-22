@@ -1,0 +1,20 @@
+<?xml version = "1.0"?>
+
+<localization lang="en">
+
+<dialogue id="npc1">
+<chunk>
+This is a test
+dialogue. Its
+only purpose is
+to test various
+things.
+</chunk>
+<chunk>
+For some reason
+it feels pretty
+meaningless...
+</chunk>
+</dialogue>
+
+</localization>

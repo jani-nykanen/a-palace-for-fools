@@ -216,7 +216,7 @@ export class Enemy extends GameObject {
                 this.dying = true;
                 this.spr.setFrame(0, 0);
 
-                ev.audio.playSample(ev.audio.sounds.kill, 0.50);
+                ev.audio.playSample(ev.audio.sounds.kill, 0.60);
             }
             else if (!this.isStatic) {
 

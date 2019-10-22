@@ -1,4 +1,5 @@
 import { State } from "./engine/input.js";
+import { Vector2 } from "./engine/vector.js";
 
 //
 // A textbox
@@ -13,6 +14,7 @@ export class Textbox {
     constructor(w, h) {
 
         this.queue = new Array();
+        this.sizes = new Array();
 
         this.char = 0;
         this.charTimer = 0;
@@ -26,12 +28,31 @@ export class Textbox {
     }
 
 
+    // Compute size for a textbox
+    computeSize(msg) {
+
+        const WIDTH_MUL = 8;
+        const HEIGHT_MUL = 10;
+
+        let r = new Vector2();
+
+        let lines = msg.split('\n');
+
+        r.x = Math.max(...(lines.map(lines => lines.length))) * WIDTH_MUL;
+        r.y = lines.length * HEIGHT_MUL;
+
+        return r;
+    }
+
+
+
     // Add messages
     addMessage() {
 
         for (let a of arguments) {
 
             this.queue.push(a);
+            this.sizes.push(this.computeSize(a));
         }
     }
 
@@ -88,6 +109,8 @@ export class Textbox {
             if (action) {
 
                 this.queue.shift();
+                this.sizes.shift();
+
                 this.charPos = 0;
                 this.charTimer = 0;
 
@@ -118,15 +141,18 @@ export class Textbox {
 
         if (!this.active) return;
 
-        let tx = c.w/2 - this.w/2;
-        let ty = c.h/2 - this.h/2;
+        let w = this.sizes[0].x + CORNER_OFF*2;
+        let h = this.sizes[0].y + CORNER_OFF*2;
+
+        let tx = c.w/2 - w/2;
+        let ty = c.h/2 - h/2;
 
         for (let i = 2; i >= 0; -- i) {
 
 
             c.setColor(COLORS[2-i]);
             c.fillRect(tx-i, ty-i,
-                this.w+i*2, this.h+i*2);
+                w+i*2, h+i*2);
         }
 
         // Draw current message
@@ -143,8 +169,8 @@ export class Textbox {
             c.drawBitmapRegion(
                 c.bitmaps.font, 
                 24, 0, 8, 8,
-                tx + this.w - 8, 
-                ty + this.h - 8 + y);
+                tx + w - 8, 
+                ty + h - 8 + y);
         }
     }
 

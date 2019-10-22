@@ -50,6 +50,8 @@ export class Core {
         this.oldTime = 0;
 
         this.initialized = false;
+
+        this.lang = null;
     }
 
 
@@ -124,6 +126,11 @@ export class Core {
                 // Initialize scenes now
                 if (!this.initialized) {
 
+                    if (this.lang != null) {
+
+                        // Create localization 
+                        this.ev.setLocalization(this.assets, this.lang);
+                    }
                     // Initialize scenes
                     this.ev.initScenes(this.canvas, this.assets);
 
@@ -193,5 +200,12 @@ export class Core {
 
         // Start the main loop
         this.loop(0);
+    }
+
+
+    // Set localization language
+    setLocalization(lang) {
+
+        this.lang = lang;
     }
 }

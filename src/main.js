@@ -20,6 +20,9 @@ window.onload = () => {
     c.addScene(new Game(), "game", false);
     c.addScene(new EnableAudioScreen(), "audiointro", true);
 
+    // Set language to english
+    c.setLocalization("en");
+
     // Set assets loading
     c.assets.addBitmaps(
         {name: "font",   src: "assets/bitmaps/font.png"},
@@ -44,6 +47,7 @@ window.onload = () => {
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past.tmx"},
         {name: "present", src: "assets/maps/present.tmx"},
+        {name: "en", src: "localization/en.xml"},
     );
     c.assets.addSounds(
         {name: "gas", src: "assets/audio/gas.wav"},

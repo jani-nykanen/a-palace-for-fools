@@ -1,6 +1,7 @@
 import { InputManager } from "./input.js";
 import { AudioPlayer } from "./audio.js";
 import { Transition } from "./transition.js";
+import { Localization } from "./localization.js";
 
 //
 // Event
@@ -27,6 +28,15 @@ export class FrameEvent {
         this.tr = new Transition();
 
         this.documents = assets.documents;
+
+        this.loc = null;
+    }
+
+
+    // Set localization
+    setLocalization(assets, lang) {
+
+        this.loc = new Localization(assets, lang);
     }
 
 

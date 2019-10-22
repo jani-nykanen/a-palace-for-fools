@@ -7,3 +7,4 @@ git add assets
 git add dev
 git add tools
 git add README.md
+git add localization
