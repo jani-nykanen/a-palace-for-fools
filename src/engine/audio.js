@@ -1,3 +1,5 @@
+import { clamp } from "./util.js";
+
 //
 // Simple audio player with
 // Howler.js
@@ -28,6 +30,14 @@ export class AudioPlayer {
         this.sounds = sounds;
 
         this.paused = false;
+    }
+
+
+    // Set global sample volume
+    setGlobalSampleVolume(vol) {
+
+        vol = clamp(vol, 0.0, 1.0);
+        this.sampleVol = vol;
     }
 
 

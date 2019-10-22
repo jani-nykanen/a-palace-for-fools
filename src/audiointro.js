@@ -23,6 +23,9 @@ export class EnableAudioScreen {
     // Initialize
     init(ev) {
 
+        const GLOBAL_SAMPLE_VOLUME = 0.70;
+
+        ev.audio.setGlobalSampleVolume(GLOBAL_SAMPLE_VOLUME);
     }
 
 
@@ -42,7 +45,7 @@ export class EnableAudioScreen {
 
             if (this.cursorPos == 1)
                 ev.audio.toggle(false);
-            else
+            else 
                 ev.audio.playSample(ev.audio.sounds.accept, 0.50);
 
 
