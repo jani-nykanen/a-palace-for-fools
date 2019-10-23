@@ -28,8 +28,7 @@ export class RenderedObject {
 
         if (this.activate == null ||
             !this.inCamera || !this.active || 
-            !pl.canJump || pl.dying ||
-            ev.input.action.up.state != State.Pressed) return;
+            !pl.canJump || pl.dying) return;
     
         // Check if inside the collision area
         let px = pl.pos.x;
@@ -48,7 +47,10 @@ export class RenderedObject {
             py+ph/2 > ty &&
             py-ph/2 < ty+this.h) {
 
-            this.activate(pl, ev);
+            pl.showArrow = true;
+
+            if (ev.input.action.up.state == State.Pressed)
+                this.activate(pl, ev);
         }
     }
 

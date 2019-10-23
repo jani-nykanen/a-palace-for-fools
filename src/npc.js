@@ -19,7 +19,7 @@ export class NPC extends RenderedObject {
         super(x, y);
 
         this.id = id;
-        this.w = 8;
+        this.w = 4;
         this.h = 16;
 
         this.spr = new Sprite(16, 16);

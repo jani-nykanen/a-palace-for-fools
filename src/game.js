@@ -36,8 +36,6 @@ export class Game {
             this.textbox
         );
 
-       
-
         this.cloudPos = [0, 0, 0];
         this.snowTimer = [0.0, 0.0];
         this.snowFloat = [0.0, Math.PI];

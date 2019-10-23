@@ -82,6 +82,10 @@ export class Player extends GameObject {
         this.gems = 0;
 
         this.teleporting = false;
+
+        this.arrowSpr = new Sprite(16, 16);
+        this.arrowSpr.setFrame(2, 0);
+        this.showArrow = false;
     }
 
 
@@ -114,6 +118,7 @@ export class Player extends GameObject {
         this.deathTimer = 0;
         this.chargeLoadTimer = 0.0;
         this.oldTouchWater = false;
+        this.showArrow = false;
 
         // Set camera
         cam.forceMoveTo(
@@ -521,8 +526,17 @@ export class Player extends GameObject {
         const WALK_SPEED_BASE = 12;
         const AIR_FRAME_LIMIT = 0.5;
         const GUN_ANIM_SPEED = 4;
+        const ARROW_ANIM_SPEED = 20;
 
         let s;
+
+        // Animate arrow
+        if (this.showArrow) {
+
+            this.arrowSpr.animate(
+                2, 0, 1, ARROW_ANIM_SPEED, ev.step);
+        }
+        this.showArrow = false;
 
         // Knockback
         if (this.hurtTimer >= HURT_TIME) {
@@ -801,6 +815,14 @@ export class Player extends GameObject {
             this.spr.frame, row,
             px-8, py-8, this.flip);
 
+        // Show the tiny arrow on top
+        // of the player's head
+        if (this.showArrow) {
+
+            c.drawSprite(this.arrowSpr, c.bitmaps.hud,
+                px-8, py - 24);
+        }
+
         
         if (this.shootAnimTimer > 0) {
 
@@ -814,6 +836,7 @@ export class Player extends GameObject {
             c.drawSprite(this.gunSpr, c.bitmaps.gun,
                 px+5, py-3, this.flip);
         }
+
 
         c.move(-tx, -ty);
     }

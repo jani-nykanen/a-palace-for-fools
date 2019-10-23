@@ -4,46 +4,50 @@
 
 <dialogue id="npc1">
 <chunk>
-We are automatons,
-just like you. We
-cannot fight, and
-that's what saved
-use from the
-disease.
+We are automata.
+If you talk to
+us, we will 
+repeat the same
+sentences over
+and over again.
 </chunk>
 <chunk>
-The fighting ones
-went mad once the
-disease struck. 
-We call them
-zombies.
+However, some of
+us have gained...
+say, additional 
+abilities, over
+time.
 </chunk>
 <chunk>
-Since you cannot
-talk, you must be
-a fighting one. 
-But how come you
-are not a zombie?
+It's almost like
+consciousness.
+Almost...
 </chunk>
 </dialogue>
 
 <dialogue id="npc2">
 <chunk>
-We could have
-fled when the
-chancellor died. 
-He was the last 
-of our rulers.
+When they gained
+more knowledge
+they learned to
+build actual
+robots.
 </chunk>
 <chunk>
-Being royal does 
-not save you from
-the disease, but
-he learned that
-too late.
+However, those
+robots went mad
+once the disease
+hit them. They
+are like zombies
+now.
+</chunk>
+<chunk>
+You look just 
+like them, but 
+how come you 
+are not mad?
 </chunk>
 </dialogue>
-
 
 <dialogue id="npc3">
 <chunk>

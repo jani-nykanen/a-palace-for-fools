@@ -91,6 +91,8 @@ export class Portal extends RenderedObject {
 
         const COLOR = [[170, 170, 0], [85, 170, 255]];
 
+        pl.showArrow = false;
+
         // Play sound
         ev.audio.playSample(ev.audio.sounds.teleport,
             0.50);

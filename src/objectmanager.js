@@ -123,14 +123,6 @@ export class ObjectManager {
             
         }
 
-        // Update NPCs
-        for (let n of this.npcs) {
-
-            n.isInCamera(cam);
-            n.update(this.player, ev);
-            n.playerCollision(this.player, ev);
-        }
-
         // Update player
         this.player.update(ev, [this.bgen]);
         // Get collisions with the stage
@@ -141,6 +133,14 @@ export class ObjectManager {
         // Update gems
         this.gemGen.updateElements(stage, cam, ev);
         this.gemGen.playerCollision(this.player, ev);
+
+        // Update NPCs
+        for (let n of this.npcs) {
+
+            n.isInCamera(cam);
+            n.update(this.player, ev);
+            n.playerCollision(this.player, ev);
+        }
 
         // Update portals
         for (let p of this.portals) {
