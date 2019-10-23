@@ -1,6 +1,7 @@
 import { Sprite } from "./engine/sprite.js";
 import { Vector2, Vector3 } from "./engine/vector.js";
 import { State } from "./engine/input.js";
+import { RenderedObject } from "./renderedobject.js";
 
 //
 // A time-traveling portal
@@ -9,12 +10,12 @@ import { State } from "./engine/input.js";
 //
 
 
-export class Portal {
+export class Portal extends RenderedObject {
 
 
     constructor(x, y, id, cb) {
 
-        this.pos = new Vector2(x, y);
+        super(x, y);
 
         // Collision dimensions
         this.w = 4;
@@ -58,12 +59,12 @@ export class Portal {
         let px = this.pos.x;
         let py = this.pos.y;
         let w = this.spr.w/2;
-        let h = this.spr.h;
+        let h = this.spr.h/2;
 
         this.inCamera =
             px+w >= cam.top.x &&
             px-w <= cam.top.x + cam.w &&
-            py >= cam.top.y &&
+            py+h >= cam.top.y &&
             py-h <= cam.top.y + cam.h;
 
         if (this.inCamera && animate)
@@ -77,7 +78,7 @@ export class Portal {
         c.move(tx, ty);
 
         let px = (this.pos.x - this.spr.w/2) | 0;
-        let py = (this.pos.y - this.spr.h) | 0;
+        let py = (this.pos.y - this.spr.h/2) | 0;
         
         c.drawSprite(this.spr, c.bitmaps.door, px, py);
 
@@ -85,65 +86,26 @@ export class Portal {
     }
 
 
-    // Draw
-    draw(c, stage, cam) {
-
-        if (cam.moving) {
-
-            if (cam.dir.x > 0)
-                this.drawTranslated(c, -stage.w*16, 0);
-            else if (cam.dir.x < 0)
-                this.drawTranslated(c, stage.w*16, 0);
-        }
-
-        if (!this.inCamera) return;
-
-        this.drawTranslated(c, 0, 0);
-    }
-
-
-    // Check the collision with the player
-    playerCollision(pl, ev) {
+    // Activate
+    activate(pl, ev) {
 
         const COLOR = [[170, 170, 0], [85, 170, 255]];
 
-        if (!this.inCamera || !this.active || 
-            !pl.canJump || pl.dying ||
-            ev.input.action.up.state != State.Pressed) return;
-    
-        // Check if inside the collision area
-        let px = pl.pos.x;
-        let py = pl.pos.y;
+        // Play sound
+        ev.audio.playSample(ev.audio.sounds.teleport,
+            0.50);
 
-        let pw = pl.w;
-        let ph = pl.h;
+        // Set player position
+        pl.pos.x = this.pos.x;
+        pl.checkpoint = pl.pos.clone();
 
-        let tx = this.pos.x - this.w/2;
-        let ty = this.pos.y - this.h;
+        // Set player pose
+        pl.setPortalPose(true);
 
-        // If in the hurt area... activate
-        // pain!
-        if (px+pw > tx &&
-            px-pw < tx+this.w &&
-            py+ph/2 > ty &&
-            py-ph/2 < ty+this.h) {
+        // Call callback function, if any
+        if (this.cb != null) {
 
-            // Play sound
-            ev.audio.playSample(ev.audio.sounds.teleport,
-                0.50);
-
-            // Set player position
-            pl.pos.x = this.pos.x;
-            pl.checkpoint = pl.pos.clone();
-
-            // Set player pose
-            pl.setPortalPose(true);
-
-            // Call callback function, if any
-            if (this.cb != null) {
-
-                this.cb(ev, pl, COLOR[this.id]);
-            }
+            this.cb(ev, pl, COLOR[this.id]);
         }
     }
 

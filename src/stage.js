@@ -616,52 +616,61 @@ export class Stage {
                 dx = x*16 + 8;
                 dy = y*16 + 8;
 
-                switch(t) {
 
-                // Player
-                case 1:
+                // Check if NPC
+                if (t >= 33) {
 
-                    objm.setPlayerPosition(x, y, respawn);
-                    break;
+                    objm.addNPC(x, y, t-33);
+                }
+                else {
 
-                // Bat
-                case 2:
+                    switch(t) {
 
-                    objm.addEnemy(Bat.prototype, dx, dy);
-                    break;
+                    // Player
+                    case 1:
 
-                // Beetle
-                case 3:
+                        objm.setPlayerPosition(x, y, respawn);
+                        break;
 
-                    objm.addEnemy(Beetle.prototype, dx, dy);
-                    break;
-                    
-                // Zombie
-                case 4:
+                    // Bat
+                    case 2:
 
-                    objm.addEnemy(Zombie.prototype, dx, dy);
-                    break;    
+                        objm.addEnemy(Bat.prototype, dx, dy);
+                        break;
 
-                // Bee
-                case 5:
+                    // Beetle
+                    case 3:
 
-                    objm.addEnemy(Bee.prototype, dx, dy);
-                    break;
+                        objm.addEnemy(Beetle.prototype, dx, dy);
+                        break;
+                        
+                    // Zombie
+                    case 4:
 
-                // Thwomp
-                case 6:
+                        objm.addEnemy(Zombie.prototype, dx, dy);
+                        break;    
 
-                    objm.addEnemy(Thwomp.prototype, dx, dy);
-                    break;
+                    // Bee
+                    case 5:
 
-                // Portal
-                case 17:
+                        objm.addEnemy(Bee.prototype, dx, dy);
+                        break;
 
-                    objm.addPortal(x, y, id);
-                    break;
+                    // Thwomp
+                    case 6:
 
-                default:
-                    break; 
+                        objm.addEnemy(Thwomp.prototype, dx, dy);
+                        break;
+
+                    // Portal
+                    case 17:
+
+                        objm.addPortal(x, y, id);
+                        break;
+
+                    default:
+                        break; 
+                    }
                 }
             }
         }

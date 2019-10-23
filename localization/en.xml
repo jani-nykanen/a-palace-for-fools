@@ -4,17 +4,89 @@
 
 <dialogue id="npc1">
 <chunk>
-This is a test
-dialogue. Its
-only purpose is
-to test various
-things.
+We are automatons,
+just like you. We
+cannot fight, and
+that's what saved
+use from the
+disease.
 </chunk>
 <chunk>
-For some reason
-it feels pretty
-meaningless...
+The fighting ones
+went mad once the
+disease struck. 
+We call them
+zombies.
+</chunk>
+<chunk>
+Since you cannot
+talk, you must be
+a fighting one. 
+But how come you
+are not a zombie?
 </chunk>
 </dialogue>
+
+<dialogue id="npc2">
+<chunk>
+We could have
+fled when the
+chancellor died. 
+He was the last 
+of our rulers.
+</chunk>
+<chunk>
+Being royal does 
+not save you from
+the disease, but
+he learned that
+too late.
+</chunk>
+</dialogue>
+
+
+<dialogue id="npc3">
+<chunk>
+We still don't
+understand how
+these portals 
+work.
+</chunk>
+<chunk>
+We are not in the
+past, not really.
+This is just...
+we could call it 
+a backup. A time 
+backup.
+</chunk>
+<chunk>
+You cannot alter
+the future here,
+but you can still
+obtain items. It
+should not work,
+but yet it does.
+</chunk>
+</dialogue>
+
+
+<dialogue id="npc4">
+<chunk>
+If you spend too
+long a time in
+here, you will be
+sent back to your
+own time.
+</chunk>
+<chunk>
+That's how time
+backups work. The
+same thing will 
+happen if you 
+travel too far.
+</chunk>
+</dialogue>
+
 
 </localization>

@@ -3,6 +3,7 @@ import { Gem } from "./gem.js";
 import { Generator } from "./generator.js";
 import { Bullet } from "./bullet.js";
 import { Portal } from "./portal.js";
+import { NPC } from "./npc.js";
 
 //
 // Object manager. Handles the game objects,
@@ -15,7 +16,7 @@ import { Portal } from "./portal.js";
 export class ObjectManager {
 
 
-    constructor(portalCB) {
+    constructor(portalCB, textbox) {
 
         const GEM_COUNT = 8;
         const BULLET_COUNT = 16;
@@ -23,6 +24,7 @@ export class ObjectManager {
         this.player = new Player(0, 0);
         this.enemies = new Array();
         this.portals = new Array();
+        this.npcs = new Array();
 
         this.playerCreated = false;
 
@@ -30,6 +32,7 @@ export class ObjectManager {
         this.gemGen = new Generator(Gem.prototype, GEM_COUNT);
 
         this.portalCB = portalCB;
+        this.textbox = textbox;
     }
 
 
@@ -77,7 +80,16 @@ export class ObjectManager {
     addPortal(x, y, id) {
 
         this.portals.push(
-            new Portal(x*16 + 8, y*16 + 16, id, this.portalCB)
+            new Portal(x*16 + 8, y*16, id, this.portalCB)
+        );
+    }
+
+
+    // Add an NPC
+    addNPC(x, y, id) {
+
+        this.npcs.push(
+            new NPC(x*16 + 8, y*16 + 8, id, this.textbox)
         );
     }
 
@@ -111,6 +123,14 @@ export class ObjectManager {
             
         }
 
+        // Update NPCs
+        for (let n of this.npcs) {
+
+            n.isInCamera(cam);
+            n.update(this.player, ev);
+            n.playerCollision(this.player, ev);
+        }
+
         // Update player
         this.player.update(ev, [this.bgen]);
         // Get collisions with the stage
@@ -139,6 +159,12 @@ export class ObjectManager {
         for (let p of this.portals) {
 
             p.draw(c, stage, cam);
+        }
+
+        // Draw NPCs
+        for (let n of this.npcs) {
+
+            n.draw(c, stage, cam);
         }
 
         // "Pre-render" specific enemy parts
@@ -191,6 +217,10 @@ export class ObjectManager {
 
             p.isInCamera(cam, ev, true);
         }
+        for (let n of this.npcs) {
+
+            n.isInCamera(cam);
+        }
     }
 
 
@@ -211,6 +241,7 @@ export class ObjectManager {
 
         this.portals = new Array();
         this.enemies = new Array();
+        this.npcs = new Array();
 
         this.bgen.reset();
         this.gemGen.reset();

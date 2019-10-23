@@ -20,6 +20,7 @@ export class Game {
         // Create components that do not require
         // assets (at least not initially)
         this.cam = new Camera(0, 0, 160, 144);
+        this.textbox = new Textbox(144, 64);
         this.objm = new ObjectManager(
             (ev, pl, col) => {
 
@@ -31,10 +32,11 @@ export class Game {
                     2, (ev) => {
                         this.changeTime();
                     }, ...col);
-            }
+            },
+            this.textbox
         );
 
-        this.textbox = new Textbox(144, 64);
+       
 
         this.cloudPos = [0, 0, 0];
         this.snowTimer = [0.0, 0.0];
@@ -85,7 +87,7 @@ export class Game {
     popTestMessage(ev) {
 
         this.textbox.addMessage(
-            ...ev.loc.dialogue.npc1
+            ...ev.loc.dialogue.npc2
         );
         this.textbox.activate();
     }
