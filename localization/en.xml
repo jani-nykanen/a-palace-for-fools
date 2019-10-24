@@ -108,5 +108,22 @@ even that, really.
 
 </dialogue>
 
+<dialogue id="item2">
+
+<chunk>
+You obtain
+"DUMMY ITEM 2"!
+</chunk>
+
+<chunk>
+It's not any more
+useful than the 
+first dummy item.
+Sorry.
+</chunk>
+
+</dialogue>
+
+
 
 </localization>

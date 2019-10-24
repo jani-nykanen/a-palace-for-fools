@@ -31,6 +31,8 @@ export class Game {
                 ev.tr.activate(true, TransitionMode.CircleOutside,
                     2, (ev) => {
                         this.changeTime();
+                        // TODO: The next line should happen somewhere else
+                        pl.spr.setFrame(10, 0);
                     }, ...col);
             },
             this.textbox
@@ -317,6 +319,9 @@ export class Game {
 
         // Draw game objects
         this.objm.draw(c, this.cam, this.stage);
+
+        // Draw textbox item
+        this.textbox.drawItem(c);
 
         // Reset camera
         c.moveTo(0, 0); 

@@ -44,6 +44,7 @@ window.onload = () => {
         {name: "snow",   src: "assets/bitmaps/snow.png"},
         {name: "door",   src: "assets/bitmaps/door.png"},
         {name: "npc",   src: "assets/bitmaps/npc.png"},
+        {name: "items",   src: "assets/bitmaps/items.png"},
     );
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past.tmx"},

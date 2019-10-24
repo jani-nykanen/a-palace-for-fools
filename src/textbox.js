@@ -11,7 +11,7 @@ import { Vector2 } from "./engine/vector.js";
 export class Textbox {
 
 
-    constructor(w, h) {
+    constructor() {
 
         this.queue = new Array();
         this.sizes = new Array();
@@ -23,10 +23,11 @@ export class Textbox {
 
         this.endSymbolFloat = 0.0;
 
-        this.w = w;
-        this.h = h;
-
         this.waitTimer = 0;
+        this.itemWait = 0;
+        this.itemPos = new Vector2();
+        this.item = null;
+        this.itemSpeed = 0;
     }
 
 
@@ -47,7 +48,6 @@ export class Textbox {
     }
 
 
-
     // Add messages
     addMessage() {
 
@@ -60,7 +60,7 @@ export class Textbox {
 
     
     // Activate
-    activate(wait) {
+    activate(wait, item, itemPos, speedY, itemWait) {
 
         this.active = true;
         this.charTimer = 0;
@@ -70,6 +70,14 @@ export class Textbox {
         if (wait == null)
             wait = 0.0;
         this.waitTimer = wait;
+
+        this.item = item;
+        if (item != null) {
+
+            this.itemPos = itemPos.clone();
+            this.itemSpeed = speedY;
+            this.itemWait = itemWait;
+        }
     }
 
 
@@ -83,6 +91,16 @@ export class Textbox {
 
         // Update wait timer
         if (this.waitTimer > 0) {
+
+            // Compute item pos
+            if (this.item != null) {
+
+                if (this.itemWait > 0) {
+
+                    this.itemPos.y += this.itemSpeed * ev.step;
+                    this.itemWait -= 1.0 * ev.step;
+                }
+            }
 
             this.waitTimer -= 1.0 * ev.step;
             return;
@@ -140,6 +158,19 @@ export class Textbox {
                 (this.endSymbolFloat + FLOAT_SPEED*ev.step) % 
                 (Math.PI*2);
         }
+    }
+
+
+    // Draw item
+    drawItem(c) {
+
+        if (!this.active ||
+            this.item == null) return;
+
+        c.drawBitmapRegion(c.bitmaps.items,
+            this.item*16, 0, 16, 16,
+            (this.itemPos.x - 8) | 0,
+            (this.itemPos.y - 8) | 0);
     }
 
 

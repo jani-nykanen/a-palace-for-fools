@@ -1,6 +1,7 @@
 import { Sprite } from "./engine/sprite.js";
 import { Flip } from "./engine/canvas.js";
 import { RenderedObject } from "./renderedobject.js";
+import { Vector2 } from "./engine/vector.js";
 
 //
 // A chest that contains an item
@@ -44,12 +45,16 @@ export class Chest extends RenderedObject {
     // Activate
     activate(pl, ev) {
 
-        const WAIT_TIME = 120;
+        const WAIT_TIME = 90;
+        const ITEM_WAIT = 30;
+        const ITEM_SPEED = -0.5;
 
         this.textbox.addMessage(
             ...ev.loc.dialogue["item" + String(this.id+1)]
         );
-        this.textbox.activate(WAIT_TIME);
+        this.textbox.activate(WAIT_TIME, this.id, 
+            new Vector2(this.pos.x, this.pos.y-8), 
+            ITEM_SPEED, ITEM_WAIT);
 
         this.spr.setFrame(1, 1);
 
