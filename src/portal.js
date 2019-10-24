@@ -40,35 +40,24 @@ export class Portal extends RenderedObject {
 
         const ANIM_SPEED = 8;
 
-        if (!this.inCamera) return;
-
-        this.spr.animate(this.id, 1, 3, ANIM_SPEED, ev.step);
+        this.spr.animate(this.id, 
+            1, 3, ANIM_SPEED, ev.step);
     }
 
 
     // Update
-    update(ev) {
+    update(pl, ev) {
         
+        if (!this.inCamera) return;
+
         this.animate(ev);
     }
 
 
-    // Check if in camera
-    isInCamera(cam, ev, animate) {
+    // Camera movement animation
+    cameraMoveAnimation(ev) {
 
-        let px = this.pos.x;
-        let py = this.pos.y;
-        let w = this.spr.w/2;
-        let h = this.spr.h/2;
-
-        this.inCamera =
-            px+w >= cam.top.x &&
-            px-w <= cam.top.x + cam.w &&
-            py+h >= cam.top.y &&
-            py-h <= cam.top.y + cam.h;
-
-        if (this.inCamera && animate)
-            this.animate(ev);
+        this.animate(ev);
     }
 
 

@@ -31,22 +31,6 @@ export class NPC extends RenderedObject {
     }
 
 
-    // Check if in camera
-    isInCamera(cam) {
-
-        let px = this.pos.x;
-        let py = this.pos.y;
-        let w = this.spr.w/2;
-        let h = this.spr.h/2;
-
-        this.inCamera =
-            px+w >= cam.top.x &&
-            px-w <= cam.top.x + cam.w &&
-            py+h >= cam.top.y &&
-            py-h <= cam.top.y + cam.h;
-    }
-
-
     // Update
     update(pl, ev) {
 
@@ -84,22 +68,6 @@ export class NPC extends RenderedObject {
             this.flip);
 
         c.move(-tx, -ty);
-    }
-
-
-    // Draw
-    draw(c, stage, cam) {
-
-        if (cam.moving) {
-
-            if (cam.dir.x > 0)
-                this.drawTranslated(c, -stage.w*16, 0);
-            else if (cam.dir.x < 0)
-                this.drawTranslated(c, stage.w*16, 0);
-        }
-
-        if (this.inCamera);
-            this.drawTranslated(c, 0, 0);
     }
 
 }

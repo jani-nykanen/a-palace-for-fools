@@ -108,6 +108,7 @@ export class Player extends GameObject {
         this.touchWater = false;
         this.rocketActive = false;
         this.dying = false;
+        this.canShoot = true;
 
         // ...and other stuff
         this.health = this.maxHealth;
@@ -354,7 +355,8 @@ export class Player extends GameObject {
                 this.chargeLoadTimer -= CHARGE_TIME_MAX;
             }
 
-            if (s == State.Released) {
+            if (s == State.Released ||
+                s == State.Up) {
 
                 this.chargeLoadTimer = 0.0;
                 this.shootBullet(bgen, 1, ev);
@@ -882,13 +884,7 @@ export class Player extends GameObject {
 
         this.spr.setFrame(goIn ? 9 : 10, 0);
 
-        this.chargeLoadTimer = 0;
-        this.hurtTimer = 0;
-        this.shootAnimTimer = 0;
-
-        this.slideTimer = 0;
-        this.speed.x = 0;
-        this.speed.y = 0;
+        this.stopMovement();        
 
         this.teleporting = true;
     }
@@ -903,5 +899,20 @@ export class Player extends GameObject {
 
         if (this.spr.frame < 5)
             this.spr.animate(this.spr.row, 0, 5, ANIM_SPEED, ev.step);
+    }
+
+
+    // Stop all the movement
+    stopMovement() {
+
+        this.chargeLoadTimer = 0;
+        this.hurtTimer = 0;
+        this.shootAnimTimer = 0;
+
+        this.slideTimer = 0;
+        this.speed.x = 0;
+        this.speed.y = 0;
+    
+        this.canShoot = true;
     }
 }

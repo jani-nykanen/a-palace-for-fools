@@ -4,6 +4,7 @@ import { Generator } from "./generator.js";
 import { Bullet } from "./bullet.js";
 import { Portal } from "./portal.js";
 import { NPC } from "./npc.js";
+import { Chest } from "./chest.js";
 
 //
 // Object manager. Handles the game objects,
@@ -25,6 +26,7 @@ export class ObjectManager {
         this.enemies = new Array();
         this.portals = new Array();
         this.npcs = new Array();
+        this.chests = new Array();
 
         this.playerCreated = false;
 
@@ -94,6 +96,27 @@ export class ObjectManager {
     }
 
 
+    // Add a chest
+    addChest(x, y, id) {
+
+        this.chests.push(
+            new Chest(x*16 + 8, y*16 + 8, id, this.textbox)
+        );
+    }
+
+
+    // Update an array of "rendered objects"
+    updateRenderedObjectArray(arr, cam, ev) {
+        
+        for (let n of arr) {
+
+            n.isInCamera(cam, ev, false);
+            n.update(this.player, ev);
+            n.playerCollision(this.player, ev);
+        }
+    }
+
+
     // Update 
     update(stage, cam, ev) {
 
@@ -134,38 +157,36 @@ export class ObjectManager {
         this.gemGen.updateElements(stage, cam, ev);
         this.gemGen.playerCollision(this.player, ev);
 
+        // Update chests
+        this.updateRenderedObjectArray(this.chests, cam, ev);
         // Update NPCs
-        for (let n of this.npcs) {
-
-            n.isInCamera(cam);
-            n.update(this.player, ev);
-            n.playerCollision(this.player, ev);
-        }
-
+        this.updateRenderedObjectArray(this.npcs, cam, ev);
         // Update portals
-        for (let p of this.portals) {
+        this.updateRenderedObjectArray(this.portals, cam, ev);
+    }
+    
 
-            p.isInCamera(cam);
-            p.update(ev);
-            p.playerCollision(this.player, ev);
+
+    // Draw an array of "rendered objects"
+    drawRenderedObjectArray(o, c, stage, cam) {
+
+        for (let n of o) {
+
+            n.draw(c, stage, cam);
         }
     }
+
 
 
     // Draw
     draw(c, cam, stage) {
 
         // Draw portals
-        for (let p of this.portals) {
-
-            p.draw(c, stage, cam);
-        }
-
+        this.drawRenderedObjectArray(this.portals, c, stage, cam);
         // Draw NPCs
-        for (let n of this.npcs) {
-
-            n.draw(c, stage, cam);
-        }
+        this.drawRenderedObjectArray(this.npcs, c, stage, cam);
+        // Draw chests
+        this.drawRenderedObjectArray(this.chests, c, stage, cam);
 
         // "Pre-render" specific enemy parts
         for (let e of this.enemies) {
@@ -221,6 +242,10 @@ export class ObjectManager {
 
             n.isInCamera(cam);
         }
+        for (let c of this.chests) {
+
+            c.isInCamera(cam);
+        }
     }
 
 
@@ -229,7 +254,6 @@ export class ObjectManager {
 
         return this.player.isDead();
     }
-
 
     // Reset
     reset(cam, id) {
@@ -242,14 +266,10 @@ export class ObjectManager {
         this.portals = new Array();
         this.enemies = new Array();
         this.npcs = new Array();
+        this.chests = new Array();
 
         this.bgen.reset();
         this.gemGen.reset();
-
-        for (let e of this.enemies) {
-
-            e.isInCamera(cam);
-        }
     }
 
 

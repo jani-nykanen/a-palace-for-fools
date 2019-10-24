@@ -82,6 +82,11 @@ export class Stage {
             this.map = new Tilemap(this.maps[id]);
         }
 
+        for (let d of this.dust) {
+
+            d.exist = false;
+        }
+
         this.map = new Tilemap(this.baseMap);
         this.w = this.map.w;
         this.h = this.map.h;
@@ -620,7 +625,10 @@ export class Stage {
                 // Check if NPC
                 if (t >= 33) {
 
-                    objm.addNPC(x, y, t-33);
+                    if (t < 33 + 16)
+                        objm.addNPC(x, y, t-33);
+                    else
+                        objm.addChest(x, y, t-49);
                 }
                 else {
 

@@ -93,4 +93,20 @@ travel too far.
 </dialogue>
 
 
+<dialogue id="item1">
+
+<chunk>
+You obtain
+"DUMMY ITEM"!
+</chunk>
+
+<chunk>
+It's a worthless
+debug item. Not
+even that, really.
+</chunk>
+
+</dialogue>
+
+
 </localization>

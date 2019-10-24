@@ -23,7 +23,7 @@ export class EnableAudioScreen {
     // Initialize
     init(ev) {
 
-        const GLOBAL_SAMPLE_VOLUME = 0.70;
+        const GLOBAL_SAMPLE_VOLUME = 0.40;
 
         ev.audio.setGlobalSampleVolume(GLOBAL_SAMPLE_VOLUME);
     }

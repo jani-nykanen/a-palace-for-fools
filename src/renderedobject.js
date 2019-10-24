@@ -23,6 +23,29 @@ export class RenderedObject {
     }
 
 
+    // Check if in camera
+    isInCamera(cam, ev, animate) {
+
+        let px = this.pos.x;
+        let py = this.pos.y;
+        let w = this.spr.w/2;
+        let h = this.spr.h/2;
+
+        this.inCamera =
+            px+w >= cam.top.x &&
+            px-w <= cam.top.x + cam.w &&
+            py+h >= cam.top.y &&
+            py-h <= cam.top.y + cam.h;
+
+        if (this.cameraMoveAnimation != null &&
+            this.inCamera && animate) {
+
+            this.cameraMoveAnimation(ev);
+        }
+            
+    }
+
+
     // Check the collision with the player
     playerCollision(pl, ev) {
 

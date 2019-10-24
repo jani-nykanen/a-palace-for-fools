@@ -25,6 +25,8 @@ export class Textbox {
 
         this.w = w;
         this.h = h;
+
+        this.waitTimer = 0;
     }
 
 
@@ -58,12 +60,16 @@ export class Textbox {
 
     
     // Activate
-    activate() {
+    activate(wait) {
 
         this.active = true;
         this.charTimer = 0;
         this.charPos = 0;
         this.queuePos = 0;
+
+        if (wait == null)
+            wait = 0.0;
+        this.waitTimer = wait;
     }
 
 
@@ -74,6 +80,13 @@ export class Textbox {
         const CHAR_WAIT = 2;
 
         if (!this.active) return;
+
+        // Update wait timer
+        if (this.waitTimer > 0) {
+
+            this.waitTimer -= 1.0 * ev.step;
+            return;
+        }
 
         let action = ev.input.anyPressed;
             //ev.input.action.start.state == State.Pressed ||
@@ -139,7 +152,8 @@ export class Textbox {
         const COLORS = [255, 0, 85];
         const END_FLOAT = 1.1;
 
-        if (!this.active) return;
+        if (!this.active ||
+            this.waitTimer > 0) return;
 
         let w = this.sizes[0].x + CORNER_OFF*2;
         let h = this.sizes[0].y + CORNER_OFF*2;
