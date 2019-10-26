@@ -81,13 +81,15 @@ export class Chest extends RenderedObject {
 
         ++ this.spr.frame;
 
-        // Make player crouch near the chest
-        pl.pos.x = this.pos.x + 8*(this.flip == Flip.None ? -1 : 1);
-        pl.pos.y = this.pos.y + 2;
-        pl.spr.setFrame(3, 2);
-        pl.flip = this.flip;
-        pl.showArrow = false;
+        if (this.id >= 0) {
+            // Make player crouch near the chest
+            pl.pos.x = this.pos.x + 8*(this.flip == Flip.None ? -1 : 1);
+            pl.pos.y = this.pos.y + 2;
+            pl.spr.setFrame(3, 2);
+            pl.flip = this.flip;
+        }
 
+        pl.showArrow = false;
         pl.stopMovement();
 
         // Play sound
