@@ -97,22 +97,23 @@ export class ObjectManager {
 
 
     // Add a chest
-    addChest(x, y, id) {
+    addChest(x, y, id, makeActive) {
 
         this.chests.push(
-            new Chest(x*16 + 8, y*16 + 8, id, this.textbox)
+            new Chest(x*16 + 8, y*16 + 8, id, 
+                this.textbox, makeActive)
         );
     }
 
 
     // Update an array of "rendered objects"
-    updateRenderedObjectArray(arr, cam, ev) {
+    updateRenderedObjectArray(arr, stage, cam, ev) {
         
         for (let n of arr) {
 
             n.isInCamera(cam, ev, false);
             n.update(this.player, ev);
-            n.playerCollision(this.player, ev);
+            n.playerCollision(this.player, stage, ev);
         }
     }
 
@@ -158,11 +159,11 @@ export class ObjectManager {
         this.gemGen.playerCollision(this.player, ev);
 
         // Update chests
-        this.updateRenderedObjectArray(this.chests, cam, ev);
+        this.updateRenderedObjectArray(this.chests, stage, cam, ev);
         // Update NPCs
-        this.updateRenderedObjectArray(this.npcs, cam, ev);
+        this.updateRenderedObjectArray(this.npcs, stage, cam, ev);
         // Update portals
-        this.updateRenderedObjectArray(this.portals, cam, ev);
+        this.updateRenderedObjectArray(this.portals, stage, cam, ev);
     }
     
 

@@ -76,7 +76,7 @@ export class Portal extends RenderedObject {
 
 
     // Activate
-    activate(pl, ev) {
+    activate(pl, stage, ev) {
 
         const COLOR = [[170, 170, 0], [85, 170, 255]];
 

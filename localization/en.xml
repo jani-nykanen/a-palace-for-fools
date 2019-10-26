@@ -93,10 +93,28 @@ travel too far.
 </dialogue>
 
 
+<!-- Item dialogue -->
+
+<dialogue id="item0">
+
+<chunk>
+You obtain a
+"HEALTH
+CONTAINER!"
+</chunk>
+
+<chunk>
+It increases
+your life by 1!
+</chunk>
+
+</dialogue>
+
+
 <dialogue id="item1">
 
 <chunk>
-You obtain
+You obtain a
 "DUMMY ITEM"!
 </chunk>
 

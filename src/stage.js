@@ -44,6 +44,15 @@ export class Stage {
         }
 
         this.gemCB = null;
+
+        // To make sure activated chests are not
+        // made active again
+        this.chestBuffer = new Array();
+        for (let i = 0; i < 2; ++ i) {
+
+            this.chestBuffer[i] = new Array(this.w*this.h);
+            this.chestBuffer[i].fill(false);
+        }
     }
 
 
@@ -628,7 +637,7 @@ export class Stage {
                     if (t < 33 + 16)
                         objm.addNPC(x, y, t-33);
                     else
-                        objm.addChest(x, y, t-49);
+                        objm.addChest(x, y, t-49, !this.chestBuffer[this.id][y*this.w+x]);
                 }
                 else {
 
@@ -676,12 +685,25 @@ export class Stage {
                         objm.addPortal(x, y, id);
                         break;
 
+                    // Health container
+                    case 18:
+
+                        objm.addChest(x, y, -1, !this.chestBuffer[this.id][y*this.w+x]);
+                        break;
+
                     default:
                         break; 
                     }
                 }
             }
         }
+    }
+
+
+    // Update chest buffer 
+    updateChestBuffer(x, y, state) {
+
+        this.chestBuffer[this.id] [y*this.w+x] = state;
     }
 
 }

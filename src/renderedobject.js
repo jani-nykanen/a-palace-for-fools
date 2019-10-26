@@ -47,7 +47,7 @@ export class RenderedObject {
 
 
     // Check the collision with the player
-    playerCollision(pl, ev) {
+    playerCollision(pl, stage, ev) {
 
         if (this.activate == null ||
             !this.inCamera || !this.active || 
@@ -73,7 +73,7 @@ export class RenderedObject {
             pl.showArrow = true;
 
             if (ev.input.action.up.state == State.Pressed)
-                this.activate(pl, ev);
+                this.activate(pl, stage, ev);
         }
     }
 

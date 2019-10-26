@@ -13,7 +13,7 @@ import { Vector2 } from "./engine/vector.js";
 export class Chest extends RenderedObject {
 
     
-    constructor(x, y, id, textbox) {
+    constructor(x, y, id, textbox, makeActive) {
 
         super(x, y);
 
@@ -22,14 +22,21 @@ export class Chest extends RenderedObject {
         this.h = 16;
 
         this.spr = new Sprite(16, 16);
-        this.spr.setFrame(1, 0);
-        this.flip = ((x/16)|0) % 2 == 0 ? Flip.Horizontal : Flip.None;
+        if (id == -1)
+            this.spr.setFrame(2, 0);
+        else
+            this.spr.setFrame(1, 0);
+            
+        this.flip = (((x/16)|0) % 2 == 0  && this.id >= 0)
+            ? Flip.Horizontal : Flip.None;
 
         this.inCamera = false;
     
         this.textbox = textbox;
 
-        this.active = true;
+        this.active = makeActive;
+        if (!this.active)
+            ++ this.spr.frame;
     }
 
 
@@ -42,8 +49,24 @@ export class Chest extends RenderedObject {
     }
 
 
+    // Item effect
+    itemEffect(pl, ev) {
+
+        switch(this.id) {
+
+            case -1:
+                ++ pl.health;
+                ++ pl.maxHealth;
+                break;
+
+            default:
+                break;
+        }
+    }
+
+
     // Activate
-    activate(pl, ev) {
+    activate(pl, stage, ev) {
 
         const WAIT_TIME = 90;
         const ITEM_WAIT = 30;
@@ -52,11 +75,11 @@ export class Chest extends RenderedObject {
         this.textbox.addMessage(
             ...ev.loc.dialogue["item" + String(this.id+1)]
         );
-        this.textbox.activate(WAIT_TIME, this.id, 
+        this.textbox.activate(WAIT_TIME, this.id+1, 
             new Vector2(this.pos.x, this.pos.y-8), 
             ITEM_SPEED, ITEM_WAIT);
 
-        this.spr.setFrame(1, 1);
+        ++ this.spr.frame;
 
         // Make player crouch near the chest
         pl.pos.x = this.pos.x + 8*(this.flip == Flip.None ? -1 : 1);
@@ -69,6 +92,13 @@ export class Chest extends RenderedObject {
 
         // Play sound
         ev.audio.playSample(ev.audio.sounds.item, 0.50);
+
+        // Apply item effect
+        this.itemEffect(pl, ev);
+
+        // Update chest array to make sure this
+        // chest is not made active upon respawn
+        stage.updateChestBuffer((this.pos.x/16)|0, (this.pos.y/16)|0, true);
 
         this.active = false;
     }

@@ -48,7 +48,7 @@ export class NPC extends RenderedObject {
 
 
     // Activate
-    activate(pl, ev) {
+    activate(pl, stage, ev) {
 
         this.textbox.addMessage(
             ...ev.loc.dialogue["npc" + String(this.id+1)]
