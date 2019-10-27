@@ -121,3 +121,17 @@ export function getColorString(r, g, b, a) {
         + String(b | 0) + ","
          + String(a) + ")";
 }
+
+
+// Draw box with borders
+export function drawBoxWithBorders(c, x, y, w, h, colors) {
+
+    let len = colors.length -1;
+
+    for (let i = len; i >= 0; -- i) {
+
+        c.setColor(colors[len-i]);
+        c.fillRect(x-i, y-i,
+            w+i*2, h+i*2);
+    }
+}

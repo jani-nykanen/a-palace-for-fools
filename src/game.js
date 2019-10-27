@@ -4,6 +4,7 @@ import { Camera } from "./camera.js";
 import { ObjectManager } from "./objectmanager.js";
 import { State } from "./engine/input.js";
 import { Textbox } from "./textbox.js";
+import { drawBoxWithBorders } from "./engine/util.js";
 
 //
 // Game scene
@@ -43,6 +44,9 @@ export class Game {
         this.snowFloat = [0.0, Math.PI];
 
         this.mapID = 0;
+
+        // Is the game paused
+        this.paused = false;
     }
 
 
@@ -106,6 +110,19 @@ export class Game {
         if (this.textbox.active) {
 
             this.textbox.update(ev);
+            return;
+        }
+
+        // Stop here if paused
+        let p = ev.input.action.start.state;
+        if (p == State.Pressed) {
+
+            this.paused = !this.paused;
+            ev.audio.playSample(ev.audio.sounds.pause,
+                0.50);
+        }
+        if (this.paused) {
+
             return;
         }
 
@@ -299,6 +316,24 @@ export class Game {
     }
 
 
+    // Draw pause
+    drawPause(c) {
+
+        const WIDTH = 96;
+        const HEIGHT = 12;
+        const COLORS = [255, 0, 85];
+
+        drawBoxWithBorders(c,
+            c.w/2 - WIDTH/2,
+            c.h/2 - HEIGHT/2,
+            WIDTH, HEIGHT,
+            COLORS);
+
+        c.drawText(c.bitmaps.font, "GAME PAUSED",
+            c.w/2, c.h/2-HEIGHT/2 +2, 0, 0, true);
+    }   
+
+
     // (Re)draw the scene
     draw(c) {
 
@@ -337,6 +372,12 @@ export class Game {
 
         // Draw text box
         this.textbox.draw(c);
+
+        // Draw game paused screen, if paused
+        if (this.paused) {
+
+            this.drawPause(c);
+        }
     }
 
 }

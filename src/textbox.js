@@ -1,5 +1,6 @@
 import { State } from "./engine/input.js";
 import { Vector2 } from "./engine/vector.js";
+import { drawBoxWithBorders } from "./engine/util.js";
 
 //
 // A textbox
@@ -192,13 +193,7 @@ export class Textbox {
         let tx = c.w/2 - w/2;
         let ty = c.h/2 - h/2;
 
-        for (let i = 2; i >= 0; -- i) {
-
-
-            c.setColor(COLORS[2-i]);
-            c.fillRect(tx-i, ty-i,
-                w+i*2, h+i*2);
-        }
+        drawBoxWithBorders(c, tx, ty, w, h, COLORS);
 
         // Draw current message
         c.drawText(c.bitmaps.font, 

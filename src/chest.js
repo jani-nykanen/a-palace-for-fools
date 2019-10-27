@@ -82,7 +82,8 @@ export class Chest extends RenderedObject {
         ++ this.spr.frame;
 
         if (this.id >= 0) {
-            // Make player crouch near the chest
+
+            // Make the player crouch near the chest
             pl.pos.x = this.pos.x + 8*(this.flip == Flip.None ? -1 : 1);
             pl.pos.y = this.pos.y + 2;
             pl.spr.setFrame(3, 2);
@@ -93,7 +94,10 @@ export class Chest extends RenderedObject {
         pl.stopMovement();
 
         // Play sound
-        ev.audio.playSample(ev.audio.sounds.item, 0.50);
+        ev.audio.playSample(
+            this.id == -1 ? ev.audio.sounds.healthUp : 
+                ev.audio.sounds.item, 
+            0.50);
 
         // Apply item effect
         this.itemEffect(pl, ev);
