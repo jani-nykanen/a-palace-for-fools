@@ -183,6 +183,7 @@ export class Enemy extends GameObject {
 
         const HURT_TIME = 30;
         const KNOCKBACK_SPEED = 1.0;
+        const EPS = 0.001;
 
         if (!b.exist || b.dying || 
             !this.exist || this.dying)
@@ -222,7 +223,9 @@ export class Enemy extends GameObject {
 
                 this.plAngle = Math.atan2(py-by, px-bx);
                 this.speed.x = Math.cos(this.plAngle) * knockback;
-                this.speed.y = Math.sin(this.plAngle) * knockback;
+
+                if (Math.abs(this.acc.y) > EPS)
+                    this.speed.y = Math.sin(this.plAngle) * knockback;
             }
         }
     }
@@ -244,6 +247,8 @@ export class Enemy extends GameObject {
 
     // Enemy-to-enemy collision
     enemyToEnemyCollision(e) {
+
+        const EPS = 0.001;
 
         if (!this.exist || this.dying ||
             !e.exist || e.dying) return;
@@ -269,7 +274,9 @@ export class Enemy extends GameObject {
                 this.pos.y += Math.sin(angle) * r/2;
 
                 this.speed.x = Math.abs(this.speed.x) * Math.cos(angle);
-                this.speed.y = Math.abs(this.speed.y) * Math.sin(angle);
+
+                if (Math.abs(this.acc.y) > EPS)
+                    this.speed.y = Math.abs(this.speed.y) * Math.sin(angle);
             }
 
             if (!e.isStatic) {
@@ -278,7 +285,9 @@ export class Enemy extends GameObject {
                 e.pos.y -= Math.sin(angle) * r/2;
 
                 e.speed.x = -Math.abs(e.speed.x) * Math.cos(angle);
-                e.speed.y = -Math.abs(e.speed.y) * Math.sin(angle);
+
+                if (Math.abs(e.acc.y) > EPS)
+                    e.speed.y = -Math.abs(e.speed.y) * Math.sin(angle);
 
                 e.dir *= -1;
             }

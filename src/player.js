@@ -710,7 +710,7 @@ export class Player extends GameObject {
 
         const EPS = -0.1;
 
-        if (this.speed.y < EPS)
+        if (this.speed.y < EPS && !this.oldTouchWater)
             ev.audio.playSample(ev.audio.sounds.hit, 0.40);
     }
 

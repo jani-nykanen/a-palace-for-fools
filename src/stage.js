@@ -6,6 +6,7 @@ import { Beetle } from "./beetle.js";
 import { Zombie } from "./zombie.js";
 import { Bee } from "./bee.js";
 import { Thwomp } from "./thwomp.js";
+import { Fish } from "./fish.js";
 
 //
 // Handles the game stage rendering
@@ -125,7 +126,7 @@ export class Stage {
     // Is the tile solid
     isSolid(x, y, loop) {
 
-        const SOLID = [1, 8, 9];
+        const SOLID = [1, 9, 10];
 
         let t = this.map.getTile(0, x, y, loop);
 
@@ -308,11 +309,11 @@ export class Stage {
 
 
     // Draw water
-    drawWater(c, x, y) {
+    drawWater(c, x, y, t) {
 
         let ts = this.tileset;
 
-        if (this.map.getTile(0, x, y-1, true) != 7) {
+        if (t == 0) {
 
             c.drawSprite(this.waterSurface, ts,
                 x*16, y*16);
@@ -391,15 +392,16 @@ export class Stage {
 
                 // Water
                 case 7:
+                case 8:
 
-                    this.drawWater(c, x, y);
+                    this.drawWater(c, x, y, t-7);
                     break;
 
                 // Breaking tile
-                case 8:
                 case 9:
+                case 10:
                     
-                    this.drawBreakingWall(c, x, y, t-8);
+                    this.drawBreakingWall(c, x, y, t-9);
                     break;
 
                 default:
@@ -523,22 +525,13 @@ export class Stage {
 
 
     // Get water collision
-    getWaterCollision(o, x, y) {
+    getWaterCollision(o, x, y, t) {
 
         const TOP_OFF = 4;
 
-        // Check if there is water in the tile
-        // above
-        let s = this.map.getTile(0, x, y-1);
-        if (s != 7) {
-
-            o.waterCollision(x*16, y*16+TOP_OFF, 
-                16, 16-TOP_OFF);
-        }
-        else {
-
-            o.waterCollision(x*16, y*16, 16, 16);
-        }
+        o.waterCollision(
+            x*16, y*16+TOP_OFF*(1-t), 
+            16, 16-TOP_OFF*(1-t));
     }
 
 
@@ -576,11 +569,11 @@ export class Stage {
 
                 // Wall
                 case 1:
-                case 8:
                 case 9:
+                case 10:
 
                     this.getWallCollision(o, x, y, 
-                        (t == 8 || t == 9) ? (t-7) : false, 
+                        (t == 9 || t == 10) ? (t-8) : false, 
                         ev);
                     break; 
 
@@ -601,11 +594,11 @@ export class Stage {
 
                 // Water
                 case 7:
+                case 8:
 
-                    this.getWaterCollision(o, x, y);
+                    this.getWaterCollision(o, x, y, t-7);
                     break;
 
-                    
                 default:
                     break;
                 }
@@ -649,6 +642,7 @@ export class Stage {
                         objm.setPlayerPosition(x, y, respawn);
                         break;
 
+                    // TODO: Object types to an array
                     // Bat
                     case 2:
 
@@ -677,6 +671,12 @@ export class Stage {
                     case 6:
 
                         objm.addEnemy(Thwomp.prototype, dx, dy);
+                        break;
+
+                    // Fish
+                    case 7:
+
+                        objm.addEnemy(Fish.prototype, dx, dy);
                         break;
 
                     // Portal
