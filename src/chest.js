@@ -27,7 +27,7 @@ export class Chest extends RenderedObject {
         else
             this.spr.setFrame(1, 0);
             
-        this.flip = (((x/16)|0) % 2 == 0  && this.id >= 0)
+        this.flip = (id % 2 == 0 && this.id >= 0)
             ? Flip.Horizontal : Flip.None;
 
         this.inCamera = false;

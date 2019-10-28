@@ -7,6 +7,7 @@ import { Zombie } from "./zombie.js";
 import { Bee } from "./bee.js";
 import { Thwomp } from "./thwomp.js";
 import { Fish } from "./fish.js";
+import { Hat } from "./hat.js";
 
 //
 // Handles the game stage rendering
@@ -677,6 +678,12 @@ export class Stage {
                     case 7:
 
                         objm.addEnemy(Fish.prototype, dx, dy);
+                        break;
+
+                    // Hat
+                    case 8:
+
+                        objm.addEnemy(Hat.prototype, dx, dy);
                         break;
 
                     // Portal

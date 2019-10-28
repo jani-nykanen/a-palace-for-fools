@@ -46,6 +46,8 @@ export class Enemy extends GameObject {
         this.isStatic = false;
 
         this.dir = 0;
+
+        this.friendly = false;
     }
 
 
@@ -85,7 +87,7 @@ export class Enemy extends GameObject {
         if (this.inCamera &&
             this.updateAI != null) {
 
-            this.updateAI(extra[0], ev);
+            this.updateAI(extra[0], ev, extra[2]);
             this.hurtPlayer(extra[0], ev);
         }
 
@@ -178,55 +180,37 @@ export class Enemy extends GameObject {
     }
 
 
-    // Bullet collision
-    bulletCollision(b, ev) {
+    // Bullet collision event
+    bulletEvent(b, ev) {
 
         const HURT_TIME = 30;
         const KNOCKBACK_SPEED = 1.0;
         const EPS = 0.001;
 
-        if (!b.exist || b.dying || 
-            !this.exist || this.dying)
-            return;
+        this.health -= b.power;
 
         let px = this.pos.x;
         let py = this.pos.y;
-        let pw = this.w/2;
-        let ph = this.h/2;
-
         let bx = b.pos.x;
         let by = b.pos.y;
-        let bw = b.w/2;
-        let bh = b.h/2;
-
-        let col = 
-            px+pw >= bx-bw &&
-            px-pw <= bx+bw &&
-            py+ph >= by-bh &&
-            py-ph <= by+bh;
 
         let knockback = KNOCKBACK_SPEED * b.power;
-        if (col) {
 
-            this.health -= b.power
-            b.kill(ev, this.health <= 0);
+        this.hurtTimer = HURT_TIME;
+        if (this.health <= 0) {
 
-            this.hurtTimer = HURT_TIME;
-            if (this.health <= 0) {
+            this.dying = true;
+            this.spr.setFrame(0, 0);
 
-                this.dying = true;
-                this.spr.setFrame(0, 0);
+            ev.audio.playSample(ev.audio.sounds.kill, 0.60);
+        }
+        else if (!this.isStatic) {
 
-                ev.audio.playSample(ev.audio.sounds.kill, 0.60);
-            }
-            else if (!this.isStatic) {
+            this.plAngle = Math.atan2(py-by, px-bx);
+            this.speed.x = Math.cos(this.plAngle) * knockback;
 
-                this.plAngle = Math.atan2(py-by, px-bx);
-                this.speed.x = Math.cos(this.plAngle) * knockback;
-
-                if (Math.abs(this.acc.y) > EPS)
-                    this.speed.y = Math.sin(this.plAngle) * knockback;
-            }
+            if (Math.abs(this.acc.y) > EPS)
+                this.speed.y = Math.sin(this.plAngle) * knockback;
         }
     }
 

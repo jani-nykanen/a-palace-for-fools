@@ -22,7 +22,7 @@ export class Fish extends Enemy {
 
         this.hitArea = new Vector2(4, 4);
 
-        this.acc.x = 0.05;
+        this.acc.x = 0.05 * 2;
         this.acc.y = 0.0;
 
         this.maxHealth = 2;
@@ -64,7 +64,7 @@ export class Fish extends Enemy {
     // Update AI
     updateAI(pl, ev) {
 
-        const SPEED = 0.15;
+        const SPEED = 0.15 * 2;
         const WAVE_SPEED = 0.10;
 
         let s = Math.sin(this.waveTimer);

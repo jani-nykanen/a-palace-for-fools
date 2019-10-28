@@ -143,5 +143,20 @@ Sorry.
 </dialogue>
 
 
+<dialogue id="item3">
+
+<chunk>
+You obtain a
+"DIVING SUIT"!
+</chunk>
+
+<chunk>
+It lets you
+stay underwater
+without dying.
+</chunk>
+
+</dialogue>
+
 
 </localization>

@@ -125,7 +125,7 @@ export class ObjectManager {
         for (let e of this.enemies) {
 
             e.isInCamera(cam);
-            e.update(ev, [this.player, this.gemGen]);
+            e.update(ev, [this.player, this.gemGen, this.bgen]);
 
             // Collisions
             if (e.exist) {
@@ -149,6 +149,10 @@ export class ObjectManager {
 
         // Update player
         this.player.update(ev, [this.bgen]);
+        for (let b of this.bgen.elements) {
+
+            this.player.bulletCollision(b, ev);
+        }
         // Get collisions with the stage
         stage.getCollisions(this.player, ev);
 

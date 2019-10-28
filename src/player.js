@@ -86,6 +86,8 @@ export class Player extends GameObject {
         this.arrowSpr = new Sprite(16, 16);
         this.arrowSpr.setFrame(2, 0);
         this.showArrow = false;
+
+        this.friendly = true;
     }
 
 
@@ -568,6 +570,7 @@ export class Player extends GameObject {
         let oldRow = this.spr.row;
 
         // Climbing
+        let mul = this.touchWater ? 0.5 : 1;
         if (this.climbing) {
 
             s = Math.abs(this.speed.y) > EPS ? 1 : 0;
@@ -618,9 +621,9 @@ export class Player extends GameObject {
         else {
 
             s = 6;
-            if (this.speed.y <= -AIR_FRAME_LIMIT)
+            if (this.speed.y <= -AIR_FRAME_LIMIT * mul)
                 s = 5;
-            else if (this.speed.y >= AIR_FRAME_LIMIT)
+            else if (this.speed.y >= AIR_FRAME_LIMIT * mul)
                 s = 7;
 
             this.spr.setFrame(this.rocketActive ? 2 : 0, s);
@@ -671,6 +674,25 @@ export class Player extends GameObject {
     }
 
 
+    // Reduce life
+    reduceLife(dmg, ev) {
+
+        // Play hurt sound
+        ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
+
+        // Lose health
+        if (this.health > 0) {
+            
+            this.health = Math.max(0, this.health-dmg);
+            this.hurtTimer = HURT_TIME;
+        }
+        else {
+
+            this.hurtTimer = HURT_TIME + KNOCKBACK_TIME;
+        }
+    }
+
+
     // Hurt player
     hurt(cx, cy, ev, dmg) {
 
@@ -696,12 +718,8 @@ export class Player extends GameObject {
         this.rocketActive = false;
         this.chargeLoadTimer = 0;
 
-        // Play hurt sound
-        ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
-
-        // Lose health
-        if (this.health > 0)
-            this.health = Math.max(0, this.health-dmg);
+        // Reduce life
+        this.reduceLife(dmg, ev);
     }
 
 
@@ -914,5 +932,13 @@ export class Player extends GameObject {
         this.speed.y = 0;
     
         this.canShoot = true;
+    }
+
+
+    // Bullet collision event
+    bulletEvent(b, ev) {
+
+        // Reduce life
+        this.reduceLife(b.power, ev);
     }
 }

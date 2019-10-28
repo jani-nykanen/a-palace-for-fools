@@ -47,20 +47,28 @@ export class GameObject {
         this.bounceFactor = new Vector2(0, 0);
 
         this.dir = 0;
+
+        this.health = 1;
+        this.maxHealth = this.health;
+        this.friendly = false;
     }
 
 
     // Update movement
     move(ev) {
 
+        let mul = 1;
+        if (this.touchWater)
+            mul = 0.5;
+
         // Store old position
         this.oldPos = this.pos.clone();
 
         // Update speed axes
         this.speed.x = updateSpeedAxis(this.speed.x, 
-            this.target.x, this.acc.x * ev.step);
+            mul * this.target.x, mul * this.acc.x * ev.step);
         this.speed.y = updateSpeedAxis(this.speed.y, 
-            this.target.y, this.acc.y * ev.step);
+            mul * this.target.y, mul * this.acc.y * ev.step);
 
         // Update position
         this.pos.x += this.speed.x * ev.step;
@@ -341,6 +349,44 @@ export class GameObject {
         }
 
         return false;
+    }
+
+
+    // Bullet collision (note, bullet is also
+    // a game object...)
+    bulletCollision(b, ev) {
+
+
+        if (!b.exist || b.dying || 
+            !this.exist || this.dying ||
+            b.friendly == this.friendly)
+            return;
+
+        let px = this.pos.x;
+        let py = this.pos.y;
+        let pw = this.w/2;
+        let ph = this.h/2;
+
+        let bx = b.pos.x;
+        let by = b.pos.y;
+        let bw = b.w/2;
+        let bh = b.h/2;
+
+        let col = 
+            px+pw >= bx-bw &&
+            px-pw <= bx+bw &&
+            py+ph >= by-bh &&
+            py-ph <= by+bh;
+
+        if (col) {
+
+            b.kill(ev, this.health <= 0 && !this.friendly);
+
+            if (this.bulletEvent != null) {
+
+                this.bulletEvent(b, ev);
+            }
+        }
     }
 
 }
