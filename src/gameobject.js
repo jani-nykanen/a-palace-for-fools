@@ -51,6 +51,7 @@ export class GameObject {
         this.health = 1;
         this.maxHealth = this.health;
         this.friendly = false;
+        this.harmless = false;
     }
 
 
@@ -356,9 +357,9 @@ export class GameObject {
     // a game object...)
     bulletCollision(b, ev) {
 
-
         if (!b.exist || b.dying || 
             !this.exist || this.dying ||
+            this.harmless ||
             b.friendly == this.friendly)
             return;
 

@@ -679,16 +679,14 @@ export class Player extends GameObject {
 
         // Play hurt sound
         ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
+        
+        this.health = Math.max(0, this.health-dmg);
 
         // Lose health
-        if (this.health > 0) {
+        this.hurtTimer = HURT_TIME;
+        if (this.health <= 0) {
             
-            this.health = Math.max(0, this.health-dmg);
-            this.hurtTimer = HURT_TIME;
-        }
-        else {
-
-            this.hurtTimer = HURT_TIME + KNOCKBACK_TIME;
+            this.hurtTimer += KNOCKBACK_TIME;
         }
     }
 
@@ -719,7 +717,8 @@ export class Player extends GameObject {
         this.chargeLoadTimer = 0;
 
         // Reduce life
-        this.reduceLife(dmg, ev);
+        ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
+        this.health = Math.max(0, this.health-dmg);
     }
 
 

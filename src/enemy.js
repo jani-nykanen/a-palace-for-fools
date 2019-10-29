@@ -48,6 +48,10 @@ export class Enemy extends GameObject {
         this.dir = 0;
 
         this.friendly = false;
+
+        // Harmless enemies cannot take damage
+        // or damage the player
+        this.harmless = false;
     }
 
 
@@ -56,6 +60,8 @@ export class Enemy extends GameObject {
 
         const KNOCKBACK_COMPARE = 0.01;
         const KNOCKBACK_BASE = 0.5;
+
+        if (this.harmless) return;
 
         let px = this.pos.x;
         let py = this.pos.y;
@@ -234,7 +240,8 @@ export class Enemy extends GameObject {
 
         const EPS = 0.001;
 
-        if (!this.exist || this.dying ||
+        if (this.harmless || e.harmless ||
+            !this.exist || this.dying ||
             !e.exist || e.dying) return;
 
         let r1 = Math.hypot(this.w/2, this.h/2);

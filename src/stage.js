@@ -8,6 +8,7 @@ import { Bee } from "./bee.js";
 import { Thwomp } from "./thwomp.js";
 import { Fish } from "./fish.js";
 import { Hat } from "./hat.js";
+import { SlimeDrop } from "./slimedrop.js";
 
 //
 // Handles the game stage rendering
@@ -611,6 +612,17 @@ export class Stage {
     // Parse objects
     parseObjects(objm, id, respawn) {
 
+        const ENEMIES = [
+            Bat.prototype,
+            Beetle.prototype,
+            Zombie.prototype,
+            Bee.prototype,
+            Thwomp.prototype,
+            Fish.prototype,
+            Hat.prototype,
+            SlimeDrop.prototype,
+        ];
+
         let t;
         let dx, dy;
         for (let y = 0; y < this.h; ++ y) {
@@ -633,6 +645,11 @@ export class Stage {
                     else
                         objm.addChest(x, y, t-49, !this.chestBuffer[this.id][y*this.w+x]);
                 }
+                // Check if enemy
+                else if (t >= 2 && t <=16) {
+
+                    objm.addEnemy(ENEMIES[t-2], dx, dy);
+                }
                 else {
 
                     switch(t) {
@@ -643,48 +660,6 @@ export class Stage {
                         objm.setPlayerPosition(x, y, respawn);
                         break;
 
-                    // TODO: Object types to an array
-                    // Bat
-                    case 2:
-
-                        objm.addEnemy(Bat.prototype, dx, dy);
-                        break;
-
-                    // Beetle
-                    case 3:
-
-                        objm.addEnemy(Beetle.prototype, dx, dy);
-                        break;
-                        
-                    // Zombie
-                    case 4:
-
-                        objm.addEnemy(Zombie.prototype, dx, dy);
-                        break;    
-
-                    // Bee
-                    case 5:
-
-                        objm.addEnemy(Bee.prototype, dx, dy);
-                        break;
-
-                    // Thwomp
-                    case 6:
-
-                        objm.addEnemy(Thwomp.prototype, dx, dy);
-                        break;
-
-                    // Fish
-                    case 7:
-
-                        objm.addEnemy(Fish.prototype, dx, dy);
-                        break;
-
-                    // Hat
-                    case 8:
-
-                        objm.addEnemy(Hat.prototype, dx, dy);
-                        break;
 
                     // Portal
                     case 17:
