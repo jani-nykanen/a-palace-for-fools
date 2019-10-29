@@ -39,15 +39,15 @@ export class SlimeDrop extends Enemy {
         this.power = 1;
 
         this.applyShake = false;
-
-        this.waitTime
     }
 
 
     // Reset
     reset() {
 
-        // ...
+        this.disappearing = false;
+        this.active = false;
+        this.spr.frame = 0;
     }
 
 
