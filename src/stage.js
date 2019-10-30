@@ -9,6 +9,8 @@ import { Thwomp } from "./thwomp.js";
 import { Fish } from "./fish.js";
 import { Hat } from "./hat.js";
 import { SlimeDrop } from "./slimedrop.js";
+import { Replica } from "./replica.js";
+import { SkyBeetle } from "./skybeetle.js";
 
 //
 // Handles the game stage rendering
@@ -621,6 +623,8 @@ export class Stage {
             Fish.prototype,
             Hat.prototype,
             SlimeDrop.prototype,
+            Replica.prototype,
+            SkyBeetle.prototype,
         ];
 
         let t;

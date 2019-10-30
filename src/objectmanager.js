@@ -124,7 +124,7 @@ export class ObjectManager {
         // Update enemies
         for (let e of this.enemies) {
 
-            e.isInCamera(cam);
+            e.isInCamera(cam, ev);
             e.update(ev, [this.player, this.gemGen, this.bgen]);
 
             // Collisions

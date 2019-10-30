@@ -142,7 +142,7 @@ export class Enemy extends GameObject {
 
 
     // Check if in camera
-    isInCamera(cam) {
+    isInCamera(cam, ev) {
 
         let px = this.pos.x;
         let py = this.pos.y;
@@ -173,9 +173,16 @@ export class Enemy extends GameObject {
             this.returned = true;
         }
 
-        if (this.inCamera)
+        if (this.inCamera) {
+
             this.returned = false;
 
+            if (ev != null) {
+
+                this.verticalCollision(cam.x*cam.w, cam.y*cam.h, 144, 1, ev);
+                this.verticalCollision((cam.x+1)*cam.w, cam.y*cam.h, 144, -1, ev);
+            }
+        }
         // This prevent some nasty bugs where
         // enemies suddenly reappear
         else if (wasInCamera &&
