@@ -13,6 +13,7 @@ import { Replica } from "./replica.js";
 import { SkyBeetle } from "./skybeetle.js";
 import { Drone } from "./drone.js";
 import { Star } from "./star.js";
+import { Clam } from "./clam.js";
 
 //
 // Handles the game stage rendering
@@ -629,6 +630,7 @@ export class Stage {
             SkyBeetle.prototype,
             Drone.prototype,
             Star.prototype,
+            Clam.prototype,
         ];
 
         let t;
