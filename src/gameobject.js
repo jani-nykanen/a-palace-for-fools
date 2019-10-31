@@ -52,24 +52,38 @@ export class GameObject {
         this.maxHealth = this.health;
         this.friendly = false;
         this.harmless = false;
+
+        this.inCamera = true;
     }
 
 
     // Update movement
     move(ev) {
 
-        let mul = 1;
-        if (this.touchWater)
-            mul = 0.5;
+        const VERTICAL_WATER_MUL = 0.5;
+        const HORIZONTAL_WATER_MUL = 0.5;
+
+        let mul = new Vector2(1, 1);
+        if (this.touchWater) {
+            
+            mul.x = HORIZONTAL_WATER_MUL;
+            mul.y = VERTICAL_WATER_MUL
+        }
 
         // Store old position
         this.oldPos = this.pos.clone();
 
         // Update speed axes
-        this.speed.x = updateSpeedAxis(this.speed.x, 
-            mul * this.target.x, mul * this.acc.x * ev.step);
-        this.speed.y = updateSpeedAxis(this.speed.y, 
-            mul * this.target.y, mul * this.acc.y * ev.step);
+        if (this.acc.x > 0) {
+
+            this.speed.x = updateSpeedAxis(this.speed.x, 
+                mul.x * this.target.x, mul.x * this.acc.x * ev.step);
+        }
+        if (this.acc.y > 0) {
+
+            this.speed.y = updateSpeedAxis(this.speed.y, 
+                mul.y * this.target.y, mul.y * this.acc.y * ev.step);
+        }
 
         // Update position
         this.pos.x += this.speed.x * ev.step;
@@ -95,6 +109,8 @@ export class GameObject {
 
             this.control(ev, extra);
         }
+        if (!this.inCamera) return;
+
         this.move(ev);
 
         if (this.animate != null) {
@@ -249,8 +265,19 @@ export class GameObject {
 
             if (this.forceUp)
                 this.speed.y *= -1;
-            else
-                this.speed.y = 0;
+
+            else {
+
+                // Bounce
+                if (this.bounce) {
+
+                    this.speed.y *= -this.bounceFactor.y;
+                }
+                else {
+
+                    this.speed.y = 0;
+                }
+            }
 
             this.jumpTimer = 0.0;
 

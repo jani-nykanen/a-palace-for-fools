@@ -63,7 +63,7 @@ export class Bullet extends GameObject {
     animate(ev) {
 
         const ANIM_SPEED = 2;
-        const END = [3, 2, 3];
+        const END = [3, 2, 3, 2];
 
         this.spr.animate(this.id*2, 
             0, END[this.id], 
@@ -74,8 +74,8 @@ export class Bullet extends GameObject {
     // Spawn
     spawn(x, y, sx, sy, id) {
 
-        const HEIGHT = [2, 8, 2];
-        const POWER = [1, 2, 1];
+        const HEIGHT = [2, 8, 2, 8];
+        const POWER = [1, 2, 1, 2];
 
         this.pos.x = x;
         this.pos.y = y;

@@ -52,6 +52,10 @@ export class Enemy extends GameObject {
         // Harmless enemies cannot take damage
         // or damage the player
         this.harmless = false;
+
+        // Prevent leaving the camera from a vertical
+        // direction
+        this.preventLeaving = false;
     }
 
 
@@ -142,7 +146,7 @@ export class Enemy extends GameObject {
 
 
     // Check if in camera
-    isInCamera(cam, ev) {
+    isInCamera(cam) {
 
         let px = this.pos.x;
         let py = this.pos.y;
@@ -171,17 +175,13 @@ export class Enemy extends GameObject {
                 this.reset();
 
             this.returned = true;
+            this.hurtTimer = 0;
+            this.health = this.maxHealth;
         }
 
         if (this.inCamera) {
 
             this.returned = false;
-
-            if (ev != null) {
-
-                this.verticalCollision(cam.x*cam.w, cam.y*cam.h, 144, 1, ev);
-                this.verticalCollision((cam.x+1)*cam.w, cam.y*cam.h, 144, -1, ev);
-            }
         }
         // This prevent some nasty bugs where
         // enemies suddenly reappear
@@ -189,6 +189,20 @@ export class Enemy extends GameObject {
             !cam.moving && !cam.stopped) {
 
             this.exist = false;
+        }
+    }
+
+
+    // Camera collisions
+    cameraCollision(cam, ev) {
+
+        this.verticalCollision(cam.top.x, cam.top.y, 144, 1, ev);
+        this.verticalCollision(cam.top.x + cam.w, cam.top.y, 144, -1, ev);
+
+        if (this.preventLeaving) {
+
+            this.horizontalCollision(cam.top.x, cam.top.y, 160, -1, ev);
+            this.horizontalCollision(cam.top.x, cam.top.y + cam.h, 160, 1, ev);
         }
     }
 

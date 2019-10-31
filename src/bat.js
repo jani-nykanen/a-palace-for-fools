@@ -36,6 +36,7 @@ export class Bat extends Enemy {
         this.bounceFactor = new Vector2(1, 1);
 
         this.ignoreLadder = true;
+        this.preventLeaving = true;
     }
 
 
@@ -44,6 +45,7 @@ export class Bat extends Enemy {
 
         this.active = false;
         this.falling = false;
+        this.spr.setFrame(1, 4);
     }
 
 

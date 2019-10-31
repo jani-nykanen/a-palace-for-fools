@@ -144,6 +144,7 @@ export class ObjectManager {
                 }
             }
             stage.getCollisions(e, ev);
+            e.cameraCollision(cam, ev);
             
         }
 

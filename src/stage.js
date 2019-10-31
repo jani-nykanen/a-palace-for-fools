@@ -11,6 +11,8 @@ import { Hat } from "./hat.js";
 import { SlimeDrop } from "./slimedrop.js";
 import { Replica } from "./replica.js";
 import { SkyBeetle } from "./skybeetle.js";
+import { Drone } from "./drone.js";
+import { Star } from "./star.js";
 
 //
 // Handles the game stage rendering
@@ -625,6 +627,8 @@ export class Stage {
             SlimeDrop.prototype,
             Replica.prototype,
             SkyBeetle.prototype,
+            Drone.prototype,
+            Star.prototype,
         ];
 
         let t;

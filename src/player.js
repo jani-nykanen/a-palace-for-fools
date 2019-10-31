@@ -88,6 +88,7 @@ export class Player extends GameObject {
         this.showArrow = false;
 
         this.friendly = true;
+        this.inCamera = true;
     }
 
 
@@ -309,7 +310,7 @@ export class Player extends GameObject {
     control(ev, extra) {
 
         const GRAVITY = 2.0;
-        const WATER_GRAVITY = 0.5;
+        const WATER_GRAVITY = 1.0;
         const H_SPEED = 1.0;
         const JUMP_TIME = 15;
         const WATER_JUMP_TIME = 5;
@@ -638,8 +639,8 @@ export class Player extends GameObject {
 
         if (cam.moving) return;
 
-        this.verticalCollision(cam.x*cam.w, cam.y*cam.h, 144, 1, ev);
-        this.verticalCollision((cam.x+1)*cam.w, cam.y*cam.h, 144, -1, ev);
+        this.verticalCollision(cam.top.x, cam.top.y, 144, 1, ev);
+        this.verticalCollision(cam.top.x + cam.w, cam.top.y, 144, -1, ev);
 
         let dx = 0;
         let dy = 0;
@@ -936,6 +937,8 @@ export class Player extends GameObject {
 
     // Bullet collision event
     bulletEvent(b, ev) {
+
+        if (this.hurtTimer > 0) return;
 
         // Reduce life
         this.reduceLife(b.power, ev);
