@@ -263,7 +263,8 @@ export class Enemy extends GameObject {
 
         if (this.harmless || e.harmless ||
             !this.exist || this.dying ||
-            !e.exist || e.dying) return;
+            !e.exist || e.dying ||
+            this.isStatic || e.isStatic) return;
 
         let r1 = Math.hypot(this.w/2, this.h/2);
         let r2 = Math.hypot(e.w/2, e.h/2);

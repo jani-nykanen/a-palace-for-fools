@@ -17,7 +17,7 @@ export class Replica extends Enemy {
         super(x, y, 0);
 
         this.w = 8;
-        this.h = 14;
+        this.h = 10;
 
         this.hitArea = new Vector2(4, 4);
 
@@ -32,8 +32,8 @@ export class Replica extends Enemy {
 
         this.dir = ((x/16)|0) % 2 == 0 ? -1 : 1;
 
-        this.center.y = 0;
-        this.pos.y += (16 - this.h) + this.center.y;
+        this.center.y = -2;
+        this.pos.y -= this.center.y -1;
         this.startPoint.y = this.pos.y;
         this.canJump = true;
     }
