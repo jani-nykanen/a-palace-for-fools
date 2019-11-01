@@ -82,6 +82,8 @@ export class Clam extends Enemy {
                     (SPEED + (Math.abs(pl.pos.x-this.pos.x)/160*SPEED_MOD))
                     * this.dir;
                 this.speed.x = this.target.x;
+
+                ev.audio.playSample(ev.audio.sounds.jump, 0.40);
             }
         }
         else {

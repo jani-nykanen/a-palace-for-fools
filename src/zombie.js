@@ -32,7 +32,7 @@ export class Zombie extends Enemy {
         this.dir = ((x/16)|0) % 2 == 0 ? -1 : 1;
 
         this.center.y = 0;
-        this.pos.y += (16 - this.h) + this.center.y;
+        this.pos.y -= this.center.y -1;
         this.startPoint.y = this.pos.y;
         this.canJump = true;
     }
@@ -65,6 +65,7 @@ export class Zombie extends Enemy {
             pl.pos.y <= this.pos.y-DIF) {
 
             this.speed.y += JUMP_HEIGHT;
+            ev.audio.playSample(ev.audio.sounds.jump, 0.40);
         }
     }
 

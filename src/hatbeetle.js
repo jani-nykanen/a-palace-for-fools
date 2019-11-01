@@ -3,15 +3,17 @@ import { Enemy } from "./enemy.js";
 import { Vector2 } from "./engine/vector.js";
 
 //
-// Not that car, that would break copyright laws,
-// but an enemy that looks like a giant bug and
-// crawls.
+// Beetle + hat
 //
 // (c) 2019 Jani Nykänen
 //
 
 
-export class Beetle extends Enemy {
+const WAIT_TIME = 60;
+
+
+
+export class HatBeetle extends Enemy {
 
 
     constructor(x, y) {
@@ -26,10 +28,10 @@ export class Beetle extends Enemy {
         this.acc.x = 0.05;
         this.acc.y = 0.15;
 
-        this.maxHealth = 3;
+        this.maxHealth = 2;
         this.health = this.maxHealth;
 
-        this.spr.setFrame(2, 0);
+        this.spr.setFrame(15, 0);
 
         this.dir = ((x/16)|0) % 2 == 0 ? -1 : 1;
 
@@ -43,6 +45,9 @@ export class Beetle extends Enemy {
 
         this.oldCanJump = true;
         this.canJump = true;
+
+        this.waitTimer = WAIT_TIME;
+        
     }
 
 
@@ -54,10 +59,12 @@ export class Beetle extends Enemy {
 
 
     // Update AI
-    updateAI(pl, ev) {
+    updateAI(pl, ev, bgen) {
 
-        const SPEED = 0.25;
+        const MOUTH_TIME = 20;
+        const SPEED = 0.33;
         const GRAVITY = 2.0;
+        const BULLET_SPEED = 2.0;
 
         this.target.x = this.dir * SPEED;
         if (this.oldCanJump && !this.canJump) {
@@ -68,6 +75,38 @@ export class Beetle extends Enemy {
             this.speed.x = 0.0;
         }
         this.target.y = GRAVITY;
+
+        let oldTime = this.waitTimer;
+
+        // Update shooting
+        let b;
+        if ((this.waitTimer -= ev.step) <= 0.0) {
+
+            this.waitTimer += WAIT_TIME + MOUTH_TIME;
+
+            // Create a bullet
+            b = bgen.createElement(
+                this.pos.x + this.dir * 6, 
+                this.pos.y + 2, 
+                BULLET_SPEED*this.dir, 0,
+                2);
+            if (b != null) {
+
+                ev.audio.playSample(ev.audio.sounds.shoot, 0.50);
+
+                // This way we prevent bullets
+                // going through walls
+                b.oldPos.x = this.pos.x;
+            }
+
+            this.spr.frame += 4;
+        }
+
+        if (this.waitTimer <= WAIT_TIME &&
+            oldTime > WAIT_TIME) {
+
+            this.spr.frame -= 4;
+        }
     }
 
 
@@ -76,7 +115,9 @@ export class Beetle extends Enemy {
 
         const ANIM_SPEED = 6;
 
+        let start = this.waitTimer > WAIT_TIME ? 4 : 0;
+
         this.flip = this.dir == 1 ? Flip.Horizontal : Flip.None;
-        this.spr.animate(2, 0, 3, ANIM_SPEED, ev.step);
+        this.spr.animate(15, start, start+3, ANIM_SPEED, ev.step);
     }
 }

@@ -76,6 +76,8 @@ export class Bunny extends Enemy {
 
                 this.target.x = this.dir * SPEED;
                 this.speed.x = this.target.x;
+
+                ev.audio.playSample(ev.audio.sounds.jump, 0.40);
             }
         }
         else {

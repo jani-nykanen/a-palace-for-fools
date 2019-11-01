@@ -19,7 +19,7 @@ export class Thwomp extends Enemy {
 
         super(x, y, 0);
 
-        this.w = 16;
+        this.w = 12;
         this.h = 14;
 
         this.hitArea = new Vector2(8, 8);
@@ -144,9 +144,10 @@ export class Thwomp extends Enemy {
 
         if (!this.active) return;
 
-        let dy = ((this.pos.y/16) | 0);
+        let dy = (((this.pos.y-this.startPoint.y)/16) | 0);
 
-        for (let y = 0; y < dy -1; ++ y) {
+        // Draw the chain
+        for (let y = 0; y < dy; ++ y) {
 
             c.drawBitmapRegion(c.bitmaps.enemy, 
                 48, 80, 16, 16,
@@ -155,13 +156,14 @@ export class Thwomp extends Enemy {
         }
 
         // Draw the partial chain
-        let h = (this.pos.y - dy*16) | 0;
+        let h = ((this.pos.y-this.startPoint.y) - dy*16) | 0;
         if (h > 0) {
 
             c.drawBitmapRegion(c.bitmaps.enemy, 
                 48, 80, 16, h,
                 (this.pos.x-8) | 0, 
-                this.startPoint.y-8 + 16*(dy-1));
+                this.startPoint.y-8 + 16*dy);
         }
+        
     }
 }

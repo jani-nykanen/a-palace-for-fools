@@ -73,6 +73,8 @@ export class Replica extends Enemy {
             this.speed.y += JUMP_BASE + Math.max(JUMP_MIN,
                 (this.pos.y-pl.pos.y) / 
                 JUMP_HEIGHT_COMP * JUMP_HEIGHT_MUL);
+
+            ev.audio.playSample(ev.audio.sounds.jump, 0.40);
         }
     }
 

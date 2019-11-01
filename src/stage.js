@@ -15,6 +15,7 @@ import { Drone } from "./drone.js";
 import { Star } from "./star.js";
 import { Clam } from "./clam.js";
 import { Bunny } from "./bunny.js";
+import { HatBeetle } from "./hatbeetle.js";
 
 //
 // Handles the game stage rendering
@@ -633,6 +634,7 @@ export class Stage {
             Star.prototype,
             Clam.prototype,
             Bunny.prototype,
+            HatBeetle.prototype,
         ];
 
         let t;
