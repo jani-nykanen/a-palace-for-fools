@@ -137,7 +137,7 @@ export class Stage {
 
         const SOLID = [1, 9, 10];
 
-        let t = this.map.getTile(0, x, y, loop);
+        let t = this.map.getTile(1, x, y, loop);
 
         return SOLID.includes(t);
     }
@@ -148,15 +148,15 @@ export class Stage {
 
         let ts = this.tileset;
 
-        let tl = this.map.getTile(0, x-1, y-1, true);
-        let tr = this.map.getTile(0, x+1, y-1, true);
-        let bl = this.map.getTile(0, x-1, y+1, true);
-        let br = this.map.getTile(0, x+1, y+1, true);
+        let tl = this.map.getTile(1, x-1, y-1, true);
+        let tr = this.map.getTile(1, x+1, y-1, true);
+        let bl = this.map.getTile(1, x-1, y+1, true);
+        let br = this.map.getTile(1, x+1, y+1, true);
         
-        let l = this.map.getTile(0, x-1, y, true);
-        let t = this.map.getTile(0, x, y-1, true);
-        let r = this.map.getTile(0, x+1, y, true);
-        let b = this.map.getTile(0, x, y+1, true);
+        let l = this.map.getTile(1, x-1, y, true);
+        let t = this.map.getTile(1, x, y-1, true);
+        let r = this.map.getTile(1, x+1, y, true);
+        let b = this.map.getTile(1, x, y+1, true);
 
         let corners = [l, t, r, b];
         let diagonal = [tl, tr, br, bl];
@@ -261,7 +261,7 @@ export class Stage {
 
         let ts = this.tileset;
 
-        let up = this.map.getTile(0, x, y - 1, true);
+        let up = this.map.getTile(1, x, y - 1, true);
         let drawUp = up != 2 && up != 1;
         if (drawUp) {
 
@@ -347,7 +347,7 @@ export class Stage {
 
             sx = 48;
         }
-        else if (this.map.getTile(0, x, y-1) != 1) {
+        else if (this.map.getTile(1, x, y-1) != 1) {
 
             sx = 16
         }
@@ -375,7 +375,7 @@ export class Stage {
 
             for (let x = sx; x < sx + w; ++ x) {
 
-                t = this.map.getTile(0, x, y, true);
+                t = this.map.getTile(1, x, y, true);
                 switch(t) {
 
                 // Wall
@@ -421,6 +421,29 @@ export class Stage {
     }
 
 
+    // Draw decorations
+    drawDecorations(c, sx, sy, w, h) {
+
+        let t;
+        let bsx, bsy;
+        for (let y = sy; y < sy + h; ++ y) {
+
+            for (let x = sx; x < sx + w; ++ x) {
+
+                t = this.map.getTile(0, x, y, true) -80;
+                if (t -- <= 0) continue;
+                
+                bsx = (t % 16);
+                bsy = (t / 16) | 0;
+
+                c.drawBitmapRegion(c.bitmaps.decorations,
+                    bsx*16, bsy*16, 16, 16,
+                    x*16, y*16);
+            }
+        }
+    }
+
+
     // Update stage
     update(ev) {
 
@@ -442,6 +465,10 @@ export class Stage {
         let w = cam.w/16 + 2;
         let h = cam.h/16 + 2;
 
+        // Draw decorations
+        this.drawDecorations(c, x, y, w, h);
+
+        // Draw tiles
         this.drawTiles(c, x, y, w, h);
 
         // Draw dust
@@ -475,7 +502,7 @@ export class Stage {
         if (breakable && o.breakWall > 0 &&
             o.breakWall <= breakable && w) {
 
-            this.map.setTile(0, x, y, 0);
+            this.map.setTile(1, x, y, 0);
             this.spawnDust(x, y, breakable-1);
 
             ev.audio.playSample(ev.audio.sounds.breakWall, 0.40);
@@ -521,7 +548,7 @@ export class Stage {
 
         // Check if the ladder ends in the tile
         // above
-        let s = this.map.getTile(0, x, y-1);
+        let s = this.map.getTile(1, x, y-1);
         if (s != 2 && s != 1) {
 
             if (!o.climbing && !o.ignoreLadder)
@@ -573,7 +600,7 @@ export class Stage {
 
             for (let x = sx; x <= sx + RADIUS*2; ++ x) {
 
-                t = this.map.getTile(0, x, y, true);
+                t = this.map.getTile(1, x, y, true);
                 switch(t) {
 
                 // Wall
@@ -606,6 +633,12 @@ export class Stage {
                 case 8:
 
                     this.getWaterCollision(o, x, y, t-7);
+                    break;
+
+                // Special floor collision
+                case 11:
+
+                    o.horizontalCollision(x*16, y*16, 16, 1, ev);  
                     break;
 
                 default:
@@ -643,7 +676,7 @@ export class Stage {
 
             for (let x = 0; x < this.w; ++ x) {
 
-                t = this.map.getTile(1, x, y);
+                t = this.map.getTile(2, x, y);
                 t -= 16;
                 
                 if (t <= 0) continue; 
