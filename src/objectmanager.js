@@ -5,6 +5,7 @@ import { Bullet } from "./bullet.js";
 import { Portal } from "./portal.js";
 import { NPC } from "./npc.js";
 import { Chest } from "./chest.js";
+import { ShopItem } from "./shopitem.js";
 
 //
 // Object manager. Handles the game objects,
@@ -27,6 +28,7 @@ export class ObjectManager {
         this.portals = new Array();
         this.npcs = new Array();
         this.chests = new Array();
+        this.shopItems = new Array();
 
         this.playerCreated = false;
 
@@ -97,11 +99,21 @@ export class ObjectManager {
 
 
     // Add a chest
-    addChest(x, y, id, makeActive) {
+    addChest(x, y, id) {
 
         this.chests.push(
             new Chest(x*16 + 8, y*16 + 8, id, 
-                this.textbox, makeActive)
+                this.textbox, this.player)
+        );
+    }
+
+
+    // Add a shop item
+    addShopItem(x, y, id) {
+
+        this.shopItems.push(
+            new ShopItem(x*16 + 8, y*16 + 8, id, 
+                this.textbox,  this.player)
         );
     }
 
@@ -169,6 +181,8 @@ export class ObjectManager {
         this.updateRenderedObjectArray(this.npcs, stage, cam, ev);
         // Update portals
         this.updateRenderedObjectArray(this.portals, stage, cam, ev);
+        // Update shop items
+        this.updateRenderedObjectArray(this.shopItems, stage, cam, ev);
     }
     
 
@@ -193,6 +207,8 @@ export class ObjectManager {
         this.drawRenderedObjectArray(this.npcs, c, stage, cam);
         // Draw chests
         this.drawRenderedObjectArray(this.chests, c, stage, cam);
+        // Draw shop items
+        this.drawRenderedObjectArray(this.shopItems, c, stage, cam);
 
         // "Pre-render" specific enemy parts
         for (let e of this.enemies) {

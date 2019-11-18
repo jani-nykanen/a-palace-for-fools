@@ -4,13 +4,22 @@ import { RenderedObject } from "./renderedobject.js";
 import { Vector2 } from "./engine/vector.js";
 
 //
-// A chest that contains an item
+// An item in a shop
 //
 // (c) 2019 Jani Nykänen
 //
 
 
-export class Chest extends RenderedObject {
+// Prices
+const PRICES = [
+    20,
+    15,
+    10,
+    20,
+];
+
+
+export class ShopItem extends RenderedObject {
 
     
     constructor(x, y, id, textbox, pl) {
@@ -22,30 +31,13 @@ export class Chest extends RenderedObject {
         this.h = 16;
 
         this.spr = new Sprite(16, 16);
-        if (id <= -1)
-            this.spr.setFrame(2, 0);
-        else
-            this.spr.setFrame(1, 0);
-            
-        this.flip = (id % 2 == 0 && this.id >= 0)
-            ? Flip.Horizontal : Flip.None;
+        this.spr.setFrame(3, id);
 
         this.inCamera = false;
-    
+
         this.textbox = textbox;
 
-        this.active = true;
-        if (pl != null) {
-
-            if (this.id >= 0)
-                this.active = !pl.items[this.id];
-
-            else
-                this.active = !pl.hcontainers[-this.id -1];
-        }
-
-        if (!this.active)
-            ++ this.spr.frame;
+        this.exist = !pl.items[16 + this.id];
     }
 
 
@@ -54,24 +46,19 @@ export class Chest extends RenderedObject {
 
         if (!this.inCamera) return;
 
-        // ...
+        this.exist = !pl.items[16 + this.id];
     }
 
 
     // Item effect
     itemEffect(pl, ev) {
 
-        if (this.id <= -1) {
+        if (this.id == 0) {
 
             ++ pl.health;
             ++ pl.maxHealth;
-
-            pl.hcontainers[-this.id - 1] = true;
         }
-        else {
-
-            pl.items[this.id] = true;
-        }
+        pl.items[16 + this.id] = true;
     }
 
 
@@ -83,36 +70,25 @@ export class Chest extends RenderedObject {
         const ITEM_SPEED = -0.5;
 
         this.textbox.addMessage(
-            ...ev.loc.dialogue["item" + String(Math.max(this.id, -1)+1)]
+            "Undefined.\nSorry."
         );
-        this.textbox.activate(WAIT_TIME, Math.max(-1, this.id)+1, 
+        this.textbox.activate(WAIT_TIME, 16+this.id, 
             new Vector2(this.pos.x, this.pos.y-8), 
             ITEM_SPEED, ITEM_WAIT);
 
-        ++ this.spr.frame;
-
-        if (this.id >= 0) {
-
-            // Make the player crouch near the chest
-            pl.pos.x = this.pos.x + 8*(this.flip == Flip.None ? -1 : 1);
-            pl.pos.y = this.pos.y + 2;
-            pl.spr.setFrame(3, 2);
-            pl.flip = this.flip;
-        }
+        this.exist = false;
 
         pl.showArrow = false;
         pl.stopMovement();
 
         // Play sound
         ev.audio.playSample(
-            this.id == -1 ? ev.audio.sounds.healthUp : 
+            this.id == 0 ? ev.audio.sounds.healthUp : 
                 ev.audio.sounds.item, 
             0.50);
 
         // Apply item effect
         this.itemEffect(pl, ev);
-
-        this.active = false;
     }
 
 
@@ -121,10 +97,15 @@ export class Chest extends RenderedObject {
 
         c.move(tx, ty);
 
+        // Draw sprite
         c.drawSprite(this.spr, c.bitmaps.npc,
             (this.pos.x-8) | 0,
             (this.pos.y-8) | 0,
             this.flip);
+
+        // Draw price
+        c.drawText(c.bitmaps.font, String(PRICES[this.id]),
+            (this.pos.x) | 0, (this.pos.y|0) + 14, -1, 0, true);
 
         c.move(-tx, -ty);
     }

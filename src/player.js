@@ -89,6 +89,21 @@ export class Player extends GameObject {
 
         this.friendly = true;
         this.inCamera = true;
+
+        // Items the player has
+        this.items = new Array(32);
+        for (let i = 0; i < this.items.length; ++ i) {
+
+            this.items[i] = false;
+        }
+
+        // Health containers the player has
+        // opened
+        this.hcontainers = new Array(7);
+        for (let i = 0; i < this.hcontainers.length; ++ i) {
+
+            this.hcontainers[i] = false;
+        } 
     }
 
 

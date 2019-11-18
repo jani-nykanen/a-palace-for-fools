@@ -20,6 +20,8 @@ export class RenderedObject {
         this.inCamera = false;
         this.w = 0;
         this.h = 0;
+
+        this.exist = true;
     }
 
 
@@ -49,7 +51,7 @@ export class RenderedObject {
     // Check the collision with the player
     playerCollision(pl, stage, ev) {
 
-        if (this.activate == null ||
+        if (!this.exist || this.activate == null ||
             !this.inCamera || !this.active || 
             !pl.canJump || pl.dying) return;
     
@@ -81,7 +83,8 @@ export class RenderedObject {
     // Draw
     draw(c, stage, cam) {
 
-        if (this.drawTranslated == null) return;
+        if (this.drawTranslated == null ||
+            !this.exist) return;
 
         if (cam.moving) {
 

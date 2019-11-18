@@ -168,8 +168,11 @@ export class Textbox {
         if (!this.active ||
             this.item == null) return;
 
+        let sx = (this.item|0 )% 16;
+        let sy = (this.item/16) | 0;
+
         c.drawBitmapRegion(c.bitmaps.items,
-            this.item*16, 0, 16, 16,
+            sx*16, sy*16, 16, 16,
             (this.itemPos.x - 8) | 0,
             (this.itemPos.y - 8) | 0);
     }

@@ -54,15 +54,6 @@ export class Stage {
         }
 
         this.gemCB = null;
-
-        // To make sure activated chests are not
-        // made active again
-        this.chestBuffer = new Array();
-        for (let i = 0; i < 2; ++ i) {
-
-            this.chestBuffer[i] = new Array(this.w*this.h);
-            this.chestBuffer[i].fill(false);
-        }
     }
 
 
@@ -84,7 +75,6 @@ export class Stage {
                 dir * GEM_SPEED_X,
                 -GEM_SPEED_Y,
                 0);
-
         }
     }
 
@@ -684,16 +674,26 @@ export class Stage {
                 dy = y*16 + 8;
 
 
-                // Check if NPC
+                // Check if "NPC"
                 if (t >= 33) {
 
                     if (t < 33 + 16)
                         objm.addNPC(x, y, t-33);
                     else
-                        objm.addChest(x, y, t-49, !this.chestBuffer[this.id][y*this.w+x]);
+                        objm.addChest(x, y, t-49);
+                }
+                // Check if a heath-container
+                else if (t >= 18 && t <= 23) {
+
+                    objm.addChest(x, y, -(t-17));
+                }
+                // Check if a shop item
+                else if (t >= 24 && t <= 32) {
+
+                    objm.addShopItem(x, y, t-25);
                 }
                 // Check if enemy
-                else if (t >= 2 && t <=16) {
+                else if (t >= 2 && t <= 16) {
 
                     objm.addEnemy(ENEMIES[t-2], dx, dy);
                 }
@@ -714,25 +714,12 @@ export class Stage {
                         objm.addPortal(x, y, id);
                         break;
 
-                    // Health container
-                    case 18:
-
-                        objm.addChest(x, y, -1, !this.chestBuffer[this.id][y*this.w+x]);
-                        break;
-
                     default:
                         break; 
                     }
                 }
             }
         }
-    }
-
-
-    // Update chest buffer 
-    updateChestBuffer(x, y, state) {
-
-        this.chestBuffer[this.id] [y*this.w+x] = state;
     }
 
 }
