@@ -142,7 +142,6 @@ Sorry.
 
 </dialogue>
 
-
 <dialogue id="item3">
 
 <chunk>
@@ -154,6 +153,62 @@ You obtain a
 It lets you
 stay underwater
 without dying.
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="item16">
+
+<chunk>
+You obtain a
+"RUSTY KEY"!
+</chunk>
+
+<chunk>
+Despite being
+rusty, it can
+open doors.
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="item17">
+
+<chunk>
+You obtain a
+"MAP"!
+</chunk>
+
+<chunk>
+Press R.Shift to
+open the map.
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="item18">
+
+<chunk>
+You obtain a
+pair of 
+"RUNNING BOOTS"!
+</chunk>
+
+<chunk>
+Now you can run 
+and climb faster.
+</chunk>
+
+</dialogue>
+
+<dialogue id="shop">
+
+<chunk>
+You cannot afford
+that.
 </chunk>
 
 </dialogue>

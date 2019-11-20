@@ -289,6 +289,7 @@ export class ObjectManager {
         this.enemies = new Array();
         this.npcs = new Array();
         this.chests = new Array();
+        this.shopItems = new Array();
 
         this.bgen.reset();
         this.gemGen.reset();

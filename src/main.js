@@ -46,6 +46,7 @@ window.onload = () => {
         {name: "npc",   src: "assets/bitmaps/npc.png"},
         {name: "items",   src: "assets/bitmaps/items.png"},
         {name: "decorations",   src: "assets/bitmaps/decorations.png"},
+        {name: "propeller",   src: "assets/bitmaps/propeller.png"},
     );
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past.tmx"},
@@ -73,6 +74,7 @@ window.onload = () => {
         {name: "kill", src: "assets/audio/kill.wav"},
         {name: "next", src: "assets/audio/next.wav"},
         {name: "pause", src: "assets/audio/pause.wav"},
+        {name: "deny", src: "assets/audio/deny.wav"},
 
         {name: "item", src: "assets/audio/item.ogg"},
         {name: "healthUp", src: "assets/audio/health_up.ogg"},

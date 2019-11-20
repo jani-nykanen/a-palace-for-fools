@@ -79,7 +79,7 @@ export class Player extends GameObject {
         this.deathTimer = 0;
 
         // Amounts of stuff
-        this.gems = 0;
+        this.gems = 50;
 
         this.teleporting = false;
 
@@ -671,7 +671,8 @@ export class Player extends GameObject {
             dx = 1;
         }
 
-        if (this.pos.y-8 < cam.top.y) {
+        if (cam.pos.y > 1 &&
+            this.pos.y-8 < cam.top.y) {
 
             dy = -1
         }

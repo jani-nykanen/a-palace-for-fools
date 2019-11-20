@@ -69,8 +69,25 @@ export class ShopItem extends RenderedObject {
         const ITEM_WAIT = 30;
         const ITEM_SPEED = -0.5;
 
+        if (pl.gems < PRICES[this.id]) {
+
+            ev.audio.playSample(
+                ev.audio.sounds.deny, 
+                0.60);
+
+            this.textbox.addMessage(
+                ev.loc.dialogue.shop[0]
+            );
+            this.textbox.activate();
+            return;
+        }
+
         this.textbox.addMessage(
-            "Undefined.\nSorry."
+            ...ev.loc.dialogue[
+
+                this.id == 0 ? "item0" :
+                ("item" + String(this.id+15))
+            ]
         );
         this.textbox.activate(WAIT_TIME, 16+this.id, 
             new Vector2(this.pos.x, this.pos.y-8), 
@@ -89,6 +106,8 @@ export class ShopItem extends RenderedObject {
 
         // Apply item effect
         this.itemEffect(pl, ev);
+
+        pl.gems -= PRICES[this.id];
     }
 
 

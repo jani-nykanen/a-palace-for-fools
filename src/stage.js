@@ -54,6 +54,9 @@ export class Stage {
         }
 
         this.gemCB = null;
+
+        this.propSpr = new Sprite(80, 24);
+        this.propWave = 0.0;
     }
 
 
@@ -99,6 +102,9 @@ export class Stage {
         this.map = new Tilemap(this.baseMap);
         this.w = this.map.w;
         this.h = this.map.h;
+    
+        this.propSpr.setFrame(0, 0);
+        this.propWave = 0.0;
     }
 
 
@@ -125,7 +131,7 @@ export class Stage {
     // Is the tile solid
     isSolid(x, y, loop) {
 
-        const SOLID = [1, 9, 10];
+        const SOLID = [1, 9, 10, 12, 13];
 
         let t = this.map.getTile(1, x, y, loop);
 
@@ -403,6 +409,13 @@ export class Stage {
                     this.drawBreakingWall(c, x, y, t-9);
                     break;
 
+                // Propeller
+                case 13:
+
+                    this.propSpr.draw(c, c.bitmaps.propeller,
+                        x*16 - 32, y*16 - 8);
+                    break;
+
                 default:
                     break;
                 }
@@ -437,8 +450,19 @@ export class Stage {
     // Update stage
     update(ev) {
 
+        const PROPELLER_SPEED = 3;
+        const PROP_FLOAT = 0.025;
+
         this.waterSurface.animate(0, 12, 14, 12, ev.step);
 
+        // Update propeller
+        if (this.id == 0)
+            this.propSpr.animate(0, 0, 3, PROPELLER_SPEED, ev.step);
+        else
+            this.propSpr.setFrame(0, 0);
+        this.propWave += PROP_FLOAT * ev.step;
+        this.propWave %= Math.PI * 2;
+            
         // Update dust
         for (let d of this.dust) {
 
@@ -449,11 +473,25 @@ export class Stage {
 
     // Render the current visible map area
     draw(c, cam) {
+        
+        const X_MARGIN = 2;
+        const Y_MARGIN = 1;
+        const PROP_AMPLITUDE = 8;
 
-        let x = Math.floor(cam.top.x / 16) -1;
-        let y = Math.floor(cam.top.y / 16) -1;
-        let w = cam.w/16 + 2;
-        let h = cam.h/16 + 2;
+        if (this.id == 0 && 
+            cam.pos.y == 1 && cam.target.y == 1) {
+
+            c.move(0, (Math.sin(this.propWave)*PROP_AMPLITUDE) | 0);
+        }
+        else {
+
+            this.propWave = 0.0;
+        }
+
+        let x = Math.floor(cam.top.x / 16) -X_MARGIN;
+        let y = Math.floor(cam.top.y / 16) -Y_MARGIN;
+        let w = cam.w/16 + X_MARGIN*2;
+        let h = cam.h/16 + Y_MARGIN*2;
 
         // Draw decorations
         this.drawDecorations(c, x, y, w, h);
@@ -474,7 +512,7 @@ export class Stage {
 
         const MARGIN = 2;
 
-        let w;
+        let w = null;
 
         // Left
         if (!this.isSolid(x-1, y, true)) {
@@ -524,7 +562,7 @@ export class Stage {
         // Bottom
         if (!this.isSolid(x, y+1, true)) {
 
-            o.horizontalCollision(x*16, (y+1) *16, 16, -1, ev);
+            o.horizontalCollision(x*16, (y+1) *16 , 16, -1, ev);
         }
     }
 
@@ -597,6 +635,7 @@ export class Stage {
                 case 1:
                 case 9:
                 case 10:
+                case 12:
 
                     this.getWallCollision(o, x, y, 
                         (t == 9 || t == 10) ? (t-8) : false, 
@@ -629,6 +668,16 @@ export class Stage {
                 case 11:
 
                     o.horizontalCollision(x*16, y*16, 16, 1, ev);  
+                    break;
+
+                // Propeller
+                case 13:
+                    
+                    if (this.id == 0)
+                        o.hurtCollision(x*16 - 32, y*16-8, 
+                            80, 24, ev, 99);
+                    this.getWallCollision(o, x, y, false, ev);
+
                     break;
 
                 default:
