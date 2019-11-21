@@ -91,7 +91,7 @@ export class Game {
     popTestMessage(ev) {
 
         this.textbox.addMessage(
-            "Accept this\nshit?"
+            "Accept this\nshit, ma'am?"
         );
         this.textbox.activate((ev) => {
 

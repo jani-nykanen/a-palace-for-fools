@@ -67,25 +67,12 @@ export class ShopItem extends RenderedObject {
     }
 
 
-    // Activate
-    activate(pl, stage, ev) {
+    // Buy
+    buy(pl, ev) {
 
         const WAIT_TIME = 90;
         const ITEM_WAIT = 30;
         const ITEM_SPEED = -0.5;
-
-        if (pl.gems < PRICES[this.id]) {
-
-            ev.audio.playSample(
-                ev.audio.sounds.deny, 
-                0.60);
-
-            this.textbox.addMessage(
-                ev.loc.dialogue.shop[0]
-            );
-            this.textbox.activate();
-            return;
-        }
 
         this.textbox.addMessage(
             ...ev.loc.dialogue[
@@ -113,6 +100,38 @@ export class ShopItem extends RenderedObject {
         this.itemEffect(pl, ev);
 
         pl.gems -= PRICES[this.id];
+    }
+
+
+    // Activate
+    activate(pl, stage, ev) {
+
+        if (pl.gems < PRICES[this.id]) {
+
+            ev.audio.playSample(
+                ev.audio.sounds.deny, 
+                0.60);
+
+            this.textbox.addMessage(
+                ev.loc.dialogue.shop[0]
+            );
+            this.textbox.activate();
+            return;
+        }
+
+        ev.audio.playSample(
+            ev.audio.sounds.accept, 
+            0.60);
+
+        this.textbox.addMessage(
+            ev.loc.dialogue.shop[1].replace("%d", String(PRICES[this.id]))
+        );
+        this.textbox.activate(
+            (ev) => {
+
+                this.buy(pl, ev);
+            }
+        )
     }
 
 

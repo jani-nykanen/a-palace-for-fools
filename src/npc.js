@@ -50,6 +50,10 @@ export class NPC extends RenderedObject {
     // Activate
     activate(pl, stage, ev) {
 
+        ev.audio.playSample(
+            ev.audio.sounds.accept, 
+            0.60);
+
         this.textbox.addMessage(
             ...ev.loc.dialogue["npc" + String(this.id+1)]
         );

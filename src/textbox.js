@@ -89,7 +89,7 @@ export class Textbox {
             (wait != null && item == null)) {
 
             this.accept = true;
-            this.acceptCB = item == null ? item : acceptCB;
+            this.acceptCB = item == null ? wait : acceptCB;
         }
 
         if (wait == null)
@@ -177,12 +177,7 @@ export class Textbox {
 
                 // Check if enter or "similar key" pressed
                 if (ev.input.action.start.state == State.Pressed ||
-                    ev.input.action.start.fire1 == State.Pressed) {
-
-                    if (this.acceptCB != null) {
-
-                        this.acceptCB(ev);
-                    }
+                    ev.input.action.fire1.state == State.Pressed) {
 
                     ev.audio.playSample(
                         this.cursorPos == 0 ? 
@@ -194,6 +189,11 @@ export class Textbox {
                     this.sizes.shift();
 
                     this.active = false;
+
+                    if (this.cursorPos == 0 && this.acceptCB != null) {
+
+                        this.acceptCB(ev);
+                    }
                 }
             }
             else {
@@ -251,16 +251,24 @@ export class Textbox {
 
         const CONFIRM_W = 32;
         const CONFIRM_H = 24;
-        const CONFIRM_OFF = 8;
+        const CONFIRM_OFF = 0;
 
         if (!this.active ||
             this.waitTimer > 0) return;
+
+        let confirm = this.accept &&
+            this.queue.length == 1;
 
         let w = this.sizes[0].x + CORNER_OFF*2;
         let h = this.sizes[0].y + CORNER_OFF*2;
 
         let tx = c.w/2 - w/2;
         let ty = c.h/2 - h/2;
+
+        if (confirm) {
+
+            ty -= CONFIRM_H / 2;
+        }
 
         drawBoxWithBorders(c, tx, ty, w, h, COLORS);
 
@@ -275,8 +283,7 @@ export class Textbox {
         let str;
         if (this.charPos == this.queue[0].length) {
 
-            if (this.accept &&
-                this.queue.length == 1) {
+            if (confirm) {
 
                 str = ["@Yes\n No", " Yes\n@No"][this.cursorPos];
 
