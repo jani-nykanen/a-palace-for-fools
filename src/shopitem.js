@@ -12,10 +12,15 @@ import { Vector2 } from "./engine/vector.js";
 
 // Prices
 const PRICES = [
-    20,
     15,
     10,
+    10,
+    15,
+
     20,
+    25,
+    15,
+    10,
 ];
 
 

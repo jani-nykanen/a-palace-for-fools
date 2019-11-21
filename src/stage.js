@@ -413,7 +413,7 @@ export class Stage {
                 case 13:
 
                     this.propSpr.draw(c, c.bitmaps.propeller,
-                        x*16 - 32, y*16 - 8);
+                        x*16 - 32, y*16 - 4);
                     break;
 
                 default:
@@ -490,8 +490,8 @@ export class Stage {
 
         let x = Math.floor(cam.top.x / 16) -X_MARGIN;
         let y = Math.floor(cam.top.y / 16) -Y_MARGIN;
-        let w = cam.w/16 + X_MARGIN*2;
-        let h = cam.h/16 + Y_MARGIN*2;
+        let w = cam.w/16 + X_MARGIN*2 +1;
+        let h = cam.h/16 + Y_MARGIN*2 +1;
 
         // Draw decorations
         this.drawDecorations(c, x, y, w, h);

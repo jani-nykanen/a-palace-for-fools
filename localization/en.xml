@@ -77,18 +77,15 @@ but yet it does.
 
 <dialogue id="npc4">
 <chunk>
-If you spend too
-long a time in
-here, you will be
-sent back to your
-own time.
+They say The
+Shopkeeper is
+immortal.
 </chunk>
 <chunk>
-That's how time
-backups work. The
-same thing will 
-happen if you 
-travel too far.
+You cannot die
+if you have never
+been alive in the
+first place...
 </chunk>
 </dialogue>
 
@@ -168,7 +165,8 @@ You obtain a
 <chunk>
 Despite being
 rusty, it can
-open doors.
+still open 
+locks. Maybe.
 </chunk>
 
 </dialogue>
@@ -179,6 +177,14 @@ open doors.
 <chunk>
 You obtain a
 "MAP"!
+</chunk>
+
+<chunk>
+It shows you all
+the rooms you 
+have visited. 
+Does not work in 
+the past.
 </chunk>
 
 <chunk>
@@ -203,6 +209,79 @@ and climb faster.
 </chunk>
 
 </dialogue>
+
+
+<dialogue id="item19">
+
+<chunk>
+You obtain a
+"SHIELD"!
+</chunk>
+
+<chunk>
+It protects you
+from powerful
+attacks.
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="item20">
+
+<chunk>
+You obtain a
+"BOXING GLOVE"!
+</chunk>
+
+<chunk>
+For some reason 
+it makes your 
+bullets more 
+powerful.
+</chunk>
+
+</dialogue>
+
+
+
+<dialogue id="item21">
+
+<chunk>
+You obtain a
+"GIANT FLY"!
+</chunk>
+
+<chunk>
+It offers some
+protection.
+</chunk>
+
+</dialogue>
+
+
+
+<dialogue id="item22">
+
+<chunk>
+You obtain an
+"OUTDATED MAP"!
+</chunk>
+
+<chunk>
+It shows you all
+the rooms you 
+have visited in 
+the past.
+</chunk>
+
+<chunk>
+Press R.Shift to
+open the map.
+</chunk>
+
+</dialogue>
+
 
 <dialogue id="shop">
 
