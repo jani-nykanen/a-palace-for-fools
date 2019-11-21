@@ -720,10 +720,10 @@ export class Player extends GameObject {
         let dirx = this.pos.x < cx ? -1 : 1;
 
         // Determine knockback
-        this.speed.x = (this.pos.x-cx)/8.0 * KNOCKBACK_X + 
+        this.speed.x = Math.max(8, this.pos.x-cx)/8.0 * KNOCKBACK_X + 
             dirx*KNOCKBACK_BASE_X;
         if (!this.canJumpOld)
-            this.speed.y = (this.pos.y-cy)/8.0 * KNOCKBACK_Y;
+            this.speed.y = Math.max(8, this.pos.y-cy)/8.0 * KNOCKBACK_Y;
 
         // Disable flags
         this.climbing = false;

@@ -91,9 +91,11 @@ export class Game {
     popTestMessage(ev) {
 
         this.textbox.addMessage(
-            ...ev.loc.dialogue.npc2
+            "Accept this\nshit?"
         );
-        this.textbox.activate();
+        this.textbox.activate((ev) => {
+
+        });
     }
 
 

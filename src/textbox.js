@@ -29,6 +29,11 @@ export class Textbox {
         this.itemPos = new Vector2();
         this.item = null;
         this.itemSpeed = 0;
+
+        this.accept = false;
+        this.acceptCB = null;
+
+        this.cursorPos = 0;
     }
 
 
@@ -52,21 +57,40 @@ export class Textbox {
     // Add messages
     addMessage() {
 
+        let str;
         for (let a of arguments) {
 
-            this.queue.push(a);
-            this.sizes.push(this.computeSize(a));
+            // Remove the newline in the end
+            if (a.charCodeAt(a.length-1) == "\n".charCodeAt(0)) {
+
+                str = a.substr(0, a.length-1);
+            }
+            else {
+
+                str = a;
+            }
+
+            this.queue.push(str);
+            this.sizes.push(this.computeSize(str));
         }
     }
 
     
     // Activate
-    activate(wait, item, itemPos, speedY, itemWait) {
+    activate(wait, item, itemPos, speedY, itemWait, acceptCB) {
 
         this.active = true;
         this.charTimer = 0;
         this.charPos = 0;
         this.queuePos = 0;
+
+        this.accept = false;
+        if (acceptCB != null || 
+            (wait != null && item == null)) {
+
+            this.accept = true;
+            this.acceptCB = item == null ? item : acceptCB;
+        }
 
         if (wait == null)
             wait = 0.0;
@@ -78,7 +102,10 @@ export class Textbox {
             this.itemPos = itemPos.clone();
             this.itemSpeed = speedY;
             this.itemWait = itemWait;
+        
+            this.cursorPos = 1;
         }
+
     }
 
 
@@ -137,27 +164,62 @@ export class Textbox {
         }
         else {
 
-            // Wait for input
-            if (action) {
+            if (this.queue.length == 1 && this.accept) {
 
-                this.queue.shift();
-                this.sizes.shift();
+                // Update cursor position
+                if (ev.input.action.up.state == State.Pressed ||
+                    ev.input.action.down.state == State.Pressed) {
+        
+                    this.cursorPos = (this.cursorPos +1) % 2;
 
-                this.charPos = 0;
-                this.charTimer = 0;
+                    ev.audio.playSample(ev.audio.sounds.next, 0.60);
+                }
 
-                ev.audio.playSample(ev.audio.sounds.next, 0.60);
+                // Check if enter or "similar key" pressed
+                if (ev.input.action.start.state == State.Pressed ||
+                    ev.input.action.start.fire1 == State.Pressed) {
 
-                if (this.queue.length == 0) {
+                    if (this.acceptCB != null) {
+
+                        this.acceptCB(ev);
+                    }
+
+                    ev.audio.playSample(
+                        this.cursorPos == 0 ? 
+                            ev.audio.sounds.accept : 
+                            ev.audio.sounds.deny, 
+                            0.60);
+
+                    this.queue.shift();
+                    this.sizes.shift();
 
                     this.active = false;
                 }
             }
+            else {
 
-            // Update end symbol floating
-            this.endSymbolFloat = 
-                (this.endSymbolFloat + FLOAT_SPEED*ev.step) % 
-                (Math.PI*2);
+                // Wait for input
+                if (action) {
+
+                    this.queue.shift();
+                    this.sizes.shift();
+
+                    this.charPos = 0;
+                    this.charTimer = 0;
+
+                    ev.audio.playSample(ev.audio.sounds.next, 0.60);
+
+                    if (this.queue.length == 0) {
+
+                        this.active = false;
+                    }
+                }
+
+                // Update end symbol floating
+                this.endSymbolFloat = 
+                    (this.endSymbolFloat + FLOAT_SPEED*ev.step) % 
+                    (Math.PI*2);
+            }
         }
     }
 
@@ -187,6 +249,10 @@ export class Textbox {
         const COLORS = [255, 0, 85];
         const END_FLOAT = 1.1;
 
+        const CONFIRM_W = 32;
+        const CONFIRM_H = 24;
+        const CONFIRM_OFF = 8;
+
         if (!this.active ||
             this.waitTimer > 0) return;
 
@@ -205,16 +271,35 @@ export class Textbox {
             TEXT_OFF_X, TEXT_OFF_Y);
 
         // Draw finish symbol
-        let y;
+        let x, y;
+        let str;
         if (this.charPos == this.queue[0].length) {
 
-            y = Math.floor(Math.sin(this.endSymbolFloat) * END_FLOAT) | 0;
-            c.drawBitmapRegion(
-                c.bitmaps.font, 
-                24, 0, 8, 8,
-                tx + w - 8, 
-                ty + h - 8 + y);
+            if (this.accept &&
+                this.queue.length == 1) {
+
+                str = ["@Yes\n No", " Yes\n@No"][this.cursorPos];
+
+                x = tx+w - CONFIRM_W;
+                y = ty+h + CONFIRM_OFF;
+
+                drawBoxWithBorders(c, x, y, CONFIRM_W, CONFIRM_H, COLORS);
+
+                c.drawText(c.bitmaps.font, str, x +1, y + 2, 0, 4, false);
+            }
+            else {
+
+                y = Math.floor(Math.sin(this.endSymbolFloat) * END_FLOAT) | 0;
+                c.drawBitmapRegion(
+                    c.bitmaps.font, 
+                    24, 0, 8, 8,
+                    tx + w - 8, 
+                    ty + h - 2 + y);
+            }
+
+
         }
+
     }
 
 }

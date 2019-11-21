@@ -13,17 +13,14 @@ export class EnableAudioScreen {
 
     constructor() {
 
-
         this.cursorPos = 0;
-
-        
     }
 
 
     // Initialize
     init(ev) {
 
-        const GLOBAL_SAMPLE_VOLUME = 0.40;
+        const GLOBAL_SAMPLE_VOLUME = 0.60;
 
         ev.audio.setGlobalSampleVolume(GLOBAL_SAMPLE_VOLUME);
     }
