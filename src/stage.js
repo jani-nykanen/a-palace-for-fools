@@ -737,7 +737,7 @@ export class Stage {
                     objm.addChest(x, y, -(t-17));
                 }
                 // Check if a shop item
-                else if (t >= 24 && t <= 32) {
+                else if (t >= 25 && t <= 32) {
 
                     objm.addShopItem(x, y, t-25);
                 }
@@ -761,6 +761,12 @@ export class Stage {
                     case 17:
 
                         objm.addPortal(x, y, id);
+                        break;
+
+                    // Save point
+                    case 24:
+
+                        objm.addSavePoint(x, y);
                         break;
 
                     default:

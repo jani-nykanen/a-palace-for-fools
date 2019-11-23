@@ -74,6 +74,11 @@ export class RenderedObject {
 
             pl.showArrow = true;
 
+            if (this.touchPlayer != null) {
+
+                this.touchPlayer(pl);
+            }
+
             if (ev.input.action.up.state == State.Pressed)
                 this.activate(pl, stage, ev);
         }

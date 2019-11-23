@@ -47,6 +47,7 @@ window.onload = () => {
         {name: "items",   src: "assets/bitmaps/items.png"},
         {name: "decorations",   src: "assets/bitmaps/decorations.png"},
         {name: "propeller",   src: "assets/bitmaps/propeller.png"},
+        {name: "savepoint",   src: "assets/bitmaps/savepoint.png"},
     );
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past.tmx"},

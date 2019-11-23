@@ -298,4 +298,27 @@ Buy this item for
 </dialogue>
 
 
+
+<dialogue id="savepoint">
+
+<chunk>
+Do you want to
+save your 
+progress?
+</chunk>
+
+<chunk>
+Game saved
+successfully!
+</chunk>
+
+<chunk>
+Failed to save
+the game!
+</chunk>
+
+
+</dialogue>
+
+
 </localization>

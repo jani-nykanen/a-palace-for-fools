@@ -1,7 +1,7 @@
 import { GameObject } from "./gameobject.js";
 import { Vector2 } from "./engine/vector.js";
 import { State } from "./engine/input.js";
-import { negMod } from "./engine/util.js";
+import { negMod, clamp } from "./engine/util.js";
 import { Sprite } from "./engine/sprite.js";
 import { Flip } from "./engine/canvas.js";
 import { Dust } from "./dust.js";
@@ -732,11 +732,11 @@ export class Player extends GameObject {
         let dirx = this.pos.x < cx ? -1 : 1;
 
         // Determine knockback
-        this.speed.x = Math.max(8, this.pos.x-cx)/8.0 * KNOCKBACK_X + 
+        this.speed.x = clamp( (this.pos.x-cx)/8.0, -1.0, 1.0) * KNOCKBACK_X + 
             dirx*KNOCKBACK_BASE_X;
         if (!this.canJumpOld)
-            this.speed.y = Math.max(8, this.pos.y-cy)/8.0 * KNOCKBACK_Y;
-
+            this.speed.y = clamp( (this.pos.y-cy)/8.0, -1.0, 1.0) * KNOCKBACK_Y;
+            
         // Disable flags
         this.climbing = false;
         this.slideTimer = 0;

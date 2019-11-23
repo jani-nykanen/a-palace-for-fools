@@ -6,6 +6,7 @@ import { Portal } from "./portal.js";
 import { NPC } from "./npc.js";
 import { Chest } from "./chest.js";
 import { ShopItem } from "./shopitem.js";
+import { SavePoint } from "./savepoint.js";
 
 //
 // Object manager. Handles the game objects,
@@ -29,6 +30,7 @@ export class ObjectManager {
         this.npcs = new Array();
         this.chests = new Array();
         this.shopItems = new Array();
+        this.savepoints = new Array();
 
         this.playerCreated = false;
 
@@ -117,6 +119,14 @@ export class ObjectManager {
         );
     }
 
+    // Add a save point
+    addSavePoint(x, y) {
+
+        this.savepoints.push(
+            new SavePoint(x*16 + 8, y*16 + 8, this.textbox)
+        );
+    }
+
 
     // Update an array of "rendered objects"
     updateRenderedObjectArray(arr, stage, cam, ev) {
@@ -175,6 +185,8 @@ export class ObjectManager {
         this.gemGen.updateElements(stage, cam, ev);
         this.gemGen.playerCollision(this.player, ev);
 
+        // Update save points
+        this.updateRenderedObjectArray(this.savepoints, stage, cam, ev);
         // Update chests
         this.updateRenderedObjectArray(this.chests, stage, cam, ev);
         // Update NPCs
@@ -184,7 +196,6 @@ export class ObjectManager {
         // Update shop items
         this.updateRenderedObjectArray(this.shopItems, stage, cam, ev);
     }
-    
 
 
     // Draw an array of "rendered objects"
@@ -197,10 +208,11 @@ export class ObjectManager {
     }
 
 
-
     // Draw
     draw(c, cam, stage) {
 
+        // Draw save points
+        this.drawRenderedObjectArray(this.savepoints, c, stage, cam);
         // Draw portals
         this.drawRenderedObjectArray(this.portals, c, stage, cam);
         // Draw NPCs
@@ -290,6 +302,7 @@ export class ObjectManager {
         this.npcs = new Array();
         this.chests = new Array();
         this.shopItems = new Array();
+        this.savepoints = new Array();
 
         this.bgen.reset();
         this.gemGen.reset();
