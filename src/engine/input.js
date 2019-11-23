@@ -1,3 +1,5 @@
+import { GamePad } from "./gamepad.js";
+
 //
 // Input manager
 // Handles all the input we need,
@@ -30,6 +32,9 @@ export class InputManager {
         this.action = [];
         // This keys will be "preventDefault"ed.
         this.prevent = [];
+
+        // Gamepad manager
+        this.gamepad = new GamePad();
 
         this.anyPressed = false;
 
@@ -85,12 +90,37 @@ export class InputManager {
     }
 
 
+    // Update directional actions
+    updateDirectionalAction(action) {
+
+        const DELTA = 0.25;
+
+        let axis = action.axis == 0 ? 
+            this.gamepad.stick.x : this.gamepad.stick.y;
+
+        let delta = action.axis == 0 ? 
+            this.gamepad.delta.x : this.gamepad.delta.y;    
+            
+        if (Math.abs(delta) > DELTA &&
+            axis / action.dir > 0 && delta / action.dir > 0) {
+
+            action.state = State.Pressed;
+        }
+    }
+
+
     // Update actions
     updateActions() {
 
         for (let n in this.action) {
 
             this.action[n].state = this.getKey(this.action[n].key);
+
+            if (this.action[n].dir != null && 
+                this.action[n].axis != null) {
+
+                this.updateDirectionalAction(this.action[n]);
+            }
         }
     }
 
@@ -107,6 +137,9 @@ export class InputManager {
                 this.keys[k] = State.Up;
         }
 
+        // Update gamepad
+        this.gamepad.update();
+
         this.anyPressed = false;
     }
 
@@ -119,12 +152,14 @@ export class InputManager {
 
 
     // Add an action
-    addAction(name, key) {
+    addAction(name, key, axis, dir) {
 
         this.action[name] = {
 
             key: key,
             state: State.Up,
+            axis: axis,
+            dir: dir,
         };
         this.prevent.push(key);
     }

@@ -162,6 +162,7 @@ export class Player extends GameObject {
     climb(ev) {
 
         const CLIMB_SPEED = 0.5;
+        const EPS = 0.1;
 
         this.target.x = 0;
         this.target.y = 0;
@@ -177,6 +178,12 @@ export class Player extends GameObject {
 
                 this.target.y = CLIMB_SPEED;
             }
+
+            if (Math.abs(ev.input.gamepad.stick.y) > EPS) {
+
+                this.target.y = ev.input.gamepad.stick.y * CLIMB_SPEED;
+            }
+            
         }
         
 
@@ -334,6 +341,7 @@ export class Player extends GameObject {
         const ROCKET_TIME = 45;
         const BASE_HEIGHT = 12;
         const CHARGE_TIME_MAX = 60;
+        const EPS = 0.1;
 
         let bgen = extra[0];
 
@@ -531,6 +539,10 @@ export class Player extends GameObject {
 
             this.target.x = H_SPEED;
             this.slideDir = 1;
+        }
+        if (Math.abs(ev.input.gamepad.stick.x) > EPS) {
+
+            this.target.x = ev.input.gamepad.stick.x * H_SPEED;
         }
 
         this.oldTouchWater = this.touchWater;
