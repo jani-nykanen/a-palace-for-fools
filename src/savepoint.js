@@ -26,6 +26,7 @@ export class SavePoint extends RenderedObject {
         this.inCamera = false;
     
         this.textbox = textbox;
+        this.color = 0;
     }
 
 
@@ -37,15 +38,23 @@ export class SavePoint extends RenderedObject {
         const ANIM_SPEED = 6;
 
         // Animate
-        this.spr.animate(0, 0, 7, ANIM_SPEED, ev.step);
+        this.color = pl.checkID == this ? 1 : 0;
+        this.spr.animate(this.color, 0, 7, ANIM_SPEED, ev.step);
     }
 
 
     // Touch player event
-    touchPlayer(pl) {
+    touchPlayer(pl, ev) {
 
-        pl.checkpoint = this.pos.clone();
-        pl.checkpoint.y += 2;
+        if (pl.checkID != this) {
+
+            pl.checkpoint = this.pos.clone();
+            pl.checkpoint.y += 2;
+
+            pl.checkID = this;
+
+            ev.audio.playSample(ev.audio.sounds.checkpoint, 0.60);
+        }
     }
 
 

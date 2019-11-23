@@ -30,6 +30,7 @@ export class Player extends GameObject {
         const STARTING_HEALTH = 3;
 
         this.checkpoint = this.pos.clone();
+        this.checkID = null;
 
         // Set acceleration
         this.acc = new Vector2(
@@ -138,6 +139,7 @@ export class Player extends GameObject {
         this.chargeLoadTimer = 0.0;
         this.oldTouchWater = false;
         this.showArrow = false;
+        this.checkID = null;
 
         // Set camera
         cam.forceMoveTo(

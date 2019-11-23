@@ -38,7 +38,8 @@ export class EnableAudioScreen {
         }
 
         // Check enter press
-        if (ev.input.action.start.state == State.Pressed) {
+        if (ev.input.action.start.state == State.Pressed ||
+            ev.input.action.fire1.state == State.Pressed) {
 
             if (this.cursorPos == 1)
                 ev.audio.toggle(false);

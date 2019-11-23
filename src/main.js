@@ -76,6 +76,7 @@ window.onload = () => {
         {name: "next", src: "assets/audio/next.wav"},
         {name: "pause", src: "assets/audio/pause.wav"},
         {name: "deny", src: "assets/audio/deny.wav"},
+        {name: "checkpoint", src: "assets/audio/checkpoint.wav"},
 
         {name: "item", src: "assets/audio/item.ogg"},
         {name: "healthUp", src: "assets/audio/health_up.ogg"},

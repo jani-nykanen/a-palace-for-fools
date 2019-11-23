@@ -76,7 +76,7 @@ export class RenderedObject {
 
             if (this.touchPlayer != null) {
 
-                this.touchPlayer(pl);
+                this.touchPlayer(pl, ev);
             }
 
             if (ev.input.action.up.state == State.Pressed)
