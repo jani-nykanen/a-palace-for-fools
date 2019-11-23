@@ -66,7 +66,7 @@ export class InputManager {
 
 
 
-    // Calledn when a key pressed
+    // Called when a key pressed
     keyPressed(key) {
 
         if (this.keys[key] != State.Down) {
@@ -112,14 +112,26 @@ export class InputManager {
     // Update actions
     updateActions() {
 
+        // Update gamepad
+        this.gamepad.update();
+
         for (let n in this.action) {
 
             this.action[n].state = this.getKey(this.action[n].key);
 
+            // Check gamepad stick
             if (this.action[n].dir != null && 
                 this.action[n].axis != null) {
 
                 this.updateDirectionalAction(this.action[n]);
+            }
+            
+            // Check gamepad buttons
+            if (this.action[n].state == State.Up &&
+                this.action[n].button != null) {
+
+                this.action[n].state = 
+                    this.gamepad.getButtonState(this.action[n].button);
             }
         }
     }
@@ -137,9 +149,6 @@ export class InputManager {
                 this.keys[k] = State.Up;
         }
 
-        // Update gamepad
-        this.gamepad.update();
-
         this.anyPressed = false;
     }
 
@@ -152,7 +161,7 @@ export class InputManager {
 
 
     // Add an action
-    addAction(name, key, axis, dir) {
+    addAction(name, key, axis, dir, button) {
 
         this.action[name] = {
 
@@ -160,8 +169,16 @@ export class InputManager {
             state: State.Up,
             axis: axis,
             dir: dir,
+            button: button,
         };
         this.prevent.push(key);
+    }
+
+
+    // If any action occurred
+    actionOccurred() {
+
+        return this.gamepad.anyPressed || this.anyPressed;
     }
 
 }

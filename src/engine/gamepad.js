@@ -1,4 +1,5 @@
 import { Vector2 } from "./vector.js";
+import { State } from "./input.js";
 
 //
 // A simple gamepad manager/listener
@@ -16,9 +17,12 @@ export class GamePad {
         this.delta = new Vector2();
 
         this.buttons = new Array();
+        this.oldButtonStates = new Array();
 
         this.pad = null;
         this.index = 0;
+
+        this.anyPressed = false;
 
         window.addEventListener("gamepadconnected", (e) => {
 
@@ -53,6 +57,59 @@ export class GamePad {
     }
 
 
+    // Update buttons
+    updateButtons(pad) {
+
+        if (pad == null) {
+
+            for (let i = 0; i < this.buttons.length; ++ i) {
+
+                this.buttons[i] = State.Up;
+            }
+            return;
+        }
+
+        // Go through all the buttons in the gamepad
+        for (let i = 0; i < pad.buttons.length; ++ i) {
+
+            // Make sure the button exists in the array
+            if (i >= this.buttons.length) {
+
+                for (let j = 0; j < i-this.buttons.length; ++ j) {
+
+                    this.buttons.push(State.Up);
+                }
+            }
+
+            if (pad.buttons[i].pressed) {
+
+                if (this.buttons[i] == State.Up ||
+                    this.buttons[i] == State.Released) {
+                    
+                    this.buttons[i] = State.Pressed;
+                    this.anyPressed = true;
+                }
+                else {
+
+                    this.buttons[i] = State.Down;
+                }
+            }
+            else {
+
+                if (this.buttons[i] == State.Down ||
+                    this.buttons[i] == State.Pressed) {
+
+                    this.buttons[i] = State.Released;
+                }
+                else {
+
+                    this.buttons[i] = State.Up;
+                }
+            }
+        }
+    }
+
+
     // Update "analogue" stick
     updateStick(pad) {
 
@@ -75,6 +132,7 @@ export class GamePad {
     updateGamepad(pad) {
         
         this.updateStick(pad);
+        this.updateButtons(pad);
     }
 
 
@@ -95,6 +153,8 @@ export class GamePad {
     // Update
     update() {
 
+        this.anyPressed = false;
+
         // Reset stick
         this.stick.x = 0.0;
         this.stick.y = 0.0;
@@ -104,6 +164,16 @@ export class GamePad {
 
         // Update the current gamepad
         this.updateGamepad(this.pad);
+    }
+
+
+    // Get button state
+    getButtonState(id) {
+
+        if (id < 0 || id >= this.buttons.length)
+            return State.Up;
+
+        return this.buttons[id];
     }
 
 }

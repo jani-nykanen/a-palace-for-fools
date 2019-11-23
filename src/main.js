@@ -82,16 +82,16 @@ window.onload = () => {
 
     // Configure keys
     c.configActions(
-        {name: "left", key: 37, axis: 0, dir: -1},
-        {name: "up", key: 38, axis: 1, dir: -1},
-        {name: "right", key: 39, axis: 0, dir: 1},
-        {name: "down", key: 40, axis: 1, dir: 1},
+        {name: "left", key: 37, axis: 0, dir: -1, button: 14},
+        {name: "up", key: 38, axis: 1, dir: -1, button: 12},
+        {name: "right", key: 39, axis: 0, dir: 1, button: 15},
+        {name: "down", key: 40, axis: 1, dir: 1, button: 13},
 
-        {name: "fire1", key: 90},
-        {name: "fire2", key: 88},
+        {name: "fire1", key: 90, button: 0},
+        {name: "fire2", key: 88, button: 2},
 
-        {name: "start", key: 13},
-        {name: "back", key: 27},
+        {name: "start", key: 13, button: 9},
+        {name: "back", key: 27, button: 8},
 
         {name: "debug", key: 80},
     )

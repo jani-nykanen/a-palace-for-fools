@@ -134,7 +134,7 @@ export class Textbox {
             return;
         }
 
-        let action = ev.input.anyPressed;
+        let action = ev.input.actionOccurred();
             //ev.input.action.start.state == State.Pressed ||
             //ev.input.action.fire1.state == State.Pressed;
         let c;
