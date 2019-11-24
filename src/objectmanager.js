@@ -281,6 +281,14 @@ export class ObjectManager {
 
             c.isInCamera(cam);
         }
+        for (let c of this.shopItems) {
+
+            c.isInCamera(cam);
+        }
+        for (let c of this.savepoints) {
+
+            c.isInCamera(cam);
+        }
     }
 
 

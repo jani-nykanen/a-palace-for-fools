@@ -99,7 +99,7 @@ export class RenderedObject {
                 this.drawTranslated(c, stage.w*16, 0);
         }
 
-        if (this.inCamera);
+        if (this.inCamera)
             this.drawTranslated(c, 0, 0);
     }
 }
