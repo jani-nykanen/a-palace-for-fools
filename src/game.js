@@ -5,6 +5,7 @@ import { ObjectManager } from "./objectmanager.js";
 import { State } from "./engine/input.js";
 import { Textbox } from "./textbox.js";
 import { drawBoxWithBorders } from "./engine/util.js";
+import { Menu, MenuButton } from "./menu.js";
 
 //
 // Game scene
@@ -45,8 +46,20 @@ export class Game {
 
         this.mapID = 0;
 
-        // Is the game paused
-        this.paused = false;
+        this.pauseMenu = this.createPauseMenu();
+    }
+
+
+    // Create the pause menu
+    createPauseMenu() {
+
+        let menu = new Menu(
+            new MenuButton("Resume", (ev) => {this.pauseMenu.disable();}),
+            new MenuButton("Respawn", (ev) => {}),
+            new MenuButton("Quit", (ev) => {}),
+        );
+
+        return menu;
     }
 
 
@@ -115,18 +128,24 @@ export class Game {
             return;
         }
 
-        // Stop here if paused
+        // Update pause menu
+        if (this.pauseMenu.active) {
+
+            this.pauseMenu.update(ev);
+            return;
+        }
+
+        // Check pause button
         let p = ev.input.action.start.state;
         if (p == State.Pressed) {
 
-            this.paused = !this.paused;
+            this.pauseMenu.activate(0);
             ev.audio.playSample(ev.audio.sounds.pause,
                 0.50);
-        }
-        if (this.paused) {
 
             return;
         }
+        
 
         // Update cloud position
         for (let i = 0; i < 3; ++ i) {
@@ -318,24 +337,6 @@ export class Game {
     }
 
 
-    // Draw pause
-    drawPause(c) {
-
-        const WIDTH = 96;
-        const HEIGHT = 12;
-        const COLORS = [255, 0, 85];
-
-        drawBoxWithBorders(c,
-            c.w/2 - WIDTH/2,
-            c.h/2 - HEIGHT/2,
-            WIDTH, HEIGHT,
-            COLORS);
-
-        c.drawText(c.bitmaps.font, "GAME PAUSED",
-            c.w/2, c.h/2-HEIGHT/2 +2, 0, 0, true);
-    }   
-
-
     // (Re)draw the scene
     draw(c) {
 
@@ -375,11 +376,8 @@ export class Game {
         // Draw text box
         this.textbox.draw(c);
 
-        // Draw game paused screen, if paused
-        if (this.paused) {
-
-            this.drawPause(c);
-        }
+        // Draw the pause menu
+        this.pauseMenu.draw(c);
     }
 
 }

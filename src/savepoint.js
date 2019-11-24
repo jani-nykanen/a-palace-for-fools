@@ -13,7 +13,7 @@ import { RenderedObject } from "./renderedobject.js";
 export class SavePoint extends RenderedObject {
 
     
-    constructor(x, y, textbox) {
+    constructor(x, y, textbox, pl) {
 
         super(x, y);
 
@@ -26,7 +26,17 @@ export class SavePoint extends RenderedObject {
         this.inCamera = false;
     
         this.textbox = textbox;
-        this.color = 0;
+        this.color = (
+            pl != null &&
+            Math.floor(pl.checkpoint.x/16) == Math.floor(x / 16) &&
+            Math.floor(pl.checkpoint.y/16) == Math.floor(y / 16)
+        ) ? 1 : 0;
+        this.spr.row = this.color;
+
+        if (this.color == 1) {
+
+            pl.checkID = this;
+        }
     }
 
 

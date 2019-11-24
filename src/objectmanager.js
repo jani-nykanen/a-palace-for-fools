@@ -123,7 +123,7 @@ export class ObjectManager {
     addSavePoint(x, y) {
 
         this.savepoints.push(
-            new SavePoint(x*16 + 8, y*16 + 8, this.textbox)
+            new SavePoint(x*16 + 8, y*16 + 8, this.textbox, this.player)
         );
     }
 
