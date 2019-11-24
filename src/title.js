@@ -1,5 +1,6 @@
 import { Menu, MenuButton } from "./menu.js";
 import { TransitionMode } from "./engine/transition.js";
+import { Textbox } from "./textbox.js";
 
 //
 // Title screen
@@ -19,6 +20,8 @@ export class TitleScreen {
     // Initialize
     init(ev) {
 
+        this.textbox = new Textbox(ev);
+
         this.menu = new Menu(
             new MenuButton("New Game", (ev) => {
 
@@ -29,6 +32,29 @@ export class TitleScreen {
                     });
             }),
             new MenuButton("Continue", (ev) => {
+
+                try {
+
+                    if (localStorage.getItem("apff_savedata") == null) {
+
+                        this.textbox.addMessage(
+                            ev.loc.dialogue.general[4]
+                        );
+                        this.textbox.activate();
+                        return;
+                    }
+                }
+                catch(e) {
+
+                    console.log(e);
+                    exist = false;
+                    
+                    this.textbox.addMessage(
+                        ev.loc.dialogue.general[3]
+                    );
+                    this.textbox.activate();
+                    return;
+                }
 
                 this.menu.disable();
                 ev.tr.activate(true, TransitionMode.VerticalBar, 2.0,
@@ -46,7 +72,14 @@ export class TitleScreen {
 
         if (ev.tr.active) return;
 
+        if (this.textbox.active) {
+
+            this.textbox.update(ev);
+            return;
+        }
+
         this.menu.update(ev);
+        
     }
 
 
@@ -60,6 +93,8 @@ export class TitleScreen {
         c.move(0, 32);
         this.menu.draw(c);
         c.moveTo(0, 0);
+
+        this.textbox.draw(c);
     }
 
 

@@ -2,6 +2,7 @@ import { Vector2 } from "./engine/vector.js";
 import { Sprite } from "./engine/sprite.js";
 import { Flip } from "./engine/canvas.js";
 import { RenderedObject } from "./renderedobject.js";
+import { SaveManager } from "./savemanager.js";
 
 //
 // A place to save the progress
@@ -37,6 +38,8 @@ export class SavePoint extends RenderedObject {
 
             pl.checkID = this;
         }
+
+        this.sman = new SaveManager();
     }
 
 
@@ -81,11 +84,23 @@ export class SavePoint extends RenderedObject {
         this.textbox.activate((ev, state) => {
 
             if (state) {
-                
+
+                let err = false;
+                try {
+              
+                    this.sman.saveGame(pl, stage);
+                }
+                catch(e) {
+
+                    console.log(e);
+                    err = true;
+                }
+
                 this.textbox.addMessage(
-                    ev.loc.dialogue.savepoint[1]
+                    ev.loc.dialogue.savepoint[err ? 2 : 1]
                 );
                 this.textbox.activate();
+                
             }
         });
     }

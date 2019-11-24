@@ -7,6 +7,7 @@ import { NPC } from "./npc.js";
 import { Chest } from "./chest.js";
 import { ShopItem } from "./shopitem.js";
 import { SavePoint } from "./savepoint.js";
+import { SaveManager } from "./savemanager.js";
 
 //
 // Object manager. Handles the game objects,
@@ -362,6 +363,14 @@ export class ObjectManager {
     killPlayer(ev) {
 
         this.player.kill(ev);
+    }
+
+
+    // Parse save data
+    parseSaveData(stage) {
+
+        let sman = new SaveManager();
+        sman.loadGame(this.player, stage);
     }
 }
 

@@ -22,8 +22,6 @@ export class Game {
         this.cloudPos = [0, 0, 0];
         this.snowTimer = [0.0, 0.0];
         this.snowFloat = [0.0, Math.PI];
-
-        this.mapID = 0; 
     }
 
     
@@ -71,6 +69,8 @@ export class Game {
 
     // Full reset
     fullReset(ev, assets) {
+
+        this.mapID = 0; 
 
         // Create pause menu
         this.pauseMenu = this.createPauseMenu();
@@ -127,6 +127,8 @@ export class Game {
 
     // Reset game
     reset(id) {
+
+        this.pauseMenu.disable();
 
         this.stage.reset(id);
         this.objm.reset(this.cam, id);
@@ -410,13 +412,34 @@ export class Game {
     // On change
     onChange(ev, param) {
 
-        if (param){
+        let err = false;
+        if (param == true){
 
             this.fullReset(ev, this.assets);
         }
-        else {
+        // Sometimes param can be null...
+        else if (param == false) {
 
-            // Load game
+            try {
+
+                this.objm.parseSaveData(this.stage);
+                this.reset();
+            }
+            catch(e) {
+
+                err = true;
+                console.log(e);
+            }
+
+            if (err) {
+
+                this.textbox.addMessage(
+                    ev.loc.dialogue.savepoint[2]
+                );
+                this.textbox.activate();
+
+                this.fullReset(ev, this.assets);
+            }
         }
     }
 
