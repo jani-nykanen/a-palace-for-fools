@@ -356,5 +356,12 @@ export class ObjectManager {
 
         cam.update(null);
     }
+
+
+    // Kill the player
+    killPlayer(ev) {
+
+        this.player.kill(ev);
+    }
 }
 

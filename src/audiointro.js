@@ -1,5 +1,6 @@
 import { State } from "./engine/input.js";
 import { TransitionMode, Transition } from "./engine/transition.js";
+import { Textbox } from "./textbox.js";
 
 //
 // "Enable audio?" intro screen
@@ -23,6 +24,24 @@ export class EnableAudioScreen {
         const GLOBAL_SAMPLE_VOLUME = 0.60;
 
         ev.audio.setGlobalSampleVolume(GLOBAL_SAMPLE_VOLUME);
+        ev.audio.toggle(false);
+
+        this.textbox = new Textbox(ev);
+
+        this.textbox.addMessage(
+            ev.loc.dialogue.general[0]
+        );
+        this.textbox.activate((ev, state) => {
+
+            if (state) {
+
+                ev.audio.toggle(true);
+                ev.audio.playSample(ev.audio.sounds.accept, 0.50);
+            }
+
+            ev.tr.activate(false, TransitionMode.VerticalBar, 2.0);
+            ev.changeScene("game");
+        });
     }
 
 
@@ -31,25 +50,7 @@ export class EnableAudioScreen {
 
         if (ev.tr.active) return;
 
-        if (ev.input.action.up.state == State.Pressed ||
-            ev.input.action.down.state == State.Pressed) {
-
-            this.cursorPos = (this.cursorPos +1) % 2;
-        }
-
-        // Check enter press
-        if (ev.input.action.start.state == State.Pressed ||
-            ev.input.action.fire1.state == State.Pressed) {
-
-            if (this.cursorPos == 1)
-                ev.audio.toggle(false);
-            else 
-                ev.audio.playSample(ev.audio.sounds.accept, 0.50);
-
-
-            ev.tr.activate(false, TransitionMode.VerticalBar, 2.0);
-            ev.changeScene("game");
-        }
+        this.textbox.update(ev);
     }
 
 
@@ -58,14 +59,6 @@ export class EnableAudioScreen {
 
         c.clear(0);
 
-        let str = ["@Yes\n No", " Yes\n@No"][this.cursorPos];
-        
-        c.drawText(c.bitmaps.font, 
-            "Enable audio?\n(Press ENTER to\nconfirm.)",
-            24, 32, 0, 2);
-
-        c.drawText(c.bitmaps.font,
-            str,
-            40, 72, 0, 2);
+        this.textbox.draw(c);
     }
 }

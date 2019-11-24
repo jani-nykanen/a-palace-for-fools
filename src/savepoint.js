@@ -78,12 +78,15 @@ export class SavePoint extends RenderedObject {
         this.textbox.addMessage(
             ev.loc.dialogue.savepoint[0]
         );
-        this.textbox.activate((ev) => {
+        this.textbox.activate((ev, state) => {
 
-            this.textbox.addMessage(
-                ev.loc.dialogue.savepoint[1]
-            );
-            this.textbox.activate();
+            if (state) {
+                
+                this.textbox.addMessage(
+                    ev.loc.dialogue.savepoint[1]
+                );
+                this.textbox.activate();
+            }
         });
     }
 

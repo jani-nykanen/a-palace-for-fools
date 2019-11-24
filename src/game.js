@@ -19,10 +19,61 @@ export class Game {
 
     constructor() {
 
-        // Create components that do not require
-        // assets (at least not initially)
+        this.cloudPos = [0, 0, 0];
+        this.snowTimer = [0.0, 0.0];
+        this.snowFloat = [0.0, Math.PI];
+
+        this.mapID = 0; 
+    }
+
+    
+    // Show "Are you sure?"
+    areYouSure(cb, ev) {
+
+        this.textbox.addMessage(
+            ev.loc.dialogue.general[3]
+        );
+        this.textbox.activate((ev, state) => {
+
+            cb(ev, state);
+        });
+    }
+
+
+    // Create the pause menu
+    createPauseMenu() {
+
+        let menu = new Menu(
+            new MenuButton("Resume", (ev) => {this.pauseMenu.disable();}),
+            new MenuButton("Respawn", (ev) => {
+
+                this.areYouSure((ev, state) => {
+
+                    if (state) {
+
+                        this.pauseMenu.disable();
+                        this.objm.killPlayer(ev);
+                    }
+                },ev);
+            }),
+            new MenuButton("Quit", (ev) => {}),
+        );
+
+        return menu;
+    }
+
+
+    // Initialize the scene
+    // (or the things that need assets, really)
+    init(ev, assets) {
+
+        // Create pause menu
+        this.pauseMenu = this.createPauseMenu();
+        // Create camera
         this.cam = new Camera(0, 0, 160, 144);
-        this.textbox = new Textbox(144, 64);
+        // Create text box
+        this.textbox = new Textbox(ev);
+        // Create object manager
         this.objm = new ObjectManager(
             (ev, pl, col) => {
 
@@ -40,33 +91,7 @@ export class Game {
             this.textbox
         );
 
-        this.cloudPos = [0, 0, 0];
-        this.snowTimer = [0.0, 0.0];
-        this.snowFloat = [0.0, Math.PI];
-
-        this.mapID = 0;
-
-        this.pauseMenu = this.createPauseMenu();
-    }
-
-
-    // Create the pause menu
-    createPauseMenu() {
-
-        let menu = new Menu(
-            new MenuButton("Resume", (ev) => {this.pauseMenu.disable();}),
-            new MenuButton("Respawn", (ev) => {}),
-            new MenuButton("Quit", (ev) => {}),
-        );
-
-        return menu;
-    }
-
-
-    // Initialize the scene
-    // (or the things that need assets, really)
-    init(ev, assets) {
-
+        // Create stage
         this.stage = new Stage(this.mapID, assets, ev);
         this.stage.setGemCallback(this.objm.getGemGenerator());
         this.stage.parseObjects(this.objm, this.mapID, true);
@@ -99,19 +124,6 @@ export class Game {
         this.reset(this.mapID);
     }
 
-
-    // Pop test message box
-    popTestMessage(ev) {
-
-        this.textbox.addMessage(
-            "Accept this\nshit, ma'am?"
-        );
-        this.textbox.activate((ev) => {
-
-        });
-    }
-
-
     // Update the scene
     update(ev) {
 
@@ -137,7 +149,7 @@ export class Game {
 
         // Check pause button
         let p = ev.input.action.start.state;
-        if (p == State.Pressed) {
+        if (!ev.tr.active && p == State.Pressed) {
 
             this.pauseMenu.activate(0);
             ev.audio.playSample(ev.audio.sounds.pause,
@@ -145,7 +157,6 @@ export class Game {
 
             return;
         }
-        
 
         // Update cloud position
         for (let i = 0; i < 3; ++ i) {
@@ -207,12 +218,6 @@ export class Game {
 
         // Update stage
         this.stage.update(ev);
-
-        // DEBUG KEY
-        if (ev.input.action.debug.state == State.Pressed) {
-
-            this.popTestMessage(ev);
-        }
     }
 
 
@@ -373,11 +378,12 @@ export class Game {
             this.drawSnowing(c);
         }
 
+        // Draw the pause menu
+        this.pauseMenu.draw(c);
+
         // Draw text box
         this.textbox.draw(c);
 
-        // Draw the pause menu
-        this.pauseMenu.draw(c);
     }
 
 }

@@ -12,7 +12,7 @@ import { drawBoxWithBorders } from "./engine/util.js";
 export class Textbox {
 
 
-    constructor() {
+    constructor(ev) {
 
         this.queue = new Array();
         this.sizes = new Array();
@@ -34,6 +34,9 @@ export class Textbox {
         this.acceptCB = null;
 
         this.cursorPos = 0;
+
+        this.yes = ev.loc.dialogue.general[1].replace("\n", "");
+        this.no = ev.loc.dialogue.general[2].replace("\n", "");
     }
 
 
@@ -190,9 +193,9 @@ export class Textbox {
 
                     this.active = false;
 
-                    if (this.cursorPos == 0 && this.acceptCB != null) {
+                    if (this.acceptCB != null) {
 
-                        this.acceptCB(ev);
+                        this.acceptCB(ev, this.cursorPos == 0);
                     }
                 }
             }
@@ -285,7 +288,9 @@ export class Textbox {
 
             if (confirm) {
 
-                str = ["@Yes\n No", " Yes\n@No"][this.cursorPos];
+                str = ["@%1\n %2", " %1\n@%2"][this.cursorPos];
+                str = str.replace("%1", this.yes);
+                str = str.replace("%2", this.no);
 
                 x = tx+w - CONFIRM_W;
                 y = ty+h + CONFIRM_OFF;

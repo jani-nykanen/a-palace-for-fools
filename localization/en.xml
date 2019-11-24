@@ -2,6 +2,24 @@
 
 <localization lang="en">
 
+<dialogue id="general">
+<chunk>
+Enable audio?
+(Press ENTER to
+confirm.)
+</chunk>
+<chunk>
+Yes
+</chunk>
+<chunk>
+No
+</chunk>
+<chunk>
+Are you sure?
+</chunk>
+</dialogue>
+
+
 <dialogue id="npc1">
 <chunk>
 We are automata.

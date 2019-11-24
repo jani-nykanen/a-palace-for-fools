@@ -127,9 +127,10 @@ export class ShopItem extends RenderedObject {
             ev.loc.dialogue.shop[1].replace("%d", String(PRICES[this.id]))
         );
         this.textbox.activate(
-            (ev) => {
+            (ev, state) => {
 
-                this.buy(pl, ev);
+                if (state)
+                    this.buy(pl, ev);
             }
         )
     }

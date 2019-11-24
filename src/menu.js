@@ -45,7 +45,7 @@ export class Menu {
     // Activate
     activate(p) {
 
-        if (p) this.cpos = p;
+        if (p != null) this.cpos = p;
 
         this.active = true;
     }

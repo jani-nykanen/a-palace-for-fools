@@ -973,4 +973,18 @@ export class Player extends GameObject {
         // Reduce life
         this.reduceLife(b.power, ev);
     }
+
+
+    // Kill
+    kill(ev) {
+
+        if (this.dying) return;
+
+        this.health = 0;
+        this.dying = true;
+        this.deathTimer = DEATH_TIME;
+
+        // Play sound effect
+        ev.audio.playSample(ev.audio.sounds.die, 0.33);
+    }
 }
