@@ -114,7 +114,7 @@ export class Menu {
 
             c.drawText(c.bitmaps.font, str,
                 tx, 
-                OFFSET/2 + ty + i*HEIGHT_MUL,
+                1 + OFFSET/2 + ty + i*HEIGHT_MUL,
                 8-CHAR_WIDTH, HEIGHT_MUL-8, false);
         }
     }

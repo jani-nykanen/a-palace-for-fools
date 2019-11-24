@@ -108,7 +108,7 @@ export class FrameEvent {
 
         if (this.activeScene.onChange != null) {
 
-            this.activeScene.onChange(params);
+            this.activeScene.onChange(this, params);
         }
     }
 }

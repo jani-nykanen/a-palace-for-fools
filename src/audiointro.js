@@ -14,7 +14,6 @@ export class EnableAudioScreen {
 
     constructor() {
 
-        this.cursorPos = 0;
     }
 
 

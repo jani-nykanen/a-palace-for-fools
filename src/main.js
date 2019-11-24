@@ -1,6 +1,7 @@
 import { Core } from "./engine/core.js";
 import { Game } from "./game.js";
 import { EnableAudioScreen } from "./audiointro.js";
+import { TitleScreen } from "./title.js";
 
 //
 // Main file
@@ -18,6 +19,7 @@ window.onload = () => {
 
     // Add scenes
     c.addScene(new Game(), "game", false);
+    c.addScene(new TitleScreen(), "title", false);
     c.addScene(new EnableAudioScreen(), "audiointro", true);
 
     // Set language to english
@@ -48,6 +50,7 @@ window.onload = () => {
         {name: "decorations",   src: "assets/bitmaps/decorations.png"},
         {name: "propeller",   src: "assets/bitmaps/propeller.png"},
         {name: "savepoint",   src: "assets/bitmaps/savepoint.png"},
+        {name: "logo",   src: "assets/bitmaps/logo.png"},
     );
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past.tmx"},

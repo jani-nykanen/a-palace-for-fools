@@ -56,16 +56,21 @@ export class Game {
                     }
                 },ev);
             }),
-            new MenuButton("Quit", (ev) => {}),
+            new MenuButton("Quit", (ev) => {
+
+                ev.tr.activate(true, TransitionMode.VerticalBar,
+                    2.0, (ev) => {
+                        ev.changeScene("title");
+                    });
+            }),
         );
 
         return menu;
     }
 
 
-    // Initialize the scene
-    // (or the things that need assets, really)
-    init(ev, assets) {
+    // Full reset
+    fullReset(ev, assets) {
 
         // Create pause menu
         this.pauseMenu = this.createPauseMenu();
@@ -102,6 +107,21 @@ export class Game {
         // Make sure enemies appear while the transition
         // effect is still happening
         this.objm.updateCamMovement(this.cam, null, ev);
+    }
+
+
+    // Initialize the scene
+    // (or the things that need assets, really)
+    init(ev, assets) {
+
+        // Needed for... THE FUTURE
+        this.assets = assets;
+
+        // Full reset is also the initial
+        // initialization thing that happens
+        // and fuck I need to rewrite this
+        // comment
+        this.fullReset(ev, assets);
     }
 
 
@@ -384,6 +404,20 @@ export class Game {
         // Draw text box
         this.textbox.draw(c);
 
+    }
+
+
+    // On change
+    onChange(ev, param) {
+
+        if (param){
+
+            this.fullReset(ev, this.assets);
+        }
+        else {
+
+            // Load game
+        }
     }
 
 }
