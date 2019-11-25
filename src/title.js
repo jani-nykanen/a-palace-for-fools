@@ -86,7 +86,7 @@ export class TitleScreen {
     // Draw 
     draw(c) {
 
-        c.clear(85,170,255);
+        c.clear(0);
 
         c.drawBitmap(c.bitmaps.logo, 0, 8);
 
@@ -95,6 +95,9 @@ export class TitleScreen {
         c.moveTo(0, 0);
 
         this.textbox.draw(c);
+
+        c.drawText(c.bitmaps.font, "©2019 Jani Nykänen",
+            c.w/2, c.h-8, 0, 0, true);
     }
 
 
