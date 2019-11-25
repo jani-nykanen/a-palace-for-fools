@@ -126,13 +126,14 @@ export class Game {
 
 
     // Reset game
-    reset(id) {
+    reset(id, special) {
 
         this.pauseMenu.disable();
 
-        this.stage.reset(id);
+        this.stage.reset(special ? this.mapID : id);
         this.objm.reset(this.cam, id);
-        this.stage.parseObjects(this.objm, this.mapID, id == null);
+        this.stage.parseObjects(this.objm, this.mapID, 
+            special || id == null);
 
         // Set initial camera position
         this.objm.setInitialCamera(this.cam);
@@ -145,6 +146,7 @@ export class Game {
         this.mapID = this.mapID == 1 ? 0 : 1;
         this.reset(this.mapID);
     }
+    
 
     // Update the scene
     update(ev) {
@@ -423,7 +425,8 @@ export class Game {
             try {
 
                 this.objm.parseSaveData(this.stage);
-                this.reset();
+                this.mapID = this.stage.id;
+                this.reset(null, true);
             }
             catch(e) {
 

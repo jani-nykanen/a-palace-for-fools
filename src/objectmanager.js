@@ -300,7 +300,7 @@ export class ObjectManager {
 
     // Reset
     reset(cam, id) {
-
+        
         if (id == null)
             this.player.respawn(cam);
 

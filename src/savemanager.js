@@ -31,7 +31,7 @@ export class SaveManager {
             d.hcontainers[i] = pl.hcontainers[i];
         }
         d.checkpoint = pl.checkpoint.clone();
-        d.mapID = stage.mapID;
+        d.mapID = stage.id;
         d.gems = pl.gems;
         d.maxHealth = pl.maxHealth;
 
@@ -55,6 +55,6 @@ export class SaveManager {
         pl.maxHealth = d.maxHealth;
         pl.gems = d.gems;
 
-        stage.mapID = d.mapID;
+        stage.id = d.mapID;
     }
 }

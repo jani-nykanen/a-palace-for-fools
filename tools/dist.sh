@@ -12,5 +12,6 @@ zip -r ../dist.zip howler.core.min.js assets localization index.html
 rm index.html
 rm -rf assets
 rm -rf howler.core.min.js
+rm -rf localization
 rm -rf out.js
 
