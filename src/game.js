@@ -114,14 +114,8 @@ export class Game {
     // (or the things that need assets, really)
     init(ev, assets) {
 
-        // Needed for... THE FUTURE
+        // Needed for... THE FUTURE!
         this.assets = assets;
-
-        // Full reset is also the initial
-        // initialization thing that happens
-        // and fuck I need to rewrite this
-        // comment
-        this.fullReset(ev, assets);
     }
 
 

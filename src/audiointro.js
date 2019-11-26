@@ -39,7 +39,7 @@ export class EnableAudioScreen {
             }
 
             ev.tr.activate(false, TransitionMode.VerticalBar, 2.0);
-            ev.changeScene("game");
+            ev.changeScene("game", true);
         });
     }
 
