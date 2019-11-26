@@ -12,6 +12,7 @@ const TRANSITION_TIME = 60;
 
 export const TransitionMode = {
 
+    Empty: -1,
     Fade: 0,
     VerticalBar: 1,
     HorizontalBar: 2,
@@ -96,7 +97,7 @@ export class Transition {
     // Draw transition
     draw(c) {
 
-        if (!this.active || this.delayTimer > 0) 
+        if (!this.active || this.delayTimer > 0 || this.mode == -1) 
             return;
 
         c.moveTo(0, 0);

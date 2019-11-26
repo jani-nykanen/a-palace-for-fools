@@ -1,5 +1,5 @@
 import { Menu, MenuButton } from "./menu.js";
-import { TransitionMode } from "./engine/transition.js";
+import { TransitionMode, Transition } from "./engine/transition.js";
 import { Textbox } from "./textbox.js";
 
 //
@@ -14,6 +14,8 @@ export class TitleScreen {
     constructor() {
 
         this.cursorPos = 0;
+        this.logoFrame = 0;
+        this.finished = false;
     }
 
 
@@ -26,8 +28,9 @@ export class TitleScreen {
             new MenuButton("New Game", (ev) => {
 
                 this.menu.disable();
-                ev.tr.activate(true, TransitionMode.VerticalBar, 2.0,
+                ev.tr.activate(true, TransitionMode.Empty, 2.0,
                     (ev) => {
+                        ev.tr.mode = TransitionMode.VerticalBar;
                         ev.changeScene("game", true);
                     });
             }),
@@ -57,8 +60,9 @@ export class TitleScreen {
                 }
 
                 this.menu.disable();
-                ev.tr.activate(true, TransitionMode.VerticalBar, 2.0,
+                ev.tr.activate(true, TransitionMode.Empty, 2.0,
                     (ev) => {
+                        ev.tr.mode = TransitionMode.VerticalBar;
                         ev.changeScene("game", false);
                     });
             })
@@ -70,7 +74,12 @@ export class TitleScreen {
     // Update
     update(ev) {
 
-        if (ev.tr.active) return;
+        if (!(this.finished = !ev.tr.active)) {
+
+            this.logoFrame = (4 * (1-ev.tr.getScaledTime())) | 0;
+            return;
+        }
+        this.logoFrame = 3;
 
         if (this.textbox.active) {
 
@@ -87,8 +96,14 @@ export class TitleScreen {
     draw(c) {
 
         c.clear(0);
+        
+        if (this.logoFrame > 0) {
 
-        c.drawBitmap(c.bitmaps.logo, 0, 8);
+            c.drawBitmapRegion(c.bitmaps.logo, 
+                (this.logoFrame-1) *160, 0, 160, 244, 0, 8);
+        }
+        if (!this.finished)
+            return;
 
         c.move(0, 32);
         this.menu.draw(c);
@@ -105,5 +120,6 @@ export class TitleScreen {
     onChange(ev) {
 
         this.menu.activate(0);
+        ev.tr.mode = TransitionMode.Empty;
     }
 }
