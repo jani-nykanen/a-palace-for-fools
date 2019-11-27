@@ -305,7 +305,7 @@ export class Player extends GameObject {
     // Update rocket
     updateRocket(ev) {
 
-        const ROCKET_SPEED = 0.25;
+        const ROCKET_SPEED = [0.14, 0.25];
         const SPEED_CAP = -1.5;
 
         // Stop rocketing, if touching ground, climbing
@@ -316,10 +316,13 @@ export class Player extends GameObject {
             this.rocketActive = false;
         }
 
-        if (ev.input.action.fire1.state == State.Down &&
+        let s = ROCKET_SPEED[this.items[4] ? 1 : 0];
+
+        if (this.items[3] &&
+            ev.input.action.fire1.state == State.Down &&
             this.rocketTimer > 0.0) {
 
-            this.speed.y -= ROCKET_SPEED * ev.step;
+            this.speed.y -= s * ev.step;
             this.speed.y = Math.max(this.speed.y, SPEED_CAP);
 
             this.rocketTimer -= 1.0 * ev.step;
@@ -331,11 +334,14 @@ export class Player extends GameObject {
 
 
     // Control
+    // Fuck this method is too long, but I just want
+    // to get this shit finished
     control(ev, extra) {
 
         const GRAVITY = 2.0;
         const WATER_GRAVITY = 1.0;
         const H_SPEED = 1.0;
+        const BOOT_MOD = 1.25;
         const JUMP_TIME = 15;
         const WATER_JUMP_TIME = 5;
         const SLIDE_TIME = 36;
@@ -359,12 +365,21 @@ export class Player extends GameObject {
         this.hitbox.y = this.slideTimer > 0 ?
             BASE_HEIGHT/2 : BASE_HEIGHT;
 
+        // Die bitch (if touches water without
+        // the required item)
+        if (this.touchWater && !this.items[2]) {
+
+            this.kill(ev);
+            return;
+        }
+
         // Update shooting related timers
         let s = ev.input.action.fire2.state;
         let oldShootTimer = this.shootAnimTimer;
         this.shootAnimTimer -= 1.0 * ev.step;
         // Start charge shot
-        if (this.chargeLoadTimer <= 0 &&
+        if (this.items[5] &&
+            this.chargeLoadTimer <= 0 &&
             oldShootTimer > 0 &&
             this.shootAnimTimer <= 0 &&
             this.hurtTimer <= HURT_TIME &&
@@ -420,7 +435,8 @@ export class Player extends GameObject {
         }
 
         // Shoot a bullet
-        if (this.canShoot &&
+        if (this.items[0] &&
+            this.canShoot &&
             this.slideTimer <= 0.0 &&
             ev.input.action.fire2.state == State.Pressed) {
             
@@ -465,7 +481,8 @@ export class Player extends GameObject {
                 else if (this.canJump) {
 
                     // If down key down, slide
-                    if (ev.input.action.down.state == State.Down) {
+                    if (this.items[1] &&
+                        ev.input.action.down.state == State.Down) {
 
                         this.slideTimer = SLIDE_TIME;
                         this.shootAnimTimer = 0.0;
@@ -487,7 +504,8 @@ export class Player extends GameObject {
 
                     }
                 }
-                else if (!this.canJump && !this.rocketActive) {
+                else if (this.items[3] &&
+                    !this.canJump && !this.rocketActive) {
 
                     this.rocketActive = true;
                     this.rocketTimer = ROCKET_TIME;
@@ -546,6 +564,10 @@ export class Player extends GameObject {
 
             this.target.x = ev.input.gamepad.stick.x * H_SPEED;
         }
+
+        // If has boots, increase speed
+        if (this.items[19])
+            this.target.x *= BOOT_MOD;
 
         this.oldTouchWater = this.touchWater;
     }

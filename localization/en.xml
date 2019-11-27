@@ -134,13 +134,14 @@ your life by 1!
 
 <chunk>
 You obtain a
-"DUMMY ITEM"!
+"HAND CANNON"!
 </chunk>
 
 <chunk>
-It's a worthless
-debug item. Not
-even that, really.
+Press X to shoot
+something green.
+Laser? Plasma?
+Who cares!
 </chunk>
 
 </dialogue>
@@ -148,15 +149,14 @@ even that, really.
 <dialogue id="item2">
 
 <chunk>
-You obtain
-"DUMMY ITEM 2"!
+You obtain a jar
+of "LUBRICANT"!
 </chunk>
 
 <chunk>
-It's not any more
-useful than the 
-first dummy item.
-Sorry.
+Press DOWN + Z
+to slide like a
+pro!
 </chunk>
 
 </dialogue>
@@ -175,6 +175,68 @@ without dying.
 </chunk>
 
 </dialogue>
+
+<dialogue id="item4">
+
+<chunk>
+You obtain a
+"ROCKET PACK
+PROTOTYPE!"
+</chunk>
+
+<chunk>
+Hold Z while on
+air to reduce 
+your landing speed.
+It's not flying,
+really.
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="item5">
+
+<chunk>
+You obtain a
+"COMPLETE 
+ROCKET PACK!"
+</chunk>
+
+<chunk>
+It can take you
+to new heights!
+Literally.
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="item6">
+
+<chunk>
+You obtain an
+"IMPROVED HAND
+CANNON!"
+</chunk>
+
+<chunk>
+Hold X after 
+shooting to 
+charge a... 
+charge shot.
+</chunk>
+
+<chunk>
+Release X to
+shoot it. It can 
+break walls you
+couldn't break 
+before!
+</chunk>
+
+</dialogue>
+
 
 
 <dialogue id="item16">

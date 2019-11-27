@@ -22,6 +22,7 @@ export class Game {
         this.cloudPos = [0, 0, 0];
         this.snowTimer = [0.0, 0.0];
         this.snowFloat = [0.0, Math.PI];
+        this.mapID = 0; 
     }
 
     
@@ -70,14 +71,14 @@ export class Game {
     // Full reset
     fullReset(ev, assets) {
 
+        // Set defaults
         this.mapID = 0; 
+        this.textbox.active = false;
 
         // Create pause menu
         this.pauseMenu = this.createPauseMenu();
         // Create camera
         this.cam = new Camera(0, 0, 160, 144);
-        // Create text box
-        this.textbox = new Textbox(ev);
         // Create object manager
         this.objm = new ObjectManager(
             (ev, pl, col) => {
@@ -116,6 +117,9 @@ export class Game {
 
         // Needed for... THE FUTURE!
         this.assets = assets;
+
+        // Create text box
+        this.textbox = new Textbox(ev);
     }
 
 
@@ -416,6 +420,7 @@ export class Game {
         // Sometimes param can be null...
         else if (param == false) {
 
+            this.fullReset(ev, this.assets);
             try {
 
                 this.objm.parseSaveData(this.stage);
@@ -434,8 +439,6 @@ export class Game {
                     ev.loc.dialogue.savepoint[2]
                 );
                 this.textbox.activate();
-
-                this.fullReset(ev, this.assets);
             }
         }
     }
