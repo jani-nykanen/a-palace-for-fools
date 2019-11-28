@@ -9,6 +9,8 @@ import { Vector2 } from "./engine/vector.js";
 // (c) 2019 Jani Nykänen
 //
 
+export const PURPLE_BOX_START = 128;
+
 
 export class Chest extends RenderedObject {
 
@@ -24,6 +26,8 @@ export class Chest extends RenderedObject {
         this.spr = new Sprite(16, 16);
         if (id <= -1)
             this.spr.setFrame(2, 0);
+        else if(id >= PURPLE_BOX_START)
+            this.spr.setFrame(1, 2);
         else
             this.spr.setFrame(1, 0);
             
@@ -37,8 +41,11 @@ export class Chest extends RenderedObject {
         this.active = true;
         if (pl != null) {
 
-            if (this.id >= 0)
+            if (this.id >= 0 && this.id < PURPLE_BOX_START)
                 this.active = !pl.items[this.id];
+
+            else if (this.id >= PURPLE_BOX_START)
+                this.active = !pl.purpleBoxes[this.id - PURPLE_BOX_START];
 
             else
                 this.active = !pl.hcontainers[-this.id -1];
@@ -68,6 +75,10 @@ export class Chest extends RenderedObject {
 
             pl.hcontainers[-this.id - 1] = true;
         }
+        else if (this.id >= PURPLE_BOX_START){
+            
+            pl.purpleBoxes[this.id - PURPLE_BOX_START] = true;
+        }
         else {
 
             pl.items[this.id] = true;
@@ -82,10 +93,12 @@ export class Chest extends RenderedObject {
         const ITEM_WAIT = 30;
         const ITEM_SPEED = -0.5;
 
+        let t = Math.min(PURPLE_BOX_START, Math.max(-1, this.id)+1);
+
         this.textbox.addMessage(
-            ...ev.loc.dialogue["item" + String(Math.max(this.id, -1)+1)]
+            ...ev.loc.dialogue["item" + String(t)]
         );
-        this.textbox.activate(WAIT_TIME, Math.max(-1, this.id)+1, 
+        this.textbox.activate(WAIT_TIME, t, 
             new Vector2(this.pos.x, this.pos.y-8), 
             ITEM_SPEED, ITEM_WAIT);
 

@@ -16,6 +16,7 @@ import { Star } from "./star.js";
 import { Clam } from "./clam.js";
 import { Bunny } from "./bunny.js";
 import { HatBeetle } from "./hatbeetle.js";
+import { PURPLE_BOX_START } from "./chest.js";
 
 //
 // Handles the game stage rendering
@@ -433,8 +434,8 @@ export class Stage {
 
             for (let x = sx; x < sx + w; ++ x) {
 
-                t = this.map.getTile(0, x, y, true) -80;
-                if (t -- <= 0) continue;
+                t = this.map.getTile(0, x, y, true) -128;
+                if ( (t --) <= 0) continue;
                 
                 bsx = (t % 16);
                 bsy = (t / 16) | 0;
@@ -479,7 +480,8 @@ export class Stage {
         const PROP_AMPLITUDE = 8;
 
         if (this.id == 0 && 
-            cam.pos.y == 1 && cam.target.y == 1) {
+            (cam.pos.y == 0 || cam.pos.y == ((this.h*16/cam.h)|0) -1) && 
+            cam.target.y == cam.pos.y) {
 
             c.move(0, (Math.sin(this.propWave)*PROP_AMPLITUDE) | 0);
         }
@@ -623,6 +625,9 @@ export class Stage {
         let sx = Math.floor(o.pos.x / 16) - RADIUS;
         let sy = Math.floor(o.pos.y / 16) - RADIUS;
 
+        // Bottom collision
+        o.hurtCollision(-16, this.h*16, this.w*16 + 32, 1024, ev, 999);
+
         let t;
         for (let y = sy; y <= sy + RADIUS*2; ++ y) {
 
@@ -722,14 +727,15 @@ export class Stage {
                 dx = x*16 + 8;
                 dy = y*16 + 8;
 
-
                 // Check if "NPC"
                 if (t >= 33) {
 
                     if (t < 33 + 16)
                         objm.addNPC(x, y, t-33);
-                    else
+                    else if (t < 49+16)
                         objm.addChest(x, y, t-49);
+                    else
+                        objm.addChest(x, y, PURPLE_BOX_START + t-65);
                 }
                 // Check if a heath-container
                 else if (t >= 18 && t <= 23) {

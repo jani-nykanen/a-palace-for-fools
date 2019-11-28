@@ -30,6 +30,11 @@ export class SaveManager {
 
             d.hcontainers[i] = pl.hcontainers[i];
         }
+        d.purpleBoxes = new Array();
+        for (let i = 0; i < pl.purpleBoxes.length; ++ i) {
+
+            d.purpleBoxes[i] = pl.purpleBoxes[i];
+        }
         d.checkpoint = pl.checkpoint.clone();
         d.mapID = stage.id;
         d.gems = pl.gems;
@@ -51,6 +56,8 @@ export class SaveManager {
 
         pl.items = [...d.items];
         pl.hcontainers = [...d.hcontainers];
+        if (d.purpleBoxes != null)
+            pl.purpleBoxes = [...d.purpleBoxes];
 
         pl.maxHealth = d.maxHealth;
         pl.gems = d.gems;

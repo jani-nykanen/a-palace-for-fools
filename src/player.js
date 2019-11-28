@@ -93,18 +93,14 @@ export class Player extends GameObject {
 
         // Items the player has
         this.items = new Array(32);
-        for (let i = 0; i < this.items.length; ++ i) {
-
-            this.items[i] = false;
-        }
-
+        this.items.fill(false);
+        // Purple boxes that had been opened
+        this.purpleBoxes = new Array(8);
+        this.purpleBoxes.fill(false);
         // Health containers the player has
         // opened
         this.hcontainers = new Array(7);
-        for (let i = 0; i < this.hcontainers.length; ++ i) {
-
-            this.hcontainers[i] = false;
-        } 
+        this.hcontainers.fill(false);
     }
 
 
@@ -707,12 +703,13 @@ export class Player extends GameObject {
             dx = 1;
         }
 
-        if (cam.pos.y > 1 &&
+        if (cam.pos.y > 0 &&
             this.pos.y-8 < cam.top.y) {
 
             dy = -1
         }
-        else if (this.pos.y+6 > cam.top.y + cam.h) {
+        else if (cam.pos.y < ((stage.h*16/cam.h) | 0) -1 &&
+            this.pos.y+6 > cam.top.y + cam.h) {
 
             dy = 1;
         }
@@ -750,6 +747,14 @@ export class Player extends GameObject {
         const KNOCKBACK_X = 1.0;
         const KNOCKBACK_BASE_X = 0.5;
         const KNOCKBACK_Y = 1;
+        const INSTANT_KILL_LIMIT = 999;
+
+        if (dmg >= INSTANT_KILL_LIMIT) {
+
+            this.hurtTimer = HURT_TIME;
+            this.health = 0;
+            return;
+        }
 
         this.hurtTimer = HURT_TIME + KNOCKBACK_TIME;
 
@@ -813,7 +818,7 @@ export class Player extends GameObject {
         this.pos.y += dy * speed * ev.step;
 
         this.pos.x = negMod(this.pos.x, stage.w*16);
-        this.pos.y = negMod(this.pos.y, stage.h*16);
+        // this.pos.y = negMod(this.pos.y, stage.h*16);
     }
 
 

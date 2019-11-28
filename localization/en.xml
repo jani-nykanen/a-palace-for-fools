@@ -114,6 +114,23 @@ first place...
 
 <!-- Item dialogue -->
 
+
+<dialogue id="item128">
+
+<chunk>
+You obtain a
+piece of 
+"SKELETON KEY!"
+</chunk>
+
+<chunk>
+Only %d more to 
+go!
+</chunk>
+
+</dialogue>
+
+
 <dialogue id="item0">
 
 <chunk>
