@@ -78,6 +78,17 @@ export class Textbox {
         }
     }
 
+
+    // Set the value of %d
+    setDParamValue(d) {
+
+        let str = String(d);
+        for (let i = 0; i < this.queue.length; ++ i) {
+
+            this.queue[i] = this.queue[i].replace("%d", str);
+        }
+    }
+
     
     // Activate
     activate(wait, item, itemPos, speedY, itemWait, acceptCB) {

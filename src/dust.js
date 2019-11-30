@@ -19,11 +19,13 @@ export class Dust {
         this.exist = false;
         this.spr = new Sprite(32, 32);
         this.speed = 0;
+
+        this.moveSpeed = new Vector2();
     }
 
 
     // Spawn
-    spawn(x, y, speed, row) {
+    spawn(x, y, speed, row, moveSpeed) {
 
         if (row == null) row = 0;
 
@@ -32,6 +34,11 @@ export class Dust {
         this.speed = speed;
 
         this.exist = true;
+
+        if (moveSpeed != null)
+            this.moveSpeed = moveSpeed.clone();
+        else
+            this.moveSpeed = new Vector2();
     }
 
 
@@ -44,6 +51,9 @@ export class Dust {
             0, 4, this.speed, ev.step);
         if (this.spr.frame == 4)
             this.exist = false;
+
+        this.pos.x += this.moveSpeed.x * ev.step;
+        this.pos.y += this.moveSpeed.y * ev.step;
     }
 
 

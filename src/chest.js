@@ -9,7 +9,10 @@ import { Vector2 } from "./engine/vector.js";
 // (c) 2019 Jani Nykänen
 //
 
-export const PURPLE_BOX_START = 128;
+export const PURPLE_BOX_START = 32;
+// TODO: Compute this number from the stage
+// data
+export const PURPLE_BOX_COUNT = 8; 
 
 
 export class Chest extends RenderedObject {
@@ -98,7 +101,17 @@ export class Chest extends RenderedObject {
         this.textbox.addMessage(
             ...ev.loc.dialogue["item" + String(t)]
         );
-        this.textbox.activate(WAIT_TIME, t, 
+        if (this.id >= PURPLE_BOX_START) {
+
+            this.textbox.setDParamValue(
+                PURPLE_BOX_COUNT - (pl.crystalCount+1)
+            );
+
+            ++ pl.crystalCount;
+        }
+
+        this.textbox.activate(WAIT_TIME, 
+            t, 
             new Vector2(this.pos.x, this.pos.y-8), 
             ITEM_SPEED, ITEM_WAIT);
 

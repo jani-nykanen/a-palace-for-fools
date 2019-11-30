@@ -115,12 +115,12 @@ first place...
 <!-- Item dialogue -->
 
 
-<dialogue id="item128">
+<dialogue id="item32">
 
 <chunk>
 You obtain a
 piece of 
-"SKELETON KEY!"
+"BLOOD CRYSTAL!"
 </chunk>
 
 <chunk>
@@ -197,16 +197,12 @@ without dying.
 
 <chunk>
 You obtain a
-"ROCKET PACK
-PROTOTYPE!"
+"ROCKET PACK V1!"
 </chunk>
 
 <chunk>
 Hold Z while on
-air to reduce 
-your landing speed.
-It's not flying,
-really.
+air to to use it.
 </chunk>
 
 </dialogue>
@@ -215,9 +211,8 @@ really.
 <dialogue id="item5">
 
 <chunk>
-You obtain a
-"COMPLETE 
-ROCKET PACK!"
+You obtain a 
+"ROCKET PACK V2!"
 </chunk>
 
 <chunk>

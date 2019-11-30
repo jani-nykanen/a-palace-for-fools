@@ -97,6 +97,7 @@ export class Player extends GameObject {
         // Purple boxes that had been opened
         this.purpleBoxes = new Array(8);
         this.purpleBoxes.fill(false);
+        this.crystalCount = 0;
         // Health containers the player has
         // opened
         this.hcontainers = new Array(7);
@@ -259,6 +260,7 @@ export class Player extends GameObject {
         
         const DUST_TIME = 6;
         const DUST_SPEED = 8;
+        const DUST_DOWN_SPEED = 0.5;
 
         // Update dust
         for (let d of this.dust) {
@@ -288,7 +290,9 @@ export class Player extends GameObject {
 
             dust.spawn(
                 this.pos.x + x, 
-                this.pos.y+2, DUST_SPEED);
+                this.pos.y+2, DUST_SPEED, 0,
+                this.items[4] ? null :
+                new Vector2(0, DUST_DOWN_SPEED));
 
             this.dustTimer += DUST_TIME;
 
