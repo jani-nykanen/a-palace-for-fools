@@ -8,6 +8,7 @@ import { Chest } from "./chest.js";
 import { ShopItem } from "./shopitem.js";
 import { SavePoint } from "./savepoint.js";
 import { SaveManager } from "./savemanager.js";
+import { Lever } from "./lever.js";
 
 //
 // Object manager. Handles the game objects,
@@ -32,6 +33,7 @@ export class ObjectManager {
         this.chests = new Array();
         this.shopItems = new Array();
         this.savepoints = new Array();
+        this.levers = new Array();
 
         this.playerCreated = false;
 
@@ -84,10 +86,11 @@ export class ObjectManager {
 
 
     // Add a portal
-    addPortal(x, y, id) {
+    addPortal(x, y, id, stage) {
 
         this.portals.push(
-            new Portal(x*16 + 8, y*16, id, this.portalCB)
+            new Portal(x*16 + 8, y*16, id, 
+                this.portalC, stage)
         );
     }
 
@@ -120,11 +123,23 @@ export class ObjectManager {
         );
     }
 
+
     // Add a save point
     addSavePoint(x, y) {
 
         this.savepoints.push(
-            new SavePoint(x*16 + 8, y*16 + 8, this.textbox, this.player)
+            new SavePoint(x*16 + 8, y*16 + 8, 
+                this.textbox, this.player)
+        );
+    }
+
+    
+    // Add a lever
+    addLever(x, y, stage) {
+
+        this.levers.push(
+            new Lever(x*16 + 8, y*16 + 8, 0,
+                this.textbox, this.player, stage)
         );
     }
 
@@ -196,6 +211,8 @@ export class ObjectManager {
         this.updateRenderedObjectArray(this.portals, stage, cam, ev);
         // Update shop items
         this.updateRenderedObjectArray(this.shopItems, stage, cam, ev);
+        // Update levers
+        this.updateRenderedObjectArray(this.levers, stage, cam, ev);
     }
 
 
@@ -212,6 +229,8 @@ export class ObjectManager {
     // Draw
     draw(c, cam, stage) {
 
+        // Draw levers
+        this.drawRenderedObjectArray(this.levers, c, stage, cam);
         // Draw save points
         this.drawRenderedObjectArray(this.savepoints, c, stage, cam);
         // Draw portals
@@ -265,29 +284,16 @@ export class ObjectManager {
 
         // Check if other objects outside
         // the camera area
-        for (let e of this.enemies) {
+        let arr = [this.enemies, this.portals,
+                   this.npcs, this.chests,
+                   this.shopItems, this.savepoints,
+                   this.levers ];
+        for (let a of arr) {
 
-            e.isInCamera(cam);
-        }
-        for (let p of this.portals) {
+            for (let e of a) {
 
-            p.isInCamera(cam, ev, true);
-        }
-        for (let n of this.npcs) {
-
-            n.isInCamera(cam);
-        }
-        for (let c of this.chests) {
-
-            c.isInCamera(cam);
-        }
-        for (let c of this.shopItems) {
-
-            c.isInCamera(cam);
-        }
-        for (let c of this.savepoints) {
-
-            c.isInCamera(cam);
+                e.isInCamera(cam, ev, true);
+            }
         }
     }
 
@@ -312,6 +318,7 @@ export class ObjectManager {
         this.chests = new Array();
         this.shopItems = new Array();
         this.savepoints = new Array();
+        this.levers = new Array();
 
         this.bgen.reset();
         this.gemGen.reset();

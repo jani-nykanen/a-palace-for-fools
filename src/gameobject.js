@@ -168,10 +168,10 @@ export class GameObject {
 
 
     // Hurt collision
-    hurtCollision(x, y, w, h, ev, dmg) {
+    hurtCollision(x, y, w, h, ev, dmg, force) {
 
         if (!this.hurt || 
-            this.hurtTimer > 0 ||
+            (!force && this.hurtTimer > 0) ||
             !this.exist || 
             this.dying) return false;
 
@@ -190,7 +190,7 @@ export class GameObject {
 
             if (dmg == null) dmg = 1;
 
-            this.hurt(x+w/2, y+h/2, ev, dmg);
+            this.hurt(x+w/2, y+h/2, ev, dmg, force);
             return true;
         }
 

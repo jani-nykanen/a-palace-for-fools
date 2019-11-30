@@ -37,6 +37,8 @@ export class Textbox {
 
         this.yes = ev.loc.dialogue.general[1].replace("\n", "");
         this.no = ev.loc.dialogue.general[2].replace("\n", "");
+
+        this.shakeApplied = false;
     }
 
 
@@ -104,6 +106,8 @@ export class Textbox {
 
             this.accept = true;
             this.acceptCB = item == null ? wait : acceptCB;
+
+            this.cursorPos = 1;
         }
 
         if (wait == null)
@@ -113,13 +117,18 @@ export class Textbox {
         this.item = item;
         if (item != null) {
 
-            this.itemPos = itemPos.clone();
+            if (itemPos != null)
+                this.itemPos = itemPos.clone();
             this.itemSpeed = speedY;
             this.itemWait = itemWait;
-        
-            this.cursorPos = 1;
-        }
 
+            if (item <= -1) {
+
+                this.shakeApplied = true;
+            }
+            
+        }
+       
     }
 
 
@@ -242,7 +251,8 @@ export class Textbox {
     drawItem(c) {
 
         if (!this.active ||
-            this.item == null) return;
+            this.item == null ||
+            this.item < 0) return;
 
         let sx = (this.item|0 )% 16;
         let sy = (this.item/16) | 0;
@@ -323,6 +333,17 @@ export class Textbox {
 
         }
 
+    }
+
+
+    // Apply shake (if the item is -1)
+    applyShake(c) {
+
+        if (this.shakeApplied) {
+
+            c.setShake(this.waitTimer, (-this.item) | 0);
+            this.shakeApplied = false;
+        }
     }
 
 }

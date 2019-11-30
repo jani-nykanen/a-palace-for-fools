@@ -369,6 +369,10 @@ export class Game {
 
         c.clear(85);
 
+        // If the screen is shaking while
+        // waiting for the textbox
+        this.textbox.applyShake(c);
+
         // Draw background
         this.drawBackground(c);
 

@@ -58,6 +58,8 @@ export class Stage {
 
         this.propSpr = new Sprite(80, 24);
         this.propWave = 0.0;
+
+        this.leverPressed = false;
     }
 
 
@@ -626,7 +628,8 @@ export class Stage {
         let sy = Math.floor(o.pos.y / 16) - RADIUS;
 
         // Bottom collision
-        o.hurtCollision(-16, this.h*16, this.w*16 + 32, 1024, ev, 999);
+        o.hurtCollision(-16, this.h*16, this.w*16 + 32, 1024, 
+            ev, 0, true);
 
         let t;
         for (let y = sy; y <= sy + RADIUS*2; ++ y) {
@@ -738,7 +741,7 @@ export class Stage {
                         objm.addChest(x, y, PURPLE_BOX_START + t-65);
                 }
                 // Check if a heath-container
-                else if (t >= 18 && t <= 23) {
+                else if (t >= 18 && t <= 22) {
 
                     objm.addChest(x, y, -(t-17));
                 }
@@ -762,11 +765,17 @@ export class Stage {
                         objm.setPlayerPosition(x, y, respawn);
                         break;
 
+                    // Lever
+                    case 23:
+
+                        objm.addLever(x, y, this);
+                        break;
+
 
                     // Portal
                     case 17:
 
-                        objm.addPortal(x, y, id);
+                        objm.addPortal(x, y, id, this);
                         break;
 
                     // Save point

@@ -112,22 +112,26 @@ first place...
 </dialogue>
 
 
-<!-- Item dialogue -->
+<dialogue id="lever">
+<chunk>
+You have
+activated
+the time
+portals.
+</chunk>
+</dialogue>
 
 
 <dialogue id="item32">
-
 <chunk>
 You obtain a
 piece of 
 "BLOOD CRYSTAL!"
 </chunk>
-
 <chunk>
 Only %d more to 
 go!
 </chunk>
-
 </dialogue>
 
 

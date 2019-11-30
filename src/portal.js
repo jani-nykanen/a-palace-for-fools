@@ -13,7 +13,7 @@ import { RenderedObject } from "./renderedobject.js";
 export class Portal extends RenderedObject {
 
 
-    constructor(x, y, id, cb) {
+    constructor(x, y, id, cb, stage) {
 
         super(x, y);
 
@@ -32,6 +32,8 @@ export class Portal extends RenderedObject {
         this.cb = cb;
 
         this.inCamera = false;
+
+        
     }
 
 

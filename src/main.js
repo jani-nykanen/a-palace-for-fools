@@ -80,6 +80,7 @@ window.onload = () => {
         {name: "pause", src: "assets/audio/pause.wav"},
         {name: "deny", src: "assets/audio/deny.wav"},
         {name: "checkpoint", src: "assets/audio/checkpoint.wav"},
+        {name: "lever", src: "assets/audio/lever.wav"},
 
         {name: "item", src: "assets/audio/item.ogg"},
         {name: "healthUp", src: "assets/audio/health_up.ogg"},

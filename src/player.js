@@ -746,14 +746,13 @@ export class Player extends GameObject {
 
 
     // Hurt player
-    hurt(cx, cy, ev, dmg) {
+    hurt(cx, cy, ev, dmg, force) {
 
         const KNOCKBACK_X = 1.0;
         const KNOCKBACK_BASE_X = 0.5;
         const KNOCKBACK_Y = 1;
-        const INSTANT_KILL_LIMIT = 999;
-
-        if (dmg >= INSTANT_KILL_LIMIT) {
+ 
+        if (force) {
 
             this.hurtTimer = HURT_TIME;
             this.health = 0;
