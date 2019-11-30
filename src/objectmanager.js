@@ -90,7 +90,7 @@ export class ObjectManager {
 
         this.portals.push(
             new Portal(x*16 + 8, y*16, id, 
-                this.portalC, stage)
+                this.portalCB, stage)
         );
     }
 
@@ -150,7 +150,7 @@ export class ObjectManager {
         for (let n of arr) {
 
             n.isInCamera(cam, ev, false);
-            n.update(this.player, ev);
+            n.update(this.player, ev, stage);
             n.playerCollision(this.player, stage, ev);
         }
     }

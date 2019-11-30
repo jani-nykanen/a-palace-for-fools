@@ -28,12 +28,10 @@ export class Portal extends RenderedObject {
         this.spr.setFrame(id, 0);
         this.id = id;
 
-        this.active = true;
+        this.active = stage.leverPressed;
         this.cb = cb;
 
         this.inCamera = false;
-
-        
     }
 
 
@@ -42,17 +40,25 @@ export class Portal extends RenderedObject {
 
         const ANIM_SPEED = 8;
 
-        this.spr.animate(this.id, 
-            1, 3, ANIM_SPEED, ev.step);
+        if (!this.active) {
+
+            this.spr.setFrame(this.id, 0);
+        }
+        else {
+
+            this.spr.animate(this.id, 
+                1, 3, ANIM_SPEED, ev.step);
+        }
     }
 
 
     // Update
-    update(pl, ev) {
+    update(pl, ev, stage) {
         
         if (!this.inCamera) return;
 
         this.animate(ev);
+        this.active = stage.leverPressed;
     }
 
 
