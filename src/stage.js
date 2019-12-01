@@ -293,7 +293,7 @@ export class Stage {
         // this spike, make the second spike slightly 
         // different
         let s = this.map.getTile(
-            0, x + DIR_X[t], y + DIR_Y[t]);
+            1, x + DIR_X[t], y + DIR_Y[t]);
         if (s != 3 + t && s != 1) {
 
             jump = 1;

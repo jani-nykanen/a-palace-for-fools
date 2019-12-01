@@ -420,7 +420,8 @@ export class Game {
         this.textbox.draw(c);
 
         // Draw map
-        this.map.draw(c, this.stage, this.cam);
+        this.map.draw(c, this.stage, 
+            this.cam, this.objm.getPlayer());
     }
 
 

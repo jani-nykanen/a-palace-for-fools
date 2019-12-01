@@ -276,21 +276,15 @@ locks. Maybe.
 <dialogue id="item17">
 
 <chunk>
-You obtain a
-"MAP"!
-</chunk>
-
-<chunk>
-It shows you all
-the rooms you 
-have visited. 
-Does not work in 
-the past.
+You obtain an
+"UP-TO-DATE MAP"!
 </chunk>
 
 <chunk>
 Press R.Shift to
 open the map.
+Does not work in 
+the past.
 </chunk>
 
 </dialogue>
@@ -370,15 +364,10 @@ You obtain an
 </chunk>
 
 <chunk>
-It shows you all
-the rooms you 
-have visited in 
-the past.
-</chunk>
-
-<chunk>
 Press R.Shift to
-open the map.
+open the map. 
+Does not work in
+the present.
 </chunk>
 
 </dialogue>

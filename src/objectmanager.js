@@ -387,5 +387,13 @@ export class ObjectManager {
         let sman = new SaveManager();
         sman.loadGame(this.player, stage);
     }
+
+
+    // Get the player object
+    // (not really useful but(t))
+    getPlayer() {
+
+        return this.player;
+    }
 }
 

@@ -26,6 +26,8 @@ export class GameMap {
         this.scale = 1;
 
         this.bmp = new Bitmap(this.image);
+
+        this.flickerTime = 0.0;
     }
 
 
@@ -52,6 +54,8 @@ export class GameMap {
     // Update
     update(stage, ev) {
 
+        const FLICKER_SPEED = 0.05;
+
         let s = ev.input.action.select.state == State.Pressed;
         let p = ev.input.action.start.state == State.Pressed
 
@@ -60,6 +64,13 @@ export class GameMap {
             if (p || s) {
 
                 this.active = false;
+
+                ev.audio.playSample(ev.audio.sounds.pause, 0.50);
+            }
+            else {
+
+                this.flickerTime  += FLICKER_SPEED * ev.step;
+                this.flickerTime %= 2;
             }
             return true;
         }
@@ -67,6 +78,7 @@ export class GameMap {
         if (s) {
 
             this.activate(stage);
+            ev.audio.playSample(ev.audio.sounds.pause, 0.50);
             return true;
         }
 
@@ -75,7 +87,7 @@ export class GameMap {
 
 
     // Refresh
-    refresh(stage, cam) {
+    refresh(stage, cam, pl) {
 
         let c = this.ctx;
 
@@ -109,20 +121,34 @@ export class GameMap {
 
 
     // Draw
-    draw(c, stage, cam) {
+    draw(c, stage, cam, pl) {
 
         if (!this.active) return;
 
         if (!this.refreshed) {
 
-            this.refresh(stage, cam);
+            this.refresh(stage, cam, pl);
             this.refreshed = true;
         }
 
-        // Draw map
-        c.drawBitmap(this.bmp,
-            c.w/2 - this.w*this.scale/2,
+        c.moveTo(c.w/2 - this.w*this.scale/2,
             c.h/2 - this.h*this.scale/2);
+
+        // Draw map
+        c.drawBitmap(this.bmp, 0, 0);
+
+        // Draw flashing player
+        let px = (pl.pos.x/16) | 0;
+        let py = (pl.pos.y/16) | 0;
+
+        if (this.flickerTime >= 1) {
+
+            c.setColor(170, 0, 0);
+            c.fillRect(px*this.scale-1, py*this.scale-1, 
+                this.scale+2, this.scale+2);
+        }
+
+        c.moveTo(0, 0);
 
     }
 }
