@@ -173,7 +173,8 @@ export class Game {
         }
 
         // Update map (or actually, check input)
-        if (this.map.update(this.stage, ev)) {
+        if (this.map.update(this.stage, 
+            this.textbox, this.objm, ev)) {
 
             return;
         }
@@ -421,7 +422,7 @@ export class Game {
 
         // Draw map
         this.map.draw(c, this.stage, 
-            this.cam, this.objm.getPlayer());
+            this.cam, this.objm.getPlayerPos());
     }
 
 

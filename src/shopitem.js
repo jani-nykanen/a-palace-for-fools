@@ -2,6 +2,7 @@ import { Sprite } from "./engine/sprite.js";
 import { Flip } from "./engine/canvas.js";
 import { RenderedObject } from "./renderedobject.js";
 import { Vector2 } from "./engine/vector.js";
+import { PURPLE_BOX_COUNT } from "./chest.js";
 
 //
 // An item in a shop
@@ -63,6 +64,10 @@ export class ShopItem extends RenderedObject {
             ++ pl.health;
             ++ pl.maxHealth;
         }
+        else if (this.id == 6) {
+
+            ++ pl.crystalCount;
+        }
         pl.items[16 + this.id] = true;
     }
 
@@ -74,13 +79,24 @@ export class ShopItem extends RenderedObject {
         const ITEM_WAIT = 30;
         const ITEM_SPEED = -0.5;
 
+        let id = this.id+15;
+        if (this.id == 0)
+            id = 0;
+        else if (this.id == 6)
+            id = 32;
+
         this.textbox.addMessage(
             ...ev.loc.dialogue[
-
-                this.id == 0 ? "item0" :
-                ("item" + String(this.id+15))
+                "item" + String(id)
             ]
         );
+        if (this.id == 6) {
+
+            this.textbox.setDParamValue(
+                PURPLE_BOX_COUNT - (pl.crystalCount+1)
+            );
+        }
+
         this.textbox.activate(WAIT_TIME, 16+this.id, 
             new Vector2(this.pos.x, this.pos.y-8), 
             ITEM_SPEED, ITEM_WAIT);
@@ -90,7 +106,6 @@ export class ShopItem extends RenderedObject {
         pl.showArrow = false;
         pl.stopMovement();
 
-        // Play sound
         ev.audio.playSample(
             this.id == 0 ? ev.audio.sounds.healthUp : 
                 ev.audio.sounds.item, 

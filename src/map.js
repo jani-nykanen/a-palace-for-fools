@@ -52,7 +52,7 @@ export class GameMap {
 
 
     // Update
-    update(stage, ev) {
+    update(stage, textbox, objm, ev) {
 
         const FLICKER_SPEED = 0.05;
 
@@ -77,9 +77,24 @@ export class GameMap {
 
         if (s) {
 
-            this.activate(stage);
-            ev.audio.playSample(ev.audio.sounds.pause, 0.50);
-            return true;
+            // Check if the player has the required
+            // map
+            if (objm.checkMap(stage)) {
+
+                this.activate(stage);
+                ev.audio.playSample(ev.audio.sounds.pause, 0.50);
+                return true;
+            }
+            else {
+
+                textbox.addMessage(
+                    ev.loc.dialogue.general[5]
+                );
+                textbox.activate();
+
+                ev.audio.playSample(ev.audio.sounds.deny, 0.60);    
+            }
+            
         }
 
         return false;
@@ -87,7 +102,7 @@ export class GameMap {
 
 
     // Refresh
-    refresh(stage, cam, pl) {
+    refresh(stage, cam) {
 
         let c = this.ctx;
 
@@ -127,7 +142,7 @@ export class GameMap {
 
         if (!this.refreshed) {
 
-            this.refresh(stage, cam, pl);
+            this.refresh(stage, cam);
             this.refreshed = true;
         }
 
@@ -138,8 +153,8 @@ export class GameMap {
         c.drawBitmap(this.bmp, 0, 0);
 
         // Draw flashing player
-        let px = (pl.pos.x/16) | 0;
-        let py = (pl.pos.y/16) | 0;
+        let px = (pl.x/16) | 0;
+        let py = (pl.y/16) | 0;
 
         if (this.flickerTime >= 1) {
 

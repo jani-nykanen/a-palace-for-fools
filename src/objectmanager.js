@@ -389,11 +389,19 @@ export class ObjectManager {
     }
 
 
-    // Get the player object
-    // (not really useful but(t))
-    getPlayer() {
+    // Get the player position
+    getPlayerPos() {
 
-        return this.player;
+        return this.player.pos;
+    }
+
+
+    // Check if the player has the 
+    // map of the current area
+    checkMap(stage) {
+
+        return (stage.id == 0 && this.player.items[18]) ||
+            (stage.id == 1 && this.player.items[23]); 
     }
 }
 
