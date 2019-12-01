@@ -125,12 +125,13 @@ portals.
 <dialogue id="item32">
 <chunk>
 You obtain a
-piece of 
-"BLOOD CRYSTAL!"
+"BLOOD SHARD!"
 </chunk>
 <chunk>
-Only %d more to 
-go!
+Only %d more 
+and you can
+craft a blood
+gem!
 </chunk>
 </dialogue>
 

@@ -51,6 +51,7 @@ window.onload = () => {
         {name: "propeller",   src: "assets/bitmaps/propeller.png"},
         {name: "savepoint",   src: "assets/bitmaps/savepoint.png"},
         {name: "logo",   src: "assets/bitmaps/logo.png"},
+        {name: "map",   src: "assets/bitmaps/map.png"},
     );
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past.tmx"},
@@ -97,7 +98,7 @@ window.onload = () => {
         {name: "fire2", key: 88, button: 2},
 
         {name: "start", key: 13, button: 9},
-        {name: "back", key: 27, button: 8},
+        {name: "select", key: 16, button: 8},
 
         {name: "debug", key: 80},
     )

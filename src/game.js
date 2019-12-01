@@ -6,6 +6,7 @@ import { State } from "./engine/input.js";
 import { Textbox } from "./textbox.js";
 import { drawBoxWithBorders } from "./engine/util.js";
 import { Menu, MenuButton } from "./menu.js";
+import { GameMap } from "./map.js";
 
 //
 // Game scene
@@ -23,6 +24,8 @@ export class Game {
         this.snowTimer = [0.0, 0.0];
         this.snowFloat = [0.0, Math.PI];
         this.mapID = 0; 
+
+        this.map = new GameMap();
     }
 
     
@@ -166,6 +169,12 @@ export class Game {
         if (this.pauseMenu.active) {
 
             this.pauseMenu.update(ev);
+            return;
+        }
+
+        // Update map (or actually, check input)
+        if (this.map.update(this.stage, ev)) {
+
             return;
         }
 
@@ -410,6 +419,8 @@ export class Game {
         // Draw text box
         this.textbox.draw(c);
 
+        // Draw map
+        this.map.draw(c, this.stage, this.cam);
     }
 
 
