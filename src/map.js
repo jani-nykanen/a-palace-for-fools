@@ -135,6 +135,57 @@ export class GameMap {
     }
 
 
+    // Draw borders
+    drawBorders(c) {
+
+        let b = c.bitmaps.map;
+
+        // TODO: Compute these
+        let w = ((this.w*this.scale / 16) | 0) + 2;
+        let h = ((this.h*this.scale / 16) | 0) + 2;
+
+        let dx = (w*16 - this.w*this.scale) / 2;
+        let dy = (h*16 - this.h*this.scale) / 2;
+
+        let sx, sy;
+
+        c.move(-dx, -dy);
+
+        // Horizontal
+        for (let x = 0; x < w; ++ x) {
+
+            if (x == 0)
+                sx = 0;
+            else if (x == w-1)
+                sx = 32;
+            else
+                sx = 16;
+
+            // Top
+            c.drawBitmapRegion(b,
+                sx, 0, 16, 16, x*16, 0);
+            // Bottom
+            c.drawBitmapRegion(b,
+                sx, 32, 16, 16, x*16, (h-1)*16);
+        }
+
+        // Vertical
+        for (let y = 1; y < h-1; ++ y) {
+
+            sy = 16;
+
+            // Left
+            c.drawBitmapRegion(b,
+                0, sy, 16, 16, 0, y*16);
+            // Right
+            c.drawBitmapRegion(b,
+                32, sy, 16, 16, (w-1)*16, y*16);
+        }
+
+        c.move(dx, dy);
+    }
+
+
     // Draw
     draw(c, stage, cam, pl) {
 
@@ -149,7 +200,12 @@ export class GameMap {
         c.moveTo(c.w/2 - this.w*this.scale/2,
             c.h/2 - this.h*this.scale/2);
 
+        // Draw borders
+        this.drawBorders(c);
+
         // Draw map
+        c.setColor(85, 0, 0);
+        c.fillRect(-1, -1, this.w*this.scale+2, this.h*this.scale+2);
         c.drawBitmap(this.bmp, 0, 0);
 
         // Draw flashing player

@@ -64,6 +64,8 @@ export class Lever extends RenderedObject {
         stage.leverPressed = true;
         this.active = false;
 
+        pl.showArrow = false;
+
         ++ this.spr.frame;
     }
 
