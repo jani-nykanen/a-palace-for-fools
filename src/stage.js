@@ -780,9 +780,11 @@ export class Stage {
 
                     switch(t) {
 
-                    // Player
+                    // Player (and the ending
+                    // portal)
                     case 1:
 
+                        objm.addPortal(x, y, 2, this);
                         objm.setPlayerPosition(x, y, respawn);
                         break;
 
