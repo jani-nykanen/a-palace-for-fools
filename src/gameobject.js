@@ -41,6 +41,7 @@ export class GameObject {
         this.hitbox = new Vector2(this.w, this.h);
 
         this.breakWall = 0;
+        this.hasKey = false;
         this.ignoreLadder = false;
 
         this.bounce = false;

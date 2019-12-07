@@ -140,7 +140,6 @@ export class GameMap {
 
         let b = c.bitmaps.map;
 
-        // TODO: Compute these
         let w = ((this.w*this.scale / 16) | 0) + 2;
         let h = ((this.h*this.scale / 16) | 0) + 2;
 

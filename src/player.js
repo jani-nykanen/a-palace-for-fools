@@ -360,6 +360,7 @@ export class Player extends GameObject {
         this.forceUp = false;
         this.canJumpOld = this.canJump;
         this.teleporting = false;
+        this.hasKey = this.items[17];
 
         // Determine hitbox height
         this.hitbox.y = this.slideTimer > 0 ?

@@ -134,7 +134,7 @@ export class Stage {
     // Is the tile solid
     isSolid(x, y, loop) {
 
-        const SOLID = [1, 9, 10, 12, 13];
+        const SOLID = [1, 9, 10, 12, 13, 14];
 
         let t = this.map.getTile(1, x, y, loop);
 
@@ -419,6 +419,13 @@ export class Stage {
                         x*16 - 32, y*16 - 4);
                     break;
 
+                // Keyhole
+                case 14:
+
+                    c.drawBitmapRegion(this.tileset, 
+                        128, 16, 16, 16, x*16, y*16);
+                    break;
+
                 default:
                     break;
                 }
@@ -517,6 +524,7 @@ export class Stage {
         const MARGIN = 2;
 
         let w = null;
+        let b = null;
 
         // Left
         if (!this.isSolid(x-1, y, true)) {
@@ -537,7 +545,7 @@ export class Stage {
             this.map.setTile(1, x, y, 0);
             this.spawnDust(x, y, breakable-1);
 
-            ev.audio.playSample(ev.audio.sounds.breakWall, 0.40);
+            ev.audio.playSample(ev.audio.sounds.breakWall, 0.50);
 
             // Spawn gem
             if (this.gemCB != null) {
@@ -553,8 +561,9 @@ export class Stage {
 
             // If touched ground while climbing downwards, stop
             // climbing
-            if (o.horizontalCollision(
-                x*16-MARGIN, y*16, 16+MARGIN*2, 1, ev)) {
+            b = o.horizontalCollision(
+                x*16-MARGIN, y*16, 16+MARGIN*2, 1, ev);
+            if (b) {
 
                 if (o.climbing) {
 
@@ -566,7 +575,16 @@ export class Stage {
         // Bottom
         if (!this.isSolid(x, y+1, true)) {
 
-            o.horizontalCollision(x*16, (y+1) *16 , 16, -1, ev);
+            b = b || o.horizontalCollision(x*16, (y+1) *16 , 16, -1, ev);
+        }
+
+        // "Open"
+        if ((w || b) && o.hasKey && breakable == -1) {
+
+            this.map.setTile(1, x, y, 0);
+            this.spawnDust(x, y, 2);
+
+            ev.audio.playSample(ev.audio.sounds.open, 0.70);
         }
     }
 
@@ -644,9 +662,11 @@ export class Stage {
                 case 9:
                 case 10:
                 case 12:
+                case 14:
 
+                    // Gotta love ?-operator while you can
                     this.getWallCollision(o, x, y, 
-                        (t == 9 || t == 10) ? (t-8) : false, 
+                        (t >= 9 && t != 12) ? (t == 14 ? -1 : t-8) : false, 
                         ev);
                     break; 
 
@@ -671,6 +691,7 @@ export class Stage {
 
                     this.getWaterCollision(o, x, y, t-7);
                     break;
+                    
 
                 // Special floor collision
                 case 11:
