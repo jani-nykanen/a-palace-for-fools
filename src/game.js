@@ -84,7 +84,7 @@ export class Game {
         this.cam = new Camera(0, 0, 160, 144);
         // Create object manager
         this.objm = new ObjectManager(
-            (ev, pl, col) => {
+            (ev, pl, col, id) => {
 
                 let x = pl.pos.x % this.cam.w;
                 let y = pl.pos.y % this.cam.h;
@@ -92,7 +92,7 @@ export class Game {
                 ev.tr.setCenter(x, y);
                 ev.tr.activate(true, TransitionMode.CircleOutside,
                     2, (ev) => {
-                        this.changeTime();
+                        this.changeTime(id == 2 ? id : null);
                         // TODO: The next line should happen somewhere else
                         pl.spr.setFrame(10, 0);
                     }, ...col);
@@ -142,9 +142,9 @@ export class Game {
 
 
     // Change time
-    changeTime() {
-
-        this.mapID = this.mapID == 1 ? 0 : 1;
+    changeTime(id) {
+        
+        this.mapID = id || (this.mapID == 1 ? 0 : 1);
         this.reset(this.mapID);
     }
     
@@ -383,8 +383,15 @@ export class Game {
         // waiting for the textbox
         this.textbox.applyShake(c);
 
-        // Draw background
-        this.drawBackground(c);
+        if (this.mapID == 2) {
+
+            c.clear(255);
+        }
+        else {
+
+            // Draw background
+            this.drawBackground(c);
+        }
 
         // Move to camera
         this.cam.use(c);

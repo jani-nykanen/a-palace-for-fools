@@ -35,7 +35,9 @@ export class Stage {
 
         this.id = id;
 
-        this.maps = [ev.documents.present, ev.documents.past];
+        this.maps = [ev.documents.present, 
+            ev.documents.past,
+            ev.documents.future];
         this.baseMap = this.maps[id];
         this.map = new Tilemap(this.maps[id]);
         this.w = this.map.w;
@@ -44,7 +46,9 @@ export class Stage {
         this.waterSurface = new Sprite(16, 16);
 
         this.tilesets = 
-             [assets.bitmaps.tilesetA, assets.bitmaps.tilesetB];
+             [assets.bitmaps.tilesetA, 
+              assets.bitmaps.tilesetB,
+              assets.bitmaps.tilesetC];
         this.tileset = this.tilesets[id];
 
         // Dust for breaking tiles

@@ -59,6 +59,7 @@ export class Player extends GameObject {
         this.chargeLoadTimer = 0;
         this.shootDir = 1;
         this.canShoot = true;
+        this.ignoreLadder = false;
         
         this.dust = new Array(DUST_COUNT);
         for (let i = 0; i < DUST_COUNT; ++ i) {
@@ -697,15 +698,18 @@ export class Player extends GameObject {
         let dx = 0;
         let dy = 0;
 
-        if (this.flip == Flip.Horizontal &&
-            this.pos.x-8 < cam.top.x) {
+        if (((stage.w*16/cam.w)|0) > 1) {
 
-            dx = -1;
-        }
-        else if (this.flip == Flip.None &&
-            this.pos.x+8 > cam.top.x + cam.w) {
+            if (this.flip == Flip.Horizontal &&
+                this.pos.x-8 < cam.top.x) {
 
-            dx = 1;
+                dx = -1;
+            }
+            else if (this.flip == Flip.None &&
+                this.pos.x+8 > cam.top.x + cam.w) {
+
+                dx = 1;
+            }
         }
 
         if (cam.pos.y > 0 &&

@@ -30,6 +30,7 @@ window.onload = () => {
         {name: "font",   src: "assets/bitmaps/font.png"},
         {name: "tilesetA",   src: "assets/bitmaps/tileset.png"},
         {name: "tilesetB",   src: "assets/bitmaps/tileset_b.png"},
+        {name: "tilesetC",   src: "assets/bitmaps/tileset_c.png"},
         {name: "cloudsA",   src: "assets/bitmaps/clouds.png"},
         {name: "cloudsB",   src: "assets/bitmaps/clouds_b.png"},
         {name: "backgroundA",   src: "assets/bitmaps/background.png"},
@@ -56,6 +57,8 @@ window.onload = () => {
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past.tmx"},
         {name: "present", src: "assets/maps/present.tmx"},
+        {name: "future", src: "assets/maps/future.tmx"},
+
         {name: "en", src: "localization/en.xml"},
     );
     c.assets.addSounds(

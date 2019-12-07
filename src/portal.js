@@ -86,7 +86,9 @@ export class Portal extends RenderedObject {
     // Activate
     activate(pl, stage, ev) {
 
-        const COLOR = [[170, 170, 0], [85, 170, 255]];
+        const COLOR = [[170, 170, 0], 
+            [85, 170, 255], 
+            [255, 255, 255]];
 
         pl.showArrow = false;
 
@@ -104,7 +106,7 @@ export class Portal extends RenderedObject {
         // Call callback function, if any
         if (this.cb != null) {
 
-            this.cb(ev, pl, COLOR[this.id]);
+            this.cb(ev, pl, COLOR[this.id], this.id);
         }
     }
 
