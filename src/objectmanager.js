@@ -73,8 +73,6 @@ export class ObjectManager {
         this.player.pos.y = (y+1)*16 -6;
 
         this.player.checkpoint = this.player.pos.clone();
-
-        
     }
 
 
@@ -367,8 +365,7 @@ export class ObjectManager {
     // Set initial camera position
     setInitialCamera(cam) {
 
-        cam.pos.x = (this.player.pos.x / cam.w) | 0;
-        cam.pos.y = (this.player.pos.y / cam.h) | 0;
+        cam.focus(this.player);
 
         cam.update(null);
     }
@@ -402,6 +399,20 @@ export class ObjectManager {
 
         return (stage.id == 0 && this.player.items[18]) ||
             (stage.id == 1 && this.player.items[23]); 
+    }
+
+
+    // Automatically position the player,
+    // that is, put him/her to the middle
+    // of the bottom screen
+    autoPos(stage, cam) {
+
+        this.player.pos.x = stage.w*16 / 2;
+        this.player.pos.y = (stage.h-1) * 16 -6;
+        this.player.checkpoint = this.player.pos.clone();
+
+        cam.focus(this.player);
+        cam.update(null);
     }
 }
 

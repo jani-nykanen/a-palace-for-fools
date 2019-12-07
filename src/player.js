@@ -981,7 +981,8 @@ export class Player extends GameObject {
         if (!this.teleporting) return;
 
         if (this.spr.frame < 5)
-            this.spr.animate(this.spr.row, 0, 5, ANIM_SPEED, ev.step);
+            this.spr.animate(this.spr.row, 0, 5, 
+                ANIM_SPEED, ev.step);
     }
 
 

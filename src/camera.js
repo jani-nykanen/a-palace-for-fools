@@ -123,4 +123,13 @@ export class Camera {
     }
 
 
+    // Focus on an object
+    focus(o) {
+
+        this.pos.x = (o.pos.x / this.w) | 0;
+        this.pos.y = (o.pos.y / this.h) | 0;
+
+        this.target = this.pos.clone();
+        this.moving = false;
+    }
 }

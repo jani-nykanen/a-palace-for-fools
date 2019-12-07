@@ -146,6 +146,13 @@ export class Game {
         
         this.mapID = id || (this.mapID == 1 ? 0 : 1);
         this.reset(this.mapID);
+
+        // If the final map, put the player
+        // in the bottom of the map
+        if (id == 2) {
+
+            this.objm.autoPos(this.stage, this.cam);
+        }
     }
     
 
