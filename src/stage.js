@@ -17,6 +17,7 @@ import { Clam } from "./clam.js";
 import { Bunny } from "./bunny.js";
 import { HatBeetle } from "./hatbeetle.js";
 import { PURPLE_BOX_START } from "./chest.js";
+import { SpectralGem } from "./spectralgem.js";
 
 //
 // Handles the game stage rendering
@@ -742,6 +743,7 @@ export class Stage {
             HatBeetle.prototype,
         ];
 
+        let enemyType;
         let t;
         let dx, dy;
         for (let y = 0; y < this.h; ++ y) {
@@ -778,7 +780,10 @@ export class Stage {
                 // Check if enemy
                 else if (t >= 2 && t <= 16) {
 
-                    objm.addEnemy(ENEMIES[t-2], dx, dy);
+                    enemyType = this.id == 2 ? 
+                        SpectralGem.prototype : ENEMIES[t-2];
+
+                    objm.addEnemy(enemyType, dx, dy);
                 }
                 else {
 

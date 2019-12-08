@@ -22,6 +22,8 @@ export class Sprite {
     // Animate the sprite
     animate(row, start, end, speed, step) {
 
+        speed = Math.max(1, speed);
+
         // Nothing to animate
         if (start == end) {
     
