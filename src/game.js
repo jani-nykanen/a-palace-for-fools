@@ -48,7 +48,10 @@ export class Game {
     createPauseMenu() {
 
         let menu = new Menu(
-            new MenuButton("Resume", (ev) => {this.pauseMenu.disable();}),
+            new MenuButton("Resume", (ev) => {
+                this.pauseMenu.disable();
+                ev.audio.resumeMusic();
+            }),
             new MenuButton("Respawn", (ev) => {
 
                 this.areYouSure((ev, state) => {
@@ -150,10 +153,12 @@ export class Game {
         this.objm.setInitialCamera(this.cam);
 
         // Start music
-        if (this.mapID == 0) {
-
-            ev.audio.fadeInMusic(ev.audio.sounds.present, MUSIC_VOLUME, 1000);
-        }
+        ev.audio.fadeInMusic(
+            [ev.audio.sounds.present,
+            ev.audio.sounds.present,
+            ev.audio.sounds.future] [this.mapID],
+            MUSIC_VOLUME, 1000);
+        
     }
 
 
@@ -210,6 +215,8 @@ export class Game {
             this.pauseMenu.activate(0);
             ev.audio.playSample(ev.audio.sounds.pause,
                 0.50);
+
+            ev.audio.pauseMusic();
 
             return;
         }

@@ -90,6 +90,7 @@ window.onload = () => {
         {name: "item", src: "assets/audio/item.ogg"},
         {name: "healthUp", src: "assets/audio/health_up.ogg"},
         {name: "present", src: "assets/audio/present.ogg"},
+        {name: "future", src: "assets/audio/future.ogg"},
     );
 
     // Configure keys
