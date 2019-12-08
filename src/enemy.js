@@ -56,6 +56,9 @@ export class Enemy extends GameObject {
         // Prevent leaving the camera from a vertical
         // direction
         this.preventLeaving = false;
+
+        // Kill if below the camera
+        this.offScreenKill = false;
     }
 
 
@@ -160,6 +163,14 @@ export class Enemy extends GameObject {
             px-w <= cam.top.x + cam.w &&
             py+h >= cam.top.y &&
             py-h <= cam.top.y + cam.h;
+
+        if (this.offScreenKill && 
+            !this.inCamera &&
+            cam.top.y+cam.h < this.pos.y-this.spr.h/2 ) {
+
+            this.exist = false;
+            return;
+        }
 
         // Return to the original position,
         // if outside the camera and the camera

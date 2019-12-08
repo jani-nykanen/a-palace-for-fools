@@ -405,14 +405,21 @@ export class ObjectManager {
     // Automatically position the player,
     // that is, put him/her to the middle
     // of the bottom screen
-    autoPos(stage, cam) {
+    autoPos(stage, cam, ev) {
 
         this.player.pos.x = stage.w*16 / 2;
         this.player.pos.y = (stage.h-1) * 16 -6;
         this.player.checkpoint = this.player.pos.clone();
 
         cam.focus(this.player);
-        cam.update(null);
+        cam.update(null);   
+
+        // This should not happen here but who
+        // gives a fuck
+        let x = this.player.pos.x % cam.w;
+        let y = this.player.pos.y % cam.h;
+
+        ev.tr.setCenter(x, y);
     }
 }
 

@@ -92,7 +92,7 @@ export class Game {
                 ev.tr.setCenter(x, y);
                 ev.tr.activate(true, TransitionMode.CircleOutside,
                     2, (ev) => {
-                        this.changeTime(id == 2 ? id : null);
+                        this.changeTime(id == 2 ? id : null, ev);
                         // TODO: The next line should happen somewhere else
                         pl.spr.setFrame(10, 0);
                     }, ...col);
@@ -142,7 +142,7 @@ export class Game {
 
 
     // Change time
-    changeTime(id) {
+    changeTime(id, ev) {
         
         this.mapID = id || (this.mapID == 1 ? 0 : 1);
         this.reset(this.mapID);
@@ -151,7 +151,7 @@ export class Game {
         // in the bottom of the map
         if (id == 2) {
 
-            this.objm.autoPos(this.stage, this.cam);
+            this.objm.autoPos(this.stage, this.cam, ev);
         }
     }
     
