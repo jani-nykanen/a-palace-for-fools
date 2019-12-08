@@ -143,6 +143,7 @@ export class AudioPlayer {
         this.paused = false;
 
         this.musicSound.play(this.musicID);
+
     }
 
 

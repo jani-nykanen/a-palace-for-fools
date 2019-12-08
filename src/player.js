@@ -163,6 +163,7 @@ export class Player extends GameObject {
 
         const CLIMB_SPEED = 0.5;
         const EPS = 0.1;
+        const BOOT_MOD = 1.25;
 
         this.target.x = 0;
         this.target.y = 0;
@@ -184,6 +185,8 @@ export class Player extends GameObject {
                 this.target.y = ev.input.gamepad.stick.y * CLIMB_SPEED;
             }
             
+            if (this.items[19])
+                this.target.y *= BOOT_MOD;
         }
         
 
@@ -422,6 +425,8 @@ export class Player extends GameObject {
 
                 this.dying = true;
                 this.deathTimer = DEATH_TIME;
+                
+                ev.audio.stopMusic();
 
                 // Play sound effect
                 ev.audio.playSample(ev.audio.sounds.die, 0.33);
@@ -1022,5 +1027,7 @@ export class Player extends GameObject {
 
         // Play sound effect
         ev.audio.playSample(ev.audio.sounds.die, 0.33);
+
+        ev.audio.stopMusic();
     }
 }

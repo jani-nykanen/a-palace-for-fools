@@ -509,11 +509,11 @@ export class Stage {
         let w = cam.w/16 + X_MARGIN*2 +1;
         let h = cam.h/16 + Y_MARGIN*2 +1;
 
-        // Draw tiles
-        this.drawTiles(c, x, y, w, h);
-
         // Draw decorations
         this.drawDecorations(c, x, y, w, h);
+
+        // Draw tiles
+        this.drawTiles(c, x, y, w, h);
 
         // Draw dust
         for (let d of this.dust) {

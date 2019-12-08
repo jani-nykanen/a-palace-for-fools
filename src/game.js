@@ -14,6 +14,8 @@ import { GameMap } from "./map.js";
 // (c) 2019 Jani Nykänen
 //
 
+const MUSIC_VOLUME = 0.40;
+
 
 export class Game {
 
@@ -63,6 +65,7 @@ export class Game {
                 ev.tr.activate(true, TransitionMode.VerticalBar,
                     2.0, (ev) => {
                         ev.changeScene("title");
+                        ev.audio.stopMusic();
                     });
             }),
         );
@@ -84,10 +87,13 @@ export class Game {
         this.cam = new Camera(0, 0, 160, 144);
         // Create object manager
         this.objm = new ObjectManager(
+            // Portal event
             (ev, pl, col, id) => {
 
                 let x = pl.pos.x % this.cam.w;
                 let y = pl.pos.y % this.cam.h;
+
+                ev.audio.stopMusic();
 
                 ev.tr.setCenter(x, y);
                 ev.tr.activate(true, TransitionMode.CircleOutside,
@@ -111,6 +117,10 @@ export class Game {
         // Make sure enemies appear while the transition
         // effect is still happening
         this.objm.updateCamMovement(this.cam, null, ev);
+        
+        // Start music
+        ev.audio.fadeInMusic(ev.audio.sounds.present, MUSIC_VOLUME, 1000);
+        
     }
 
 
@@ -127,7 +137,7 @@ export class Game {
 
 
     // Reset game
-    reset(id, special) {
+    reset(id, special, ev) {
 
         this.pauseMenu.disable();
 
@@ -138,6 +148,12 @@ export class Game {
 
         // Set initial camera position
         this.objm.setInitialCamera(this.cam);
+
+        // Start music
+        if (this.mapID == 0) {
+
+            ev.audio.fadeInMusic(ev.audio.sounds.present, MUSIC_VOLUME, 1000);
+        }
     }
 
 
@@ -145,7 +161,7 @@ export class Game {
     changeTime(id, ev) {
         
         this.mapID = id || (this.mapID == 1 ? 0 : 1);
-        this.reset(this.mapID);
+        this.reset(this.mapID, null, ev);
 
         // If the final map, put the player
         // in the bottom of the map
@@ -165,10 +181,11 @@ export class Game {
         const SNOW_SPEED_VARY = [0.20, 0.30];
         const SNOW_FLOAT_SPEED = [0.025, 0.030];
 
-        // Update text box
+        // Update text box (we have to do this in
+        // this order...)
+        this.textbox.update(ev);
         if (this.textbox.active) {
 
-            this.textbox.update(ev);
             return;
         }
 
@@ -248,7 +265,7 @@ export class Game {
 
             ev.tr.activate(true, TransitionMode.VerticalBar, 2.0,
                 () => {
-                    this.reset();
+                    this.reset(null, null, ev);
                 });
         }
 
@@ -456,7 +473,7 @@ export class Game {
 
                 this.objm.parseSaveData(this.stage);
                 this.mapID = this.stage.id;
-                this.reset(null, true);
+                this.reset(null, true, ev);
             }
             catch(e) {
 

@@ -39,6 +39,9 @@ export class Textbox {
         this.no = ev.loc.dialogue.general[2].replace("\n", "");
 
         this.shakeApplied = false;
+
+        this.musicStopped = true;
+        this.musicResumed = true;
     }
 
 
@@ -128,7 +131,7 @@ export class Textbox {
             }
             
         }
-       
+        this.musicStopped = false;
     }
 
 
@@ -138,7 +141,22 @@ export class Textbox {
         const FLOAT_SPEED = 0.1;
         const CHAR_WAIT = 2;
 
-        if (!this.active) return;
+        if (!this.active) {
+
+            if (!this.musicResumed) {
+
+                ev.audio.resumeMusic();
+                this.musicResumed = true;
+            }
+            return;
+        }
+
+        if (!this.musicStopped) {
+
+            ev.audio.pauseMusic();
+            this.musicStopped = true;
+            this.musicResumed = false;
+        }
 
         // Update wait timer
         if (this.waitTimer > 0) {
