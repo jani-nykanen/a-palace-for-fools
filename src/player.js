@@ -232,7 +232,8 @@ export class Player extends GameObject {
         let b = bgen.createElement(
             p, this.pos.y, 
             BULLET_SPEED*this.shootDir, 0,
-            id);
+            id,
+            this.items[21] ? 1: 0);
         if (b != null) {
 
             // This way we prevent bullets
@@ -744,7 +745,9 @@ export class Player extends GameObject {
         // Play hurt sound
         ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
         
-        this.health = Math.max(0, this.health-dmg);
+        if (this.items[21])
+            dmg = Math.max(1, dmg-1);
+        this.health = Math.max(0, this.health-dmg);  
 
         // Lose health
         this.hurtTimer = HURT_TIME;
@@ -789,6 +792,8 @@ export class Player extends GameObject {
 
         // Reduce life
         ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
+        if (this.items[21])
+            dmg = Math.max(1, dmg-1);
         this.health = Math.max(0, this.health-dmg);
     }
 

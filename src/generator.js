@@ -29,7 +29,7 @@ export class Generator {
 
 
     // Create an element
-    createElement(x, y, sx, sy, id) {
+    createElement(x, y, sx, sy, id, extra) {
 
         // Find a bullet that does not exist
         // and spawn it
@@ -44,7 +44,7 @@ export class Generator {
         }
         if (e == null) return null;
 
-        e.spawn(x, y, sx, sy, id);
+        e.spawn(x, y, sx, sy, id, extra);
 
         return e;
     }

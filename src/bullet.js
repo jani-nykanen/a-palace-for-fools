@@ -72,7 +72,7 @@ export class Bullet extends GameObject {
 
 
     // Spawn
-    spawn(x, y, sx, sy, id) {
+    spawn(x, y, sx, sy, id, powerUp) {
 
         const HEIGHT = [2, 8, 2, 8];
         const POWER = [1, 2, 1, 2];
@@ -87,6 +87,9 @@ export class Bullet extends GameObject {
 
         this.id = id;
         this.power = POWER[this.id];
+        if (powerUp != null)
+            this.power += powerUp;
+            
         this.h = HEIGHT[this.id];
 
         this.exist = true;
