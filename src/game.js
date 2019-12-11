@@ -4,9 +4,9 @@ import { Camera } from "./camera.js";
 import { ObjectManager } from "./objectmanager.js";
 import { State } from "./engine/input.js";
 import { Textbox } from "./textbox.js";
-import { drawBoxWithBorders } from "./engine/util.js";
 import { Menu, MenuButton } from "./menu.js";
 import { GameMap } from "./map.js";
+import { Tilemap } from "./engine/tilemap.js";
 
 //
 // Game scene
@@ -30,6 +30,33 @@ export class Game {
         this.map = new GameMap();
     }
 
+
+    // Count the amount of blood shards
+    countBloodshards(ev) {
+
+        let maps = [ev.documents.present, 
+            ev.documents.past];
+        let tmap, t;
+        let count = 0;
+
+        for (let m of maps) {
+
+            tmap = new Tilemap(m);
+            // Find bloodshards (includes the 
+            // shop items)
+            for (let i = 0; i < tmap.w*tmap.h; ++ i) {
+
+                t = tmap.layers[2][i];
+                if (t >= 81 || t == 47) {
+
+                    ++ count;
+                }
+            }
+        }
+
+        return count;
+    }
+
     
     // Show "Are you sure?"
     areYouSure(cb, ev) {
@@ -41,6 +68,7 @@ export class Game {
 
             cb(ev, state);
         });
+        this.textbox.doNotResumeMusic();
     }
 
 
@@ -57,6 +85,8 @@ export class Game {
                 this.areYouSure((ev, state) => {
 
                     if (state) {
+
+                        ev.audio.resumeMusic();
 
                         this.pauseMenu.disable();
                         this.objm.killPlayer(ev);
@@ -106,7 +136,8 @@ export class Game {
                         pl.spr.setFrame(10, 0);
                     }, ...col);
             },
-            this.textbox
+            this.textbox,
+            this.shardCount
         );
 
         // Create stage
@@ -131,11 +162,16 @@ export class Game {
     // (or the things that need assets, really)
     init(ev, assets) {
 
+        this.shardCount = this.countBloodshards(ev);
+
         // Needed for... THE FUTURE!
         this.assets = assets;
 
         // Create text box
         this.textbox = new Textbox(ev);
+
+        this.objm = null;
+        this.stage = null;
     }
 
 
@@ -188,8 +224,9 @@ export class Game {
 
         // Update text box (we have to do this in
         // this order...)
+        let oldState = this.textbox.active;
         this.textbox.update(ev);
-        if (this.textbox.active) {
+        if (oldState) {
 
             return;
         }

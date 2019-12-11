@@ -1,8 +1,6 @@
 import { Sprite } from "./engine/sprite.js";
-import { Flip } from "./engine/canvas.js";
 import { RenderedObject } from "./renderedobject.js";
 import { Vector2 } from "./engine/vector.js";
-import { PURPLE_BOX_COUNT } from "./chest.js";
 
 //
 // An item in a shop
@@ -28,7 +26,7 @@ const PRICES = [
 export class ShopItem extends RenderedObject {
 
     
-    constructor(x, y, id, textbox, pl) {
+    constructor(x, y, id, textbox, pl, shardCount) {
 
         super(x, y);
 
@@ -44,6 +42,8 @@ export class ShopItem extends RenderedObject {
         this.textbox = textbox;
 
         this.exist = !pl.items[16 + this.id];
+
+        this.shardCount = shardCount;
     }
 
 
@@ -93,7 +93,7 @@ export class ShopItem extends RenderedObject {
         if (this.id == 6) {
 
             this.textbox.setDParamValue(
-                PURPLE_BOX_COUNT - (pl.crystalCount+1)
+                this.shardCount - (pl.crystalCount+1)
             );
         }
 

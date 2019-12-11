@@ -10,15 +10,12 @@ import { Vector2 } from "./engine/vector.js";
 //
 
 export const PURPLE_BOX_START = 32;
-// TODO: Compute this number from the stage
-// data
-export const PURPLE_BOX_COUNT = 8; 
 
 
 export class Chest extends RenderedObject {
 
     
-    constructor(x, y, id, textbox, pl) {
+    constructor(x, y, id, textbox, pl, shardCount) {
 
         super(x, y);
 
@@ -56,6 +53,8 @@ export class Chest extends RenderedObject {
 
         if (!this.active)
             ++ this.spr.frame;
+
+        this.shardCount = shardCount;
     }
 
 
@@ -98,15 +97,24 @@ export class Chest extends RenderedObject {
 
         let t = Math.min(PURPLE_BOX_START, Math.max(-1, this.id)+1);
 
+        let itemID = "item" + String(t);
+        if (this.id >= PURPLE_BOX_START &&
+            pl.crystalCount >= this.shardCount-1) {
+
+            itemID += "_op";
+        }
+
         this.textbox.addMessage(
-            ...ev.loc.dialogue["item" + String(t)]
+            ...ev.loc.dialogue[itemID]
         );
         if (this.id >= PURPLE_BOX_START) {
 
-            this.textbox.setDParamValue(
-                PURPLE_BOX_COUNT - (pl.crystalCount+1)
-            );
+            if (pl.crystalCount < this.shardCount-1) {
 
+                this.textbox.setDParamValue(
+                    this.shardCount - (pl.crystalCount+1)
+                );
+            }
             ++ pl.crystalCount;
         }
 

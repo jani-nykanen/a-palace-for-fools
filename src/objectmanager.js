@@ -21,7 +21,7 @@ import { Lever } from "./lever.js";
 export class ObjectManager {
 
 
-    constructor(portalCB, textbox) {
+    constructor(portalCB, textbox, shardCount) {
 
         const GEM_COUNT = 8;
         const BULLET_COUNT = 16;
@@ -42,6 +42,7 @@ export class ObjectManager {
 
         this.portalCB = portalCB;
         this.textbox = textbox;
+        this.shardCount = shardCount;
     }
 
 
@@ -107,7 +108,8 @@ export class ObjectManager {
 
         this.chests.push(
             new Chest(x*16 + 8, y*16 + 8, id, 
-                this.textbox, this.player)
+                this.textbox, this.player,
+                this.shardCount)
         );
     }
 
@@ -117,7 +119,8 @@ export class ObjectManager {
 
         this.shopItems.push(
             new ShopItem(x*16 + 8, y*16 + 8, id, 
-                this.textbox,  this.player)
+                this.textbox,  this.player,
+                this.shardCount)
         );
     }
 

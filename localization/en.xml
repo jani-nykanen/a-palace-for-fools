@@ -135,8 +135,20 @@ You obtain a
 <chunk>
 Only %d more 
 and you can
-craft a blood
-gem!
+craft a BLOOD
+GEM!
+</chunk>
+</dialogue>
+
+<dialogue id="item32_op">
+<chunk>
+You obtain a
+"BLOOD SHARD!"
+</chunk>
+<chunk>
+Now you can 
+craft a BLOOD
+GEM!
 </chunk>
 </dialogue>
 

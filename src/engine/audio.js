@@ -125,7 +125,7 @@ export class AudioPlayer {
         if (!this.enabled) return;
         
         if (this.paused) return;
-
+        
         if (this.musicSound == null || this.musicID == null)
             return;
 

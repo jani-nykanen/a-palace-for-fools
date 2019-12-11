@@ -42,6 +42,8 @@ export class Textbox {
 
         this.musicStopped = true;
         this.musicResumed = true;
+
+        this.pauseMusic = false;
     }
 
 
@@ -94,6 +96,14 @@ export class Textbox {
         }
     }
 
+    // Do not resume music after
+    // disable
+    doNotResumeMusic() {
+
+        this.musicStopped = true;
+        this.musicResumed = true;
+    }
+
     
     // Activate
     activate(wait, item, itemPos, speedY, itemWait, acceptCB) {
@@ -140,6 +150,8 @@ export class Textbox {
 
         const FLOAT_SPEED = 0.1;
         const CHAR_WAIT = 2;
+
+        if (ev.tr.active) return;
 
         if (!this.active) {
 
@@ -362,6 +374,13 @@ export class Textbox {
             c.setShake(this.waitTimer, (-this.item) | 0);
             this.shakeApplied = false;
         }
+    }
+
+
+    // Disable
+    disable() {
+
+        this.active = false;
     }
 
 }

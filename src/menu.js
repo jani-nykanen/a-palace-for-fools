@@ -61,7 +61,7 @@ export class Menu {
     // Update
     update(ev) {
 
-        if (!this.active) return;
+        if (!this.active || ev.tr.active) return;
 
         let opos = this.cpos;
         if (ev.input.action.up.state == State.Pressed) {
