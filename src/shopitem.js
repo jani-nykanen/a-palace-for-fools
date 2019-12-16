@@ -85,10 +85,15 @@ export class ShopItem extends RenderedObject {
         else if (this.id == 6)
             id = 32;
 
+        let itemID = "item" + String(id);
+        if (this.id == 6 &&
+            pl.crystalCount >= this.shardCount-1) {
+
+            itemID += "_op";
+        }
+
         this.textbox.addMessage(
-            ...ev.loc.dialogue[
-                "item" + String(id)
-            ]
+            ...ev.loc.dialogue[itemID]
         );
         if (this.id == 6) {
 
