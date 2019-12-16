@@ -23,8 +23,15 @@ export class Lever extends RenderedObject {
 
         this.spr = new Sprite(16, 16);
         this.flip = Flip.None;
-        this.active = !stage.leverPressed;
-        this.spr.setFrame(0, this.active ? 2 : 3);
+        this.active = (stage.id == 0 && !stage.leverPressed)
+            || (stage.id == 1 && !pl.hasGem);
+
+        this.id = stage.id;
+
+        if (stage.id == 0)
+            this.spr.setFrame(0, this.active ? 2 : 3);
+        else
+            this.spr.setFrame(0, 4);
 
         this.inCamera = false;
     
@@ -37,7 +44,10 @@ export class Lever extends RenderedObject {
 
         if (!this.inCamera) return;
 
-        // ...
+        if (this.id == 1) {
+
+            this.spr.animate(0, 4, 7, 6, ev.step);
+        }
     }
 
 
@@ -55,13 +65,17 @@ export class Lever extends RenderedObject {
             0.70);
 
         this.textbox.addMessage(
-            ...ev.loc.dialogue["lever"]
+            ...ev.loc.dialogue["lever" + String(this.id)]
         );
         this.textbox.activate(WAIT_TIME, 
             -SHAKE_MAG, null, 
             0.0, 0.0);
 
-        stage.leverPressed = true;
+        if (this.id == 0)
+            stage.leverPressed = true;
+        else if (this.id == 1)
+            pl.hasGem = true;
+            
         this.active = false;
 
         pl.showArrow = false;
@@ -72,6 +86,8 @@ export class Lever extends RenderedObject {
 
     // Draw translate
     drawTranslated(c, tx, ty) {
+
+        if (!this.active && this.id == 1) return;
 
         c.move(tx, ty);
 

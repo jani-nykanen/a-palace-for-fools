@@ -92,6 +92,8 @@ export class Player extends GameObject {
         this.friendly = true;
         this.inCamera = true;
 
+        this.hasGem = false;
+
         // Items the player has
         this.items = new Array(32);
         this.items.fill(false);

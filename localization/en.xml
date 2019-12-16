@@ -117,7 +117,7 @@ first place...
 </dialogue>
 
 
-<dialogue id="lever">
+<dialogue id="lever0">
 <chunk>
 You have
 activated
@@ -125,6 +125,15 @@ the time
 portals.
 </chunk>
 </dialogue>
+
+<dialogue id="lever1">
+<chunk>
+You have 
+crafted a
+BLOOD GEM!
+</chunk>
+</dialogue>
+
 
 
 <dialogue id="item32">

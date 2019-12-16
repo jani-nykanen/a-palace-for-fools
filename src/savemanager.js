@@ -41,6 +41,7 @@ export class SaveManager {
         d.maxHealth = pl.maxHealth;
         d.crystalCount = pl.crystalCount;
         d.leverPressed = stage.leverPressed;
+        d.hasGem = pl.hasGem;
 
         let out = JSON.stringify(d);
 
@@ -65,6 +66,7 @@ export class SaveManager {
             pl.crystalCount = d.crystalCount;
         pl.maxHealth = d.maxHealth;
         pl.gems = d.gems;
+        pl.hasGem = d.hasGem;
 
         stage.leverPressed = d.leverPressed;
         stage.id = d.mapID;

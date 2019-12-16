@@ -803,7 +803,6 @@ export class Stage {
                         objm.addLever(x, y, this);
                         break;
 
-
                     // Portal
                     case 17:
 
