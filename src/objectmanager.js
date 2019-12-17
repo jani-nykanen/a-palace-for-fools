@@ -141,7 +141,8 @@ export class ObjectManager {
 
         this.levers.push(
             new Lever(x*16 + 8, y*16 + 8, 0,
-                this.textbox, this.player, stage)
+                this.textbox, this.player, stage,
+                this.shardCount)
         );
     }
 

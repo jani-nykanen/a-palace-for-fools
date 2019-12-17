@@ -110,6 +110,8 @@ export class ShopItem extends RenderedObject {
 
         pl.showArrow = false;
         pl.stopMovement();
+        // Set player frame
+        pl.spr.setFrame(4, 3);
 
         ev.audio.playSample(
             this.id == 0 ? ev.audio.sounds.healthUp : 

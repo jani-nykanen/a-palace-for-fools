@@ -13,7 +13,7 @@ import { RenderedObject } from "./renderedobject.js";
 export class Lever extends RenderedObject {
 
     
-    constructor(x, y, id, textbox, pl, stage) {
+    constructor(x, y, id, textbox, pl, stage, shardCount) {
 
         super(x, y);
 
@@ -35,6 +35,7 @@ export class Lever extends RenderedObject {
 
         this.inCamera = false;
     
+        this.shardCount = shardCount;
         this.textbox = textbox;
     }
 
@@ -60,6 +61,35 @@ export class Lever extends RenderedObject {
         const ITEM_WAIT = 30;
         const ITEM_SPEED = -1.0;
         
+        
+        let id = "lever" + String(this.id);
+        let shardsCollected = pl.crystalCount >= this.shardCount;
+        if (this.id == 1 && !shardsCollected) {
+
+            id += "_fail";
+        }
+
+        this.textbox.addMessage(
+            ...ev.loc.dialogue[id]
+        );
+        
+        if (this.id == 0 || shardsCollected) {
+
+            this.textbox.activate(WAIT_TIME1, 
+                -SHAKE_MAG, null, 
+                0.0, 0.0);
+        }
+        else {
+
+            ev.audio.playSample(
+                ev.audio.sounds.deny, 
+                0.60);
+
+            this.textbox.activate();
+            return;
+        }
+
+        // Play audio
         ev.audio.playSample(
             ev.audio.sounds.accept, 
             0.70);
@@ -67,17 +97,16 @@ export class Lever extends RenderedObject {
             ev.audio.sounds[ ["lever", "craft"] [this.id] ], 
             0.70);
 
-        this.textbox.addMessage(
-            ...ev.loc.dialogue["lever" + String(this.id)]
-        );
-        
-        this.textbox.activate(WAIT_TIME1, 
-            -SHAKE_MAG, null, 
-            0.0, 0.0);
-            
+        // If fire, start "gem obtained"
+        // animation after shaking            
         if (this.id == 1) {
 
             this.textbox.setEndCallback((ev) => {
+
+                    this.active = false;
+
+                    // Set player frame
+                    pl.spr.setFrame(4, 3);
 
                     // Play sound
                     ev.audio.playSample(ev.audio.sounds.item, 
@@ -95,12 +124,11 @@ export class Lever extends RenderedObject {
 
             stage.leverPressed = true;
             ++ this.spr.frame;
+            this.active = false;
         }
         else if (this.id == 1)
             pl.hasGem = true;
             
-        this.active = false;
-
         // Set player position
         pl.pos.x = this.pos.x;
         pl.spr.setFrame(3, 3);

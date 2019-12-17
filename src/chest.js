@@ -133,6 +133,11 @@ export class Chest extends RenderedObject {
             pl.spr.setFrame(3, 2);
             pl.flip = this.flip;
         }
+        else {
+
+            // Set player frame
+            pl.spr.setFrame(4, 3);
+        }
 
         pl.showArrow = false;
         pl.stopMovement();

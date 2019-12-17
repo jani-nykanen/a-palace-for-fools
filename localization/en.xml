@@ -117,6 +117,17 @@ first place...
 </dialogue>
 
 
+<dialogue id="lever1_fail">
+<chunk>
+You can use this 
+fire to craft a 
+BLOOD GEM if you 
+collect all the 
+blood shards.
+</chunk>
+</dialogue>
+
+
 <dialogue id="lever0">
 <chunk>
 You have
@@ -131,6 +142,12 @@ portals.
 You have 
 crafted a
 BLOOD GEM!
+</chunk>
+<chunk>
+Now you can 
+enter the 
+nightmare
+portal!
 </chunk>
 </dialogue>
 
