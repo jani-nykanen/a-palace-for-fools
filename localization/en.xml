@@ -78,27 +78,33 @@ are not mad?
 
 <dialogue id="npc3">
 <chunk>
-We still don't
-understand how
-these portals 
-work.
+See that flame?
+They say it is 
+made of pure
+nightmares.
 </chunk>
 <chunk>
-We are not in the
-past, not really.
-This is just...
-we could call it 
-a backup. A time 
-backup.
+It is just a 
+tale, but they 
+did use it to
+create blood
+gems.
 </chunk>
+
 <chunk>
-You cannot alter
-the future here,
-but you can still
-obtain items. It
-should not work,
-but yet it does.
+Most of them
+failed, as you 
+can see. Not 
+all, though.
 </chunk>
+
+<chunk>
+I wonder what 
+happened to  
+the successful
+ones...
+</chunk>
+
 </dialogue>
 
 
