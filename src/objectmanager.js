@@ -89,7 +89,8 @@ export class ObjectManager {
 
         this.portals.push(
             new Portal(x*16 + 8, y*16, id, 
-                this.portalCB, stage)
+                this.portalCB, stage, 
+                this.player)
         );
     }
 

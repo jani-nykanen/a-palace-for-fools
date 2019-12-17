@@ -13,7 +13,7 @@ import { RenderedObject } from "./renderedobject.js";
 export class Portal extends RenderedObject {
 
 
-    constructor(x, y, id, cb, stage) {
+    constructor(x, y, id, cb, stage, pl) {
 
         super(x, y);
 
@@ -28,7 +28,8 @@ export class Portal extends RenderedObject {
         this.spr.setFrame(id, 0);
         this.id = id;
 
-        this.active = stage.leverPressed;
+        this.active = (this.id == 2 && pl.hasGem) ||
+            (this.id < 2 && stage.leverPressed);
         this.cb = cb;
 
         this.inCamera = false;
@@ -58,7 +59,8 @@ export class Portal extends RenderedObject {
         if (!this.inCamera) return;
 
         this.animate(ev);
-        this.active = stage.leverPressed;
+        this.active = (this.id == 2 && pl.hasGem) ||
+            (this.id < 2 && stage.leverPressed);
     }
 
 

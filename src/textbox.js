@@ -40,10 +40,18 @@ export class Textbox {
 
         this.shakeApplied = false;
 
-        this.musicStopped = true;
-        this.musicResumed = true;
+        this.musicStopped = false;
+        this.musicResumed = false;
 
-        this.pauseMusic = false;
+        this.endCB = null;
+    }
+
+
+    // Reset
+    reset() {
+
+        this.musicStopped = false;
+        this.musicResumed = false;
     }
 
 
@@ -184,6 +192,12 @@ export class Textbox {
             }
 
             this.waitTimer -= 1.0 * ev.step;
+            if (this.waitTimer <= 0.0 && this.endCB != null) {
+
+                this.endCB(ev);
+                this.endCB = null;
+            }
+
             return;
         }
 
@@ -381,6 +395,13 @@ export class Textbox {
     disable() {
 
         this.active = false;
+    }
+
+
+    // Set ending callback
+    setEndCallback(cb) {
+
+        this.endCB = cb;
     }
 
 }

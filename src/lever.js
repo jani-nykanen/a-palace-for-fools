@@ -55,32 +55,57 @@ export class Lever extends RenderedObject {
     activate(pl, stage, ev) {
 
         const SHAKE_MAG = 4;
-        const WAIT_TIME = 120;
+        const WAIT_TIME1 = 120;
+        const WAIT_TIME2 = 90;
+        const ITEM_WAIT = 30;
+        const ITEM_SPEED = -1.0;
         
         ev.audio.playSample(
             ev.audio.sounds.accept, 
             0.70);
         ev.audio.playSample(
-            ev.audio.sounds.lever, 
+            ev.audio.sounds[ ["lever", "craft"] [this.id] ], 
             0.70);
 
         this.textbox.addMessage(
             ...ev.loc.dialogue["lever" + String(this.id)]
         );
-        this.textbox.activate(WAIT_TIME, 
+        
+        this.textbox.activate(WAIT_TIME1, 
             -SHAKE_MAG, null, 
             0.0, 0.0);
+            
+        if (this.id == 1) {
 
-        if (this.id == 0)
+            this.textbox.setEndCallback((ev) => {
+
+                    // Play sound
+                    ev.audio.playSample(ev.audio.sounds.item, 
+                        0.50);
+
+                    // Activate a new textbox
+                    this.textbox.activate(WAIT_TIME2, 7, 
+                        new Vector2(this.pos.x, this.pos.y-8), 
+                        ITEM_SPEED, ITEM_WAIT)
+                    }
+                );
+        }
+
+        if (this.id == 0) {
+
             stage.leverPressed = true;
+            ++ this.spr.frame;
+        }
         else if (this.id == 1)
             pl.hasGem = true;
             
         this.active = false;
 
+        // Set player position
+        pl.pos.x = this.pos.x;
+        pl.spr.setFrame(3, 3);
         pl.showArrow = false;
-
-        ++ this.spr.frame;
+        pl.stopMovement();
     }
 
 

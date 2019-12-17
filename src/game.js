@@ -110,6 +110,8 @@ export class Game {
     // Full reset
     fullReset(ev, assets) {
 
+        this.textbox.reset();
+
         // Set defaults
         this.mapID = 0; 
         this.textbox.active = false;
@@ -177,6 +179,8 @@ export class Game {
 
     // Reset game
     reset(id, special, ev) {
+
+        this.textbox.reset();
 
         this.pauseMenu.disable();
 
