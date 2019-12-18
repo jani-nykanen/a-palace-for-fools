@@ -78,31 +78,15 @@ are not mad?
 
 <dialogue id="npc3">
 <chunk>
-See that flame?
-They say it is 
-made of pure
-nightmares.
+To destroy a 
+god one needs
+a blood gem.
 </chunk>
 <chunk>
-It is just a 
-tale, but they 
-did use it to
-create blood
-gems.
-</chunk>
-
-<chunk>
-Most of them
-failed, as you 
-can see. Not 
-all, though.
-</chunk>
-
-<chunk>
-I wonder what 
-happened to  
-the successful
-ones...
+That's what
+they say, but 
+I find it hard
+to believe.
 </chunk>
 
 </dialogue>
@@ -125,11 +109,10 @@ first place...
 
 <dialogue id="lever1_fail">
 <chunk>
-You can use this 
-fire to craft a 
-BLOOD GEM if you 
-collect all the 
-blood shards.
+If you had all
+the BLOOD SHARDS,
+you could craft
+a BLOOD GEM here.
 </chunk>
 </dialogue>
 
@@ -145,18 +128,31 @@ portals.
 
 <dialogue id="lever1">
 <chunk>
-You have 
-crafted a
+You obtain a
 BLOOD GEM!
-</chunk>
-<chunk>
-Now you can 
-enter the 
-nightmare
-portal!
 </chunk>
 </dialogue>
 
+
+<dialogue id="enter_final">
+<chunk>
+You can use 
+BLOOD GEM to 
+enter this 
+portal.
+</chunk>
+
+<chunk>
+However, you 
+cannot come 
+back.
+</chunk>
+
+<chunk>
+Proceed?
+</chunk>
+
+</dialogue>
 
 
 <dialogue id="item32">
@@ -166,9 +162,7 @@ You obtain a
 </chunk>
 <chunk>
 Only %d more 
-and you can
-craft a BLOOD
-GEM!
+to go!
 </chunk>
 </dialogue>
 
@@ -178,9 +172,8 @@ You obtain a
 "BLOOD SHARD!"
 </chunk>
 <chunk>
-Now you can 
-craft a BLOOD
-GEM!
+Now you have 
+them all!
 </chunk>
 </dialogue>
 

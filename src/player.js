@@ -492,7 +492,8 @@ export class Player extends GameObject {
 
                     // If down key down, slide
                     if (this.items[1] &&
-                        ev.input.action.down.state == State.Down) {
+                        (ev.input.action.down.state == State.Down ||
+                         ev.input.gamepad.stick.y > EPS)) {
 
                         this.slideTimer = SLIDE_TIME;
                         this.shootAnimTimer = 0.0;

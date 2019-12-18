@@ -13,7 +13,7 @@ import { RenderedObject } from "./renderedobject.js";
 export class Portal extends RenderedObject {
 
 
-    constructor(x, y, id, cb, stage, pl) {
+    constructor(x, y, id, cb, stage, pl, textbox) {
 
         super(x, y);
 
@@ -33,6 +33,8 @@ export class Portal extends RenderedObject {
         this.cb = cb;
 
         this.inCamera = false;
+
+        this.textbox = textbox;
     }
 
 
@@ -85,14 +87,12 @@ export class Portal extends RenderedObject {
     }
 
 
-    // Activate
-    activate(pl, stage, ev) {
+    // Teleport
+    teleport(pl, stage, ev) {
 
         const COLOR = [[170, 170, 0], 
             [85, 170, 255], 
             [255, 255, 255]];
-
-        pl.showArrow = false;
 
         // Play sound
         ev.audio.playSample(ev.audio.sounds.teleport,
@@ -109,6 +109,33 @@ export class Portal extends RenderedObject {
         if (this.cb != null) {
 
             this.cb(ev, pl, COLOR[this.id], this.id);
+        }
+    }
+
+
+    // Activate
+    activate(pl, stage, ev) {
+
+        pl.showArrow = false;
+
+        if (this.id == 2) {
+
+            ev.audio.playSample(
+                ev.audio.sounds.accept, 
+                0.60);
+
+            this.textbox.addMessage(
+                ...ev.loc.dialogue["enter_final"]
+            );
+            this.textbox.activate((ev, state) => {
+                
+                if (state)
+                    this.teleport(pl, stage, ev);
+            });
+        }
+        else {
+
+            this.teleport(pl, stage, ev);
         }
     }
 
