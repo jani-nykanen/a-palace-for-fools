@@ -26,6 +26,7 @@ You do not have
 the map of this 
 area!
 </chunk>
+
 </dialogue>
 
 
@@ -447,6 +448,11 @@ successfully!
 <chunk>
 Failed to save
 the game!
+</chunk>
+
+<chunk>
+Error
+occurred!
 </chunk>
 
 

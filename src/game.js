@@ -107,8 +107,23 @@ export class Game {
     }
 
 
+    // Start the music
+    startMusic(ev) {
+
+        // Start music
+        let s = ev.audio.sounds[([
+            "present", 
+            "past", 
+            "future"]
+            [this.mapID])];
+        ev.audio.fadeInMusic(
+            s,
+            MUSIC_VOLUME, 1000);
+    }
+
+
     // Full reset
-    fullReset(ev, assets) {
+    fullReset(ev, assets, disableMusic) {
 
         this.textbox.reset();
 
@@ -154,10 +169,15 @@ export class Game {
         // effect is still happening
         this.objm.updateCamMovement(this.cam, null, ev);
         
-        // Start music
-        ev.audio.fadeInMusic(ev.audio.sounds.present, MUSIC_VOLUME, 1000);
+        // Start music  
+        if (!disableMusic) {
+
+            ev.audio.fadeInMusic(
+                ev.audio.sounds.present, MUSIC_VOLUME, 1000);
+        }
         
     }
+    
 
 
     // Initialize the scene
@@ -178,7 +198,7 @@ export class Game {
 
 
     // Reset game
-    reset(id, special, ev) {
+    reset(id, special, ev, disableMusic) {
 
         this.textbox.reset();
 
@@ -192,12 +212,8 @@ export class Game {
         // Set initial camera position
         this.objm.setInitialCamera(this.cam);
 
-        // Start music
-        ev.audio.fadeInMusic(
-            [ev.audio.sounds.present,
-            ev.audio.sounds.present,
-            ev.audio.sounds.future] [this.mapID],
-            MUSIC_VOLUME, 1000);
+        if (!disableMusic)
+            this.startMusic(ev);
         
     }
 
@@ -511,17 +527,17 @@ export class Game {
         let err = false;
         if (param == true){
 
-            this.fullReset(ev, this.assets);
+            this.fullReset(ev, this.assets, true);
         }
         // Sometimes param can be null...
         else if (param == false) {
 
-            this.fullReset(ev, this.assets);
+            this.fullReset(ev, this.assets, true);
             try {
 
                 this.objm.parseSaveData(this.stage);
                 this.mapID = this.stage.id;
-                this.reset(null, true, ev);
+                this.reset(null, true, ev, true);
             }
             catch(e) {
 
@@ -532,11 +548,13 @@ export class Game {
             if (err) {
 
                 this.textbox.addMessage(
-                    ev.loc.dialogue.savepoint[2]
+                    ev.loc.dialogue.savepoint[3]
                 );
                 this.textbox.activate();
             }
         }
+
+        this.startMusic(ev);
     }
 
 }
