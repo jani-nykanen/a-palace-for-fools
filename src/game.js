@@ -47,7 +47,7 @@ export class Game {
             for (let i = 0; i < tmap.w*tmap.h; ++ i) {
 
                 t = tmap.layers[2][i];
-                if (t >= 81 || t == 47) {
+                if ((t >= 81 && t < 81+16) || t == 47) {
 
                     ++ count;
                 }

@@ -1,6 +1,7 @@
 import { Enemy } from "./enemy.js";
 import { Vector2 } from "./engine/vector.js";
 import { Sprite } from "./engine/sprite.js";
+import { clamp } from "./engine/util.js";
 
 //
 // The final boss.
@@ -8,9 +9,9 @@ import { Sprite } from "./engine/sprite.js";
 // (c) 2019 Jani Nykänen
 //
 
-
-const INITIAL_WAIT = 30;
-const APPEAR_TIME = 90;
+const APPEAR_TIME = 60;
+const OPEN_TIME = 30;
+const OPEN_PLUS = 30;
 
 
 export class Eye extends Enemy {
@@ -23,7 +24,7 @@ export class Eye extends Enemy {
         this.w = 40;
         this.h = 40;
 
-        this.hitArea = new Vector2(36, 36);
+        this.hitArea = new Vector2(24, 24);
 
         this.acc.x = 0.010;
         this.acc.y = 0.010;
@@ -32,46 +33,137 @@ export class Eye extends Enemy {
         this.health = this.maxHealth;
 
         this.spr = new Sprite(48, 48);
-        this.spr.setFrame(0, 0);
+        this.spr.setFrame(1, 3);
 
         this.bounce = true;
         this.bounceFactor = new Vector2(1, 1);
-
-        this.timer = INITIAL_WAIT;
 
         this.ignoreLadder = true;
         this.preventLeaving = true;
 
         this.appearTimer = APPEAR_TIME;
+        this.waitTime = 0;
         this.fadingIn = false;
+
+        this.extraWait = 0;
+        this.mode = 0;
     }
 
 
     // Reset
     reset() {
 
-        this.timer = INITIAL_WAIT;
         this.appearTimer = APPEAR_TIME;
     }
 
 
-    // Update AI
-    updateAI(pl, ev) {
+    // Re-appear
+    reappear() {
+        
+        const MAX_Y = 144-16;
 
-        const FLY_SPEED = 1.0;
-        const EPS = 0.1;
+        let x = this.spr.w/2 + ((Math.random() * (160 - this.spr.w)) | 0);
+        let y = this.spr.h/2 + ((Math.random() * (MAX_Y - this.spr.h)) | 0);
+
+        this.pos.x = x;
+        this.pos.y = y;
+
+        this.mode = (Math.random()*2) | 0;
+        this.isStatic = false;
+
+        switch(this.mode) {
+
+        case 0:
+            this.spr.row = 1;
+            break;
+
+        case 1:
+            this.isStatic = true;
+            this.spr.row = 3;
+            break;
+
+        default:
+            break;
+        }
+    }
+
+
+    // "Ram"
+    ram(pl) {
+
+        const WAIT_TIME = 45;
+
+        const FLY_SPEED_MIN = 1.0;
+        const FLY_SPEED_VARY = 1.0;
+
+        let angle = Math.atan2(
+            this.pos.y-pl.pos.y,
+            this.pos.x-pl.pos.x);
+
+        let s = FLY_SPEED_MIN + Math.random() * FLY_SPEED_VARY;
+
+        this.speed.x = -Math.cos(angle) * s;
+        this.speed.y = -Math.sin(angle) * s;
+
+        this.waitTime = WAIT_TIME * s;
+    }
+
+
+    // Open eye
+    openEye(bgen, ev) {
+
+        const BULLET_COUNT = 4;
+        const BULLET_SPEED = 1.5;
+
+        this.waitTime = OPEN_TIME + OPEN_PLUS;
+
+        let angleStart = ((Math.random()*2) | 0 ) * (Math.PI/4.0);
+        let angle;
+
+        // Create bullets
+        let b;
+        for (let i = 0; i < BULLET_COUNT; ++ i) {
+
+            angle = angleStart + i * (Math.PI*2 / BULLET_COUNT);
+
+            b = bgen.createElement(
+                this.pos.x, 
+                this.pos.y, 
+                -Math.cos(angle) * BULLET_SPEED, 
+                -Math.sin(angle) * BULLET_SPEED, 3);
+            if (b != null) {
+
+                // This way we prevent bullets
+                // going through walls
+                b.oldPos.x = this.pos.x;
+                b.oldPos.y = this.pos.y;
+            }
+        }
+        ev.audio.playSample(ev.audio.sounds.shootBig, 0.50);
+    }
+
+
+    // Update AI
+    updateAI(pl, ev, bgen) {
+
+        const EXTRA_WAIT_MIN = 30;
+        const EXTRA_WAIT_VARY = 30;
 
         this.target.x = 0;
         this.target.y = 0;
 
-        let angle;
-        let len = Math.hypot(this.speed.x, this.speed.y);
+        // let len = Math.hypot(this.speed.x, this.speed.y);
+
+        this.harmless = this.appearTimer > 0;
 
         // Appear
         if (this.appearTimer > 0) {
 
-            this.speed.x = 0;
-            this.speed.y = 0;
+            if (!this.fadingIn) {
+
+                this.speed.x = 0;
+                this.speed.y = 0;
+            }
 
             this.appearTimer -= ev.step;
             
@@ -79,36 +171,77 @@ export class Eye extends Enemy {
 
                 if (this.fadingIn) {
 
+                    this.extraWait = 0.0;
                     this.appearTimer += APPEAR_TIME;
                     this.fadingIn = false;
+
+                    // Jump to new position
+                    this.reappear();
                 }
                 else {
 
-                    angle = Math.atan2(
-                        this.pos.y-pl.pos.y,
-                        this.pos.x-pl.pos.x);
-            
-                    this.speed.x = -Math.cos(angle) * FLY_SPEED;
-                    this.speed.y = -Math.sin(angle) * FLY_SPEED;
+                    if (this.mode == 0)
+                        this.ram(pl);
+                    
+                    else if (this.mode == 1)
+                        this.openEye(bgen, ev);
                 }
             }
-        }
-        else if (len < EPS) {
 
-            this.appearTimer = APPEAR_TIME;
+            return;
+        }
+
+
+        if ( (this.waitTime -= ev.step) <= 0) {
+
+            this.extraWait = EXTRA_WAIT_MIN
+                + ((Math.random() * EXTRA_WAIT_VARY) | 0);
+
+            this.appearTimer = APPEAR_TIME + this.extraWait;
             this.fadingIn = true;
         }
+    }
+
+
+    // Animate fading
+    fade() {
+
+        let t = (this.appearTimer-this.extraWait) / APPEAR_TIME;
+        t = clamp(t, 0, 1);
+        if (this.fadingIn)
+            t = 1.0 - t;
+
+        let frame = Math.min((t * 4) | 0, 3);
+
+        this.spr.setFrame(this.spr.row, frame);
+    }
+
+
+    // Animate opening eye
+    animateEye() {
+
+        let t = Math.max(0, this.waitTime-OPEN_PLUS) / OPEN_TIME;
+        let row = ((t * 3) | 0);
+
+        this.spr.row = row;
     }
 
 
     // Animate
     animate(ev) {
 
-        let t = Math.min(Math.ceil((this.appearTimer / APPEAR_TIME)*4), 3);
-        if (this.fadingIn)
-            t = 3 - t;
+        if (this.appearTimer > 0) {
 
-        this.spr.setFrame(this.spr.row, t);
+            this.fade();
+        }
+        else {
+
+            // Animate opening eye
+            if (this.mode == 1) {
+
+                this.animateEye();
+            }
+        }
     }
 
 
