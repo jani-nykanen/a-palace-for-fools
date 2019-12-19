@@ -18,6 +18,7 @@ import { Bunny } from "./bunny.js";
 import { HatBeetle } from "./hatbeetle.js";
 import { PURPLE_BOX_START } from "./chest.js";
 import { SpectralGem } from "./spectralgem.js";
+import { Eye } from "./eye.js";
 
 //
 // Handles the game stage rendering
@@ -758,7 +759,7 @@ export class Stage {
                 dy = y*16 + 8;
 
                 // Check if "NPC"
-                if (t >= 33) {
+                if (t >= 33 && t < 81) {
 
                     if (t < 33 + 16)
                         objm.addNPC(x, y, t-33);
@@ -784,6 +785,11 @@ export class Stage {
                         SpectralGem.prototype : ENEMIES[t-2];
 
                     objm.addEnemy(enemyType, dx, dy);
+                }
+                // The "eye"
+                else if (t == 81) {
+
+                    objm.addEnemy(Eye.prototype, dx, dy);
                 }
                 else {
 
