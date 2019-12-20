@@ -270,6 +270,20 @@ export class ObjectManager {
     }
 
 
+    // Post draw
+    postDraw(c) {
+
+        for (let e of this.enemies) {
+
+            if (e.exist && !e.dying && e.inCamera &&
+                e.postDraw != null) {
+
+                e.postDraw(c);
+            }
+        }
+    }
+
+
     // Update camera movement actions
     // TODO: Rename this
     updateCamMovement(cam, stage, ev) {
@@ -308,6 +322,7 @@ export class ObjectManager {
         return this.player.isDead();
     }
 
+    
     // Reset
     reset(cam, id) {
         

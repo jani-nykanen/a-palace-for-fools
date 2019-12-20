@@ -47,6 +47,8 @@ export class Eye extends Enemy {
 
         this.extraWait = 0;
         this.mode = 0;
+
+        this.barPos = 1.0;
     }
 
 
@@ -148,9 +150,18 @@ export class Eye extends Enemy {
 
         const EXTRA_WAIT_MIN = 30;
         const EXTRA_WAIT_VARY = 30;
+        const BAR_SPEED = 0.005;
 
         this.target.x = 0;
         this.target.y = 0;
+
+        // Update health bar position
+        let t = this.health/this.maxHealth;
+        if (t < this.barPos) {
+
+            this.barPos -= BAR_SPEED * ev.step;
+            this.barPos = Math.max(t, this.barPos);
+        }
 
         // let len = Math.hypot(this.speed.x, this.speed.y);
 
@@ -245,6 +256,53 @@ export class Eye extends Enemy {
     }
 
 
+    // Draw health bar
+    drawHealthBar(c) {
+
+        const WIDTH = 80;
+        const HEIGHT = 6;
+        const OFF = 3;
+        const GRADIENT_OFF = 1;
+
+        const COLORS = [
+            [170, 0, 0],
+            [255, 85, 0],
+            [255, 255, 255]
+        ];
+
+        let tx = 160/2 - WIDTH/2;
+        let ty = 144 - HEIGHT - OFF;
+
+        c.setColor(0, 0, 0);
+        c.fillRect(tx-1, ty-1,
+            WIDTH+2, HEIGHT+2
+        );
+
+        let t = this.barPos;
+        let p = (t * WIDTH) | 0;
+
+        c.setColor(85);
+        c.fillRect(tx, ty,
+            WIDTH, HEIGHT
+        );
+
+        let off = ((HEIGHT/COLORS.length)/2) | 0;
+        for (let i = 0; i < COLORS.length; ++ i) {
+
+            c.setColor(...COLORS[i]);
+            c.fillRect(tx, ty+off*i,
+                p, HEIGHT-off*i*2 - GRADIENT_OFF*Math.min(1, i)
+            );
+        }
+
+        if (this.health < this.maxHealth) {
+
+            c.setColor(0);
+            c.fillRect(tx + p, ty, 1, HEIGHT);
+        }
+    }
+
+
     // Draw to the translated position
     // (overriden)
     drawTranslated(c, tx, ty) {
@@ -257,5 +315,12 @@ export class Eye extends Enemy {
             this.flip);
 
         c.move(-tx, -ty);
+    }
+
+
+    // Draw after everything else
+    postDraw(c) {
+        
+        this.drawHealthBar(c);
     }
 }

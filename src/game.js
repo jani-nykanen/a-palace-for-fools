@@ -500,14 +500,17 @@ export class Game {
         // Reset camera
         c.moveTo(0, 0); 
 
-        // Draw HUD
-        this.drawHUD(c);
-
         // Draw snow
         if (this.mapID == 1) {
 
             this.drawSnowing(c);
         }
+
+        // Post-draw objects
+        this.objm.postDraw(c);
+
+        // Draw HUD
+        this.drawHUD(c);
 
         // Draw the pause menu
         this.pauseMenu.draw(c);
