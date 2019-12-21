@@ -47,6 +47,8 @@ export class Eye extends Enemy {
 
         this.extraWait = 0;
         this.mode = 0;
+        this.stompCount = 0;
+        this.applyShake = false;
 
         this.barPos = 1.0;
     }
@@ -70,7 +72,7 @@ export class Eye extends Enemy {
         this.pos.x = x;
         this.pos.y = y;
 
-        this.mode = (Math.random()*2) | 0;
+        this.mode = (Math.random()*4) | 0;
         this.isStatic = false;
 
         switch(this.mode) {
@@ -81,6 +83,21 @@ export class Eye extends Enemy {
 
         case 1:
             this.isStatic = true;
+            this.spr.row = 3;
+            break;
+
+        case 2:
+
+            this.isStatic = true;
+            this.pos.y = 0;
+            this.spr.row = 1;
+            this.stompCount = 0;
+            break;
+
+        case 3:
+
+            this.isStatic = true;
+            this.pos.y = 0;
             this.spr.row = 3;
             break;
 
@@ -97,12 +114,14 @@ export class Eye extends Enemy {
 
         const FLY_SPEED_MIN = 1.0;
         const FLY_SPEED_VARY = 1.0;
+        const SPEED_MOD = 1.5;
 
         let angle = Math.atan2(
             this.pos.y-pl.pos.y,
             this.pos.x-pl.pos.x);
 
         let s = FLY_SPEED_MIN + Math.random() * FLY_SPEED_VARY;
+        s *= 1.0 + (SPEED_MOD-1.0) * (1.0 - this.health/this.maxHealth);
 
         this.speed.x = -Math.cos(angle) * s;
         this.speed.y = -Math.sin(angle) * s;
@@ -111,37 +130,125 @@ export class Eye extends Enemy {
     }
 
 
+    // Create bullets
+    createBullets(bgen, angleStart, bcount, bspeed, stop, ev) {
+
+         // Create bullets
+         let b, angle;
+         for (let i = 0; i < bcount; ++ i) {
+ 
+             angle = angleStart + i * (Math.PI*2 / bcount);
+ 
+             b = bgen.createElement(
+                 this.pos.x, 
+                 this.pos.y, 
+                 -Math.cos(angle) * bspeed, 
+                 -Math.sin(angle) * bspeed, 3);
+             if (b != null) {
+ 
+                 // This way we prevent bullets
+                 // going through walls
+                 b.oldPos.x = this.pos.x;
+                 b.oldPos.y = this.pos.y;
+             }
+
+             if (stop != null && i >= stop) break;
+         }
+         ev.audio.playSample(ev.audio.sounds.shootBig, 0.50);
+    }
+
+
     // Open eye
     openEye(bgen, ev) {
 
-        const BULLET_COUNT = 4;
+        const BULLET_COUNT_START = 4;
         const BULLET_SPEED = 1.5;
 
         this.waitTime = OPEN_TIME + OPEN_PLUS;
 
         let angleStart = ((Math.random()*2) | 0 ) * (Math.PI/4.0);
-        let angle;
+
+        let bcount = BULLET_COUNT_START;
+        if (this.health <= this.maxHealth/2) {
+
+            angleStart = 0;
+            bcount *= 2;
+        }
 
         // Create bullets
-        let b;
-        for (let i = 0; i < BULLET_COUNT; ++ i) {
+        this.createBullets(bgen, angleStart,
+            bcount, BULLET_SPEED, null, ev);
+    }
 
-            angle = angleStart + i * (Math.PI*2 / BULLET_COUNT);
 
-            b = bgen.createElement(
-                this.pos.x, 
-                this.pos.y, 
-                -Math.cos(angle) * BULLET_SPEED, 
-                -Math.sin(angle) * BULLET_SPEED, 3);
-            if (b != null) {
+    // Special stomp
+    stompSpecial(bgen, ev) {
 
-                // This way we prevent bullets
-                // going through walls
-                b.oldPos.x = this.pos.x;
-                b.oldPos.y = this.pos.y;
-            }
+        const GRAVITY_MAX = 6.0;
+        const GRAVITY = 0.35;
+        const WAIT_TIME = 60;
+    
+        this.target.x = 0;
+        this.target.y = GRAVITY_MAX;
+
+        this.acc.y = GRAVITY;
+        this.bounce = false;
+
+        if (!this.canJump) {
+
+            this.waitTime = 1;
         }
-        ev.audio.playSample(ev.audio.sounds.shootBig, 0.50);
+
+        if (this.spr.row != 0 && this.canJump) {
+
+            this.spr.row = 0;
+            this.waitTime = WAIT_TIME;
+
+            ev.audio.playSample(ev.audio.sounds.quake, 0.50);
+                this.applyShake = true;
+
+            // Create bullets
+            this.createBullets(bgen, 0, 8, 2, 4, ev);
+        }
+    }
+
+
+    // Stomp
+    stomp(pl, ev) {
+
+        const SPEED_X = 0.75;
+        const GRAVITY_MAX = 4.0;
+        const GRAVITY = 0.2;
+        const STOMP_MAX = 3;
+
+        this.waitTime = 1;
+
+        this.target.x = SPEED_X * 
+            (pl.pos.x < this.pos.x ? -1 : 1);
+        this.target.y = GRAVITY_MAX; 
+
+        this.acc.x = 0.025;
+        this.acc.y = GRAVITY;
+
+        let t = 1.0 - this.health / this.maxHealth;
+        let stomps = 1 + ((t * STOMP_MAX) | 0)
+
+        if (this.canJump && !this.oldCanJump) {
+
+            if (this.appearTimer <= 0) {
+
+                ev.audio.playSample(ev.audio.sounds.quake, 0.50);
+                this.applyShake = true;
+            }
+
+            ++ this.stompCount;
+        }
+
+        if (this.stompCount >= stomps &&
+            this.speed.y > 0) {
+
+            this.waitTime = 0;
+        }
     }
 
 
@@ -152,8 +259,25 @@ export class Eye extends Enemy {
         const EXTRA_WAIT_VARY = 30;
         const BAR_SPEED = 0.005;
 
+        // Set default target speeds
+        // and acceleration 
         this.target.x = 0;
         this.target.y = 0;
+
+        this.acc.x = 0.010;
+        this.acc.y = 0.010;
+
+        this.bounce = true;
+
+        // STOMP!
+        if (this.appearTimer <= 0) {
+
+            if (this.mode == 2)
+                this.stomp(pl, ev);
+
+            else if (this.mode == 3)
+                this.stompSpecial(bgen, ev);
+        }
 
         // Update health bar position
         let t = this.health/this.maxHealth;
@@ -162,8 +286,6 @@ export class Eye extends Enemy {
             this.barPos -= BAR_SPEED * ev.step;
             this.barPos = Math.max(t, this.barPos);
         }
-
-        // let len = Math.hypot(this.speed.x, this.speed.y);
 
         this.harmless = this.appearTimer > 0;
 
@@ -202,8 +324,14 @@ export class Eye extends Enemy {
             return;
         }
 
+        // Update wait time
+        if (this.mode < 2 || (this.mode == 3 && this.canJump)) {
 
-        if ( (this.waitTime -= ev.step) <= 0) {
+            this.waitTime -= ev.step;
+        }
+
+        // Disappear, if the time is full
+        if (this.waitTime <= 0) {
 
             this.extraWait = EXTRA_WAIT_MIN
                 + ((Math.random() * EXTRA_WAIT_VARY) | 0);
@@ -306,6 +434,16 @@ export class Eye extends Enemy {
     // Draw to the translated position
     // (overriden)
     drawTranslated(c, tx, ty) {
+
+        const SHAKE_TIME = 60;
+        const SHAKE_MAG = 2;
+
+        if (this.applyShake &&
+            tx == 0 && ty == 0) {
+
+            c.setShake(SHAKE_TIME, SHAKE_MAG);
+            this.applyShake = false;
+        }
 
         c.move(tx, ty);
 
