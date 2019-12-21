@@ -88,6 +88,7 @@ window.onload = () => {
         {name: "lever", src: "assets/audio/lever.wav"},
         {name: "open", src: "assets/audio/open.wav"},
         {name: "craft", src: "assets/audio/craft.wav"},
+        {name: "recreate", src: "assets/audio/recreate.wav"},
 
         {name: "item", src: "assets/audio/item.ogg"},
         {name: "healthUp", src: "assets/audio/health_up.ogg"},

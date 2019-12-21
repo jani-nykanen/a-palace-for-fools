@@ -17,6 +17,7 @@ export const TransitionMode = {
     VerticalBar: 1,
     HorizontalBar: 2,
     CircleOutside: 3,
+    CircleInside: 4,
 }
 
 
@@ -105,6 +106,17 @@ export class Transition {
         let t = this.getScaledTime();
         let r, w, h;
 
+        // Radius must be great enough so that
+        // the circle area (or its complement)
+        // does not vanish too early
+        let maxRadius = this.center == null ? 0 : 
+            Math.max(
+                Math.hypot(this.center.x, this.center.y),
+                Math.hypot(c.w-this.center.x, this.center.y),
+                Math.hypot(c.w-this.center.x, c.h-this.center.y),
+                Math.hypot(this.center.x, c.h-this.center.y)
+            );
+
         switch(this.mode) {
 
         case TransitionMode.Fade:
@@ -144,17 +156,22 @@ export class Transition {
                 this.center = new Vector2(c.w/2, c.h/2);
             }
             
-            // Radius must be great enough to make sure the
-            // "the complement of circle" area does not disappear 
-            // before the animation is finished
-            r = (1-t) * Math.max(
-                Math.hypot(this.center.x, this.center.y),
-                Math.hypot(c.w-this.center.x, this.center.y),
-                Math.hypot(c.w-this.center.x, c.h-this.center.y),
-                Math.hypot(this.center.x, c.h-this.center.y)
-            );
+            r = (1-t) * maxRadius;
             c.setColor(this.color.r, this.color.g, this.color.b);
             c.fillCircleOutside(r, this.center.x, this.center.y);
+
+            break;
+
+        case TransitionMode.CircleInside:
+
+            if (this.center == null) {
+
+                this.center = new Vector2(c.w/2, c.h/2);
+            }
+
+            r = t * maxRadius;
+            c.setColor(this.color.r, this.color.g, this.color.b);
+            c.fillCircle(r, this.center.x, this.center.y);
 
             break;
 

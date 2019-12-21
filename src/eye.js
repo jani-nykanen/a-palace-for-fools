@@ -52,6 +52,9 @@ export class Eye extends Enemy {
         this.power = 2;
 
         this.barPos = 1.0;
+
+        this.top = Math.floor(y/144)*144;
+        console.log(this.top);
     }
 
 
@@ -97,7 +100,8 @@ export class Eye extends Enemy {
         const MAX_Y = 144-16;
 
         let x = this.spr.w/2 + ((Math.random() * (160 - this.spr.w)) | 0);
-        let y = this.spr.h/2 + ((Math.random() * (MAX_Y - this.spr.h)) | 0);
+        let y = this.top + 
+            this.spr.h/2 + ((Math.random() * (MAX_Y - this.spr.h)) | 0);
 
         this.pos.x = x;
         this.pos.y = y;
@@ -119,7 +123,7 @@ export class Eye extends Enemy {
         case 2:
 
             this.isStatic = true;
-            this.pos.y = 0;
+            this.pos.y = this.top;
             this.spr.row = 1;
             this.stompCount = 0;
             break;
@@ -127,7 +131,7 @@ export class Eye extends Enemy {
         case 3:
 
             this.isStatic = true;
-            this.pos.y = 0;
+            this.pos.y =  this.top;
             this.spr.row = 3;
             break;
 

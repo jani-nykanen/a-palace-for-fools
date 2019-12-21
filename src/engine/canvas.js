@@ -385,4 +385,38 @@ export class Canvas {
                 this.fillRect(px2, y, this.w-px1, 1);
         }
     }
+
+
+    // Fill a circle
+    fillCircle(r, cx, cy) {
+
+        if (r <= 0) {
+
+            return;
+        }
+        else if (r*r >= this.w*this.w + this.h*this.h) {
+
+            this.fillRect(0, 0, this.w, this.h);
+            return;
+        }
+
+        if (cx == null)
+            cx = this.w / 2;
+        if (cy == null)
+            cy = this.h / 2;
+
+        let start = Math.max(0, cy - r) | 0;
+        let end = Math.min(this.h, cy + r) | 0;
+
+        // Draw the circle area line by line
+        let dy, w;
+        for (let y = start; y < end; ++ y) {
+
+            dy = y - cy;
+            
+            w = (Math.sqrt(r*r - dy*dy) | 0) * 2;
+
+            this.fillRect(cx-w/2, y, w, 1);
+        }
+    }
 }

@@ -66,7 +66,7 @@ export class Lever extends RenderedObject {
             ev.audio.sounds.accept, 
             0.70);
         ev.audio.playSample(
-            ev.audio.sounds[ ["lever", "craft", "lever"] [this.id] ], 
+            ev.audio.sounds[ ["lever", "craft", "recreate"] [this.id] ], 
             0.70);
 
         // If fire, start "gem obtained"
@@ -115,6 +115,7 @@ export class Lever extends RenderedObject {
     activate(pl, stage, ev) {
 
         const SHAKE_MAG = 4;
+        const SHAKE_MAG2 = 8;
         const WAIT_TIME1 = 120;
         const WAIT_TIME2 = 240;
         
@@ -145,16 +146,16 @@ export class Lever extends RenderedObject {
                         "null"
                     );
                     this.textbox.activate(WAIT_TIME2, 
-                        -SHAKE_MAG, null, 
+                        -SHAKE_MAG2, null, 
                         0.0, 0.0);
                     this.activationEvent(pl, stage, ev);
 
                     // Start transition to the ending
-                    ev.tr.activate(true, TransitionMode.CircleOutside,
+                    ev.tr.activate(true, TransitionMode.CircleInside,
                         0.25, (ev) => {
                             ev.changeScene("title");
                         });
-                    ev.tr.setCenter(80, (144-24));
+                    ev.tr.setCenter(80, 72);
                 }
             });
         }
