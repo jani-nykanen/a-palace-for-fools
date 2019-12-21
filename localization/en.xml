@@ -134,6 +134,16 @@ BLOOD GEM!
 </chunk>
 </dialogue>
 
+<dialogue id="lever2">
+<chunk>
+Destroy the
+world and 
+create a 
+new one?
+</chunk>
+</dialogue>
+
+
 
 <dialogue id="enter_final">
 <chunk>

@@ -59,6 +59,8 @@ export class Enemy extends GameObject {
 
         // Kill if below the camera
         this.offScreenKill = false;
+
+        this.deathEventCalled = false;
     }
 
 
@@ -100,7 +102,7 @@ export class Enemy extends GameObject {
         if (this.inCamera &&
             this.updateAI != null) {
 
-            this.updateAI(extra[0], ev, extra[2]);
+            this.updateAI(extra[0], ev, extra[2], extra[3]);
             this.hurtPlayer(extra[0], ev);
         }
 
@@ -118,6 +120,12 @@ export class Enemy extends GameObject {
         const DEATH_SPEED = 5;
         const GEM_SPEED = 1;
         const H_UP_PROB_BASE = 0.75;
+
+        if (!this.deathEventCalled && this.deathEvent != null) {
+
+            this.deathEvent(extra[3], ev);
+            this.deathEventCalled = true;
+        }
 
         this.spr.animate(0, 0, 4, DEATH_SPEED, ev.step);
         if (this.spr.frame == 4)

@@ -789,7 +789,7 @@ export class Stage {
                 // The "eye"
                 else if (t == 81) {
 
-                    objm.addEnemy(Eye.prototype, dx, dy);
+                    objm.addEnemy(Eye.prototype, dx + 8, dy + 8);
                 }
                 else {
 

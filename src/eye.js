@@ -22,14 +22,14 @@ export class Eye extends Enemy {
         super(x, y, 0);
 
         this.w = 40;
-        this.h = 40;
+        this.h = 48;
 
         this.hitArea = new Vector2(24, 24);
 
         this.acc.x = 0.010;
         this.acc.y = 0.010;
 
-        this.maxHealth = 30;
+        this.maxHealth = 1;
         this.health = this.maxHealth;
 
         this.spr = new Sprite(48, 48);
@@ -49,6 +49,7 @@ export class Eye extends Enemy {
         this.mode = 0;
         this.stompCount = 0;
         this.applyShake = false;
+        this.power = 2;
 
         this.barPos = 1.0;
     }
@@ -58,6 +59,35 @@ export class Eye extends Enemy {
     reset() {
 
         this.appearTimer = APPEAR_TIME;
+    }
+
+
+    // Compute mode
+    computeMode() {
+
+        const PROB = [
+            [0.5, 0.20, 0.10, 0],
+            [0.4, 0.30, 0.20, 0.10],
+            [0.30, 0.30, 0.20, 0.20],
+            [0.25, 0.25, 0.25, 0.25],
+        ];
+
+        let t = ( (1.0 - (this.health / this.maxHealth)) * 4) | 0;
+        let p = Math.random();
+
+        let sum = 0;
+        let q;
+        for (let i = 0; i < 4; ++ i) {
+
+            q = (PROB[t]) [i];
+            sum += q;
+
+            if (p <= sum) {
+
+                return i;
+            }
+        }
+        return 3; // Should not happen
     }
 
 
@@ -72,7 +102,7 @@ export class Eye extends Enemy {
         this.pos.x = x;
         this.pos.y = y;
 
-        this.mode = (Math.random()*4) | 0;
+        this.mode = this.computeMode();
         this.isStatic = false;
 
         switch(this.mode) {
@@ -250,10 +280,21 @@ export class Eye extends Enemy {
             this.waitTime = 0;
         }
     }
+    
+
+    // Called when the eye dies
+    deathEvent(objm, ev) {
+
+        objm.addLever(
+            4.5, ((this.pos.y/144)|0) * 144 / 16 + 7, null
+        );
+
+        ev.audio.stopMusic();
+    }
 
 
     // Update AI
-    updateAI(pl, ev, bgen) {
+    updateAI(pl, ev, bgen, objm) {
 
         const EXTRA_WAIT_MIN = 30;
         const EXTRA_WAIT_VARY = 30;
@@ -458,7 +499,7 @@ export class Eye extends Enemy {
 
     // Draw after everything else
     postDraw(c) {
-        
+
         this.drawHealthBar(c);
     }
 }
