@@ -61,6 +61,15 @@ export class Enemy extends GameObject {
         this.offScreenKill = false;
 
         this.deathEventCalled = false;
+
+        // Death time, used for the final boss.
+        // Takes values in range [0,1)
+        this.deathTimer = 0.0;
+        // To make it possible to have
+        // "slow death"
+        this.deathSpeedMod = 1.0;
+    
+        this.dropItem = true;
     }
 
 
@@ -127,7 +136,11 @@ export class Enemy extends GameObject {
             this.deathEventCalled = true;
         }
 
-        this.spr.animate(0, 0, 4, DEATH_SPEED, ev.step);
+        let s = DEATH_SPEED / this.deathSpeedMod;
+        this.spr.animate(0, 0, 4, s, ev.step);
+        this.deathTimer = 
+            (DEATH_SPEED*this.spr.frame + this.spr.count * this.deathSpeedMod) / 
+            (DEATH_SPEED*4);
         if (this.spr.frame == 4)
             this.exist = false;
 
@@ -135,7 +148,7 @@ export class Enemy extends GameObject {
         let pl = extra[0];
         let healthProb = H_UP_PROB_BASE * (1.0 - pl.health/pl.maxHealth);
         let id;
-        if (!this.gemCreated) {
+        if (this.dropItem && !this.gemCreated) {
 
             id = 0;
             if (pl.health < pl.maxHealth && 

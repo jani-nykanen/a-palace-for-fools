@@ -39,6 +39,10 @@ export class Lever extends RenderedObject {
     
         this.shardCount = shardCount;
         this.textbox = textbox;
+
+        this.spawning = stage == null;
+        this.spawnSpr = new Sprite(16, 16);
+        this.spawnSpr.setFrame(1, 4);
     }
 
 
@@ -46,6 +50,14 @@ export class Lever extends RenderedObject {
     update(pl, ev) {
 
         if (!this.inCamera) return;
+
+        // Animate spawn effect
+        if (this.spawning) {
+
+            this.spawnSpr.animate(1, 4, 8, 5, ev.step);
+            if (this.spawnSpr.frame == 8)
+                this.spawning = false;
+        }
 
         if (this.id == 1) {
 
@@ -189,6 +201,15 @@ export class Lever extends RenderedObject {
             (this.pos.x-8) | 0,
             (this.pos.y-8) | 0,
             this.flip);
+
+        // Draw spawning dust
+        if (this.spawning) {
+
+            c.drawSprite(this.spawnSpr, c.bitmaps.npc,
+                (this.pos.x-8) | 0,
+                (this.pos.y-8) | 0,
+                this.flip);
+        }
 
         c.move(-tx, -ty);
     }

@@ -24,12 +24,12 @@ export class Eye extends Enemy {
         this.w = 40;
         this.h = 48;
 
-        this.hitArea = new Vector2(24, 24);
+        this.hitArea = new Vector2(32, 32);
 
         this.acc.x = 0.010;
         this.acc.y = 0.010;
 
-        this.maxHealth = 1;
+        this.maxHealth = 32;
         this.health = this.maxHealth;
 
         this.spr = new Sprite(48, 48);
@@ -50,11 +50,17 @@ export class Eye extends Enemy {
         this.stompCount = 0;
         this.applyShake = false;
         this.power = 2;
+        this.deathSpeedMod = 0.25;
 
         this.barPos = 1.0;
 
         this.top = Math.floor(y/144)*144;
-        console.log(this.top);
+
+        this.center = new Vector2(0, 0);
+
+        this.dropItem = false;
+
+        this.lastAttack = 0;
     }
 
 
@@ -107,6 +113,14 @@ export class Eye extends Enemy {
         this.pos.y = y;
 
         this.mode = this.computeMode();
+        // This actually makes possible to use 
+        // "impossible" attack in the first phase,
+        // but it is not very likely
+        if (this.mode == this.lastAttack) {
+
+            this.mode = (this.mode +1) % 4;
+        }
+        this.lastAttack = this.mode;
         this.isStatic = false;
 
         switch(this.mode) {
@@ -148,7 +162,7 @@ export class Eye extends Enemy {
 
         const FLY_SPEED_MIN = 1.0;
         const FLY_SPEED_VARY = 1.0;
-        const SPEED_MOD = 1.5;
+        const SPEED_MOD = 1.25;
 
         let angle = Math.atan2(
             this.pos.y-pl.pos.y,
@@ -381,6 +395,9 @@ export class Eye extends Enemy {
             this.extraWait = EXTRA_WAIT_MIN
                 + ((Math.random() * EXTRA_WAIT_VARY) | 0);
 
+            this.extraWait *= (this.health / this.maxHealth);
+            this.extraWait |= 0;
+
             this.appearTimer = APPEAR_TIME + this.extraWait;
             this.fadingIn = true;
         }
@@ -476,6 +493,37 @@ export class Eye extends Enemy {
     }
 
 
+    // Draw the dying animation
+    drawDeath(c, t) {
+
+        const SCALE = 6;
+        const WIDTH_MUL = 3;
+
+        let amplitude = t * this.spr.w * WIDTH_MUL;
+        let jump = Math.PI *2 / this.spr.h;
+        let start = Math.PI * 2 * t;
+
+        let r = (this.spr.h * (1.0 + t*(SCALE-1)) / 2) | 0;
+
+        let px = this.pos.x | 0;
+        let py = this.pos.y | 0;
+
+        let step = (r*2) / this.spr.h;
+        let sy = 0;
+        for (let y = py - r; y < py + r; y += step) {
+
+            c.drawBitmapRegion(c.bitmaps.eye, 
+                0, sy, 
+                this.spr.w, 1,
+                px - this.spr.w/2 + 
+                    (Math.sin(start + jump * sy)*amplitude) | 0, 
+                y);
+            ++ sy;
+            sy %= this.spr.h;
+        }
+    }
+
+
     // Draw to the translated position
     // (overriden)
     drawTranslated(c, tx, ty) {
@@ -492,10 +540,17 @@ export class Eye extends Enemy {
 
         c.move(tx, ty);
 
-        c.drawSprite(this.spr, c.bitmaps.eye,
-            (this.pos.x-24 + this.center.x) | 0,
-            (this.pos.y-24 + this.center.y) | 0,
-            this.flip);
+        if (this.dying) {
+
+            this.drawDeath(c, this.deathTimer);
+        }
+        else {
+
+            c.drawSprite(this.spr, c.bitmaps.eye,
+                (this.pos.x-24 + this.center.x) | 0,
+                (this.pos.y-24 + this.center.y) | 0,
+                this.flip);
+        }
 
         c.move(-tx, -ty);
     }
