@@ -166,6 +166,44 @@ Proceed?
 </dialogue>
 
 
+<dialogue id="story">
+<chunk>
+A thousand years 
+ago people wor-
+shipped a giant 
+floating eye, a 
+god who promised 
+to protect her 
+people from evil.
+</chunk>
+
+<chunk>
+However, one day 
+people decided
+they need a god 
+no longer. They 
+built a huge 
+flying palace to 
+rival their god.
+</chunk>
+
+<chunk>
+But people had 
+underestimated the 
+power of their god.
+A few years later
+everyone was gone.
+</chunk>
+
+<chunk>
+But the palace...
+it is still there, 
+soaring the skies.
+</chunk>
+
+</dialogue>
+
+
 <dialogue id="item32">
 <chunk>
 You obtain a

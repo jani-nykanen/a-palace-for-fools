@@ -30,8 +30,8 @@ export class TitleScreen {
                 this.menu.disable();
                 ev.tr.activate(true, TransitionMode.Empty, 2.0,
                     (ev) => {
-                        ev.tr.mode = TransitionMode.VerticalBar;
-                        ev.changeScene("game", true);
+                        ev.tr.disable();
+                        ev.changeScene("storyintro");
                     });
             }),
             new MenuButton("Continue", (ev) => {

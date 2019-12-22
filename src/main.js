@@ -2,6 +2,7 @@ import { Core } from "./engine/core.js";
 import { Game } from "./game.js";
 import { EnableAudioScreen } from "./audiointro.js";
 import { TitleScreen } from "./title.js";
+import { StoryIntro } from "./storyintro.js";
 
 //
 // Main file
@@ -20,6 +21,7 @@ window.onload = () => {
     // Add scenes
     c.addScene(new Game(), "game", false);
     c.addScene(new TitleScreen(), "title", false);
+    c.addScene(new StoryIntro(), "storyintro", false);
     c.addScene(new EnableAudioScreen(), "audiointro", true);
 
     // Set language to english

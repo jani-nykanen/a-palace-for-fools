@@ -188,4 +188,11 @@ export class Transition {
         if (this.fadeIn) t = 1.0 - t;
         return t;
     }
+
+
+    // Disable
+    disable() {
+
+        this.active = false;
+    }
 }

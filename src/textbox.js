@@ -309,7 +309,7 @@ export class Textbox {
 
 
     // Draw
-    draw(c) {
+    draw(c, disableBorders) {
 
         const CORNER_OFF = 2;
         const TEXT_OFF_X = 0;
@@ -338,7 +338,8 @@ export class Textbox {
             ty -= CONFIRM_H / 2;
         }
 
-        drawBoxWithBorders(c, tx, ty, w, h, COLORS);
+        if (!disableBorders)
+            drawBoxWithBorders(c, tx, ty, w, h, COLORS);
 
         // Draw current message
         c.drawText(c.bitmaps.font, 

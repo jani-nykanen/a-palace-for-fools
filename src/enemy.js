@@ -253,7 +253,7 @@ export class Enemy extends GameObject {
         let bx = b.pos.x;
         let by = b.pos.y;
 
-        let knockback = KNOCKBACK_SPEED * b.power;
+        let knockback = KNOCKBACK_SPEED * (1 + (b.id % 2));
 
         this.hurtTimer = HURT_TIME;
         if (this.health <= 0) {
