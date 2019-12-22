@@ -14,7 +14,7 @@ import { Tilemap } from "./engine/tilemap.js";
 // (c) 2019 Jani Nykänen
 //
 
-const MUSIC_VOLUME = 0.40;
+export const MUSIC_VOLUME = 0.40;
 
 
 export class Game {
@@ -97,8 +97,9 @@ export class Game {
 
                 ev.tr.activate(true, TransitionMode.VerticalBar,
                     2.0, (ev) => {
-                        ev.changeScene("title");
+
                         ev.audio.stopMusic();
+                        ev.changeScene("title");
                     });
             }),
         );

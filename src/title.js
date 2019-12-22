@@ -1,6 +1,7 @@
 import { Menu, MenuButton } from "./menu.js";
 import { TransitionMode, Transition } from "./engine/transition.js";
 import { Textbox } from "./textbox.js";
+import { MUSIC_VOLUME } from "./game.js";
 
 //
 // Title screen
@@ -58,6 +59,8 @@ export class TitleScreen {
                     this.textbox.activate();
                     return;
                 }
+
+                ev.audio.stopMusic();
 
                 this.menu.disable();
                 ev.tr.activate(true, TransitionMode.Empty, 2.0,
@@ -121,5 +124,8 @@ export class TitleScreen {
 
         this.menu.activate(0);
         ev.tr.mode = TransitionMode.Empty;
+
+        ev.audio.fadeInMusic(ev.audio.sounds.future, 
+            MUSIC_VOLUME, 1000);
     }
 }
