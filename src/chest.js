@@ -156,6 +156,7 @@ export class Chest extends RenderedObject {
         // Set player checkpoint
         pl.checkpoint = this.pos.clone();
         pl.checkpoint.y += 2;
+        pl.checkID = null;
     }
 
 
