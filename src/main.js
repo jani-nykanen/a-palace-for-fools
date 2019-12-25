@@ -58,8 +58,8 @@ window.onload = () => {
         {name: "eye",   src: "assets/bitmaps/eye.png"},
     );
     c.assets.addDocuments(
-        {name: "past", src: "assets/maps/past.tmx"},
-        {name: "present", src: "assets/maps/present.tmx"},
+        {name: "past", src: "assets/maps/past_new.tmx"},
+        {name: "present", src: "assets/maps/present_new.tmx"},
         {name: "future", src: "assets/maps/future.tmx"},
 
         {name: "en", src: "localization/en.xml"},

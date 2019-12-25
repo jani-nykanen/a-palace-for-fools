@@ -81,7 +81,7 @@ export class Player extends GameObject {
         this.deathTimer = 0;
 
         // Amounts of stuff
-        this.gems = 20;
+        this.gems = 0;
 
         this.teleporting = false;
 
