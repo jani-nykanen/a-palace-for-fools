@@ -169,6 +169,8 @@ export class Player extends GameObject {
 
         this.target.x = 0;
         this.target.y = 0;
+    
+        let climbing = false;
 
         if (this.shootAnimTimer <= 0) {
 
@@ -176,18 +178,21 @@ export class Player extends GameObject {
             if (ev.input.action.up.state == State.Down) {
 
                 this.target.y = -CLIMB_SPEED;
+                climbing = true;
             }
             else if (ev.input.action.down.state == State.Down) {
 
                 this.target.y = CLIMB_SPEED;
+                climbing = true;
             }
 
             if (Math.abs(ev.input.gamepad.stick.y) > EPS) {
 
                 this.target.y = ev.input.gamepad.stick.y * CLIMB_SPEED;
+                climbing = true;
             }
             
-            if (this.items[19])
+            if (climbing && this.items[19])
                 this.target.y *= BOOT_MOD;
         }
         
