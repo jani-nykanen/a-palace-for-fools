@@ -29,7 +29,7 @@ export class Eye extends Enemy {
         this.acc.x = 0.010;
         this.acc.y = 0.010;
 
-        this.maxHealth = 32;
+        this.maxHealth = 40;
         this.health = this.maxHealth;
 
         this.spr = new Sprite(48, 48);
@@ -49,7 +49,7 @@ export class Eye extends Enemy {
         this.mode = 0;
         this.stompCount = 0;
         this.applyShake = false;
-        this.power = 2;
+        this.power = 3;
         this.deathSpeedMod = 0.25;
 
         this.barPos = 1.0;

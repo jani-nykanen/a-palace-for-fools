@@ -1,4 +1,4 @@
-import { negMod } from "./util.js";
+import { negMod, clamp } from "./util.js";
 
 //
 // A tilemap
@@ -42,13 +42,18 @@ export class Tilemap {
 
 
     // Get a tile value in the given coordinate
-    getTile(layer, x, y, loop) {
+    getTile(layer, x, y, loopx, loopy) {
 
-        if (loop) {
-
+        if (loopx) 
             x = negMod(x, this.w);
+        else 
+            x = clamp(x, 0, this.w-1);
+
+        if (loopy) 
             y = negMod(y, this.h);
-        }
+        else 
+            y = clamp(y, 0, this.h-1);
+        
 
         return this.layers[layer][y*this.w+x];
     }
