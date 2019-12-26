@@ -142,7 +142,8 @@ export class Gem extends GameObject {
             // Gem
             if (this.id == 0) {
 
-                ++ pl.gems;
+                if (pl.gems < 99)
+                    ++ pl.gems;
             }
             // Health up
             else if (this.id == 1) {

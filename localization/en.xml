@@ -65,6 +65,7 @@ immediately.
 <chunk>
 It was robots
 who finished
+building
 the palace.
 </chunk>
 </dialogue>
@@ -177,8 +178,9 @@ just... wait.
 We built the
 robots to
 finish the
-palace in the
-case we die.
+palace if the
+people happen
+to die.
 </chunk>
 
 <chunk>
@@ -310,8 +312,8 @@ Proceed?
 <dialogue id="story">
 <chunk>
 A long time ago
-people had a
-god they called
+people worshipped
+a god they called
 "The Eye".
 </chunk>
 
