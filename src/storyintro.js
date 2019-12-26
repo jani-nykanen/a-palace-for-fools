@@ -12,6 +12,7 @@ export class StoryIntro {
 
     constructor() {
 
+        this.frame = 0;
     }
 
 
@@ -25,16 +26,29 @@ export class StoryIntro {
     // Update
     update(ev) {
 
-        if (ev.tr.active) return;
+        if (ev.tr.active) {
+
+            this.frame = (4 * ev.tr.getScaledTime()) | 0;
+            if (!ev.fadeIn) {
+
+                this.frame = 3 - this.frame;
+            }
+            return;
+        }
 
         this.textbox.update(ev);
 
         if (!this.textbox.active) {
 
-            ev.audio.stopMusic();
-            ev.changeScene("game", true);
-            ev.tr.activate(false, TransitionMode.CircleOutside, 1.0);
-            ev.tr.setCenter();
+            ev.tr.activate(true, TransitionMode.Empty, 2.0,
+                (ev) => {
+
+                    ev.audio.stopMusic();
+                    ev.changeScene("game", true);
+                    ev.tr.mode = TransitionMode.CircleOutside;
+                    ev.tr.setCenter();
+                    ev.tr.speed = 1.0;
+                });
         }
     }
 
@@ -43,6 +57,10 @@ export class StoryIntro {
     draw(c) {
 
         c.clear(0);
+
+        c.drawBitmapRegion(c.bitmaps.intro,
+            0, this.frame*144, 160, 144,
+            0, 0);
         
         this.textbox.draw(c, true);
     }
@@ -51,7 +69,7 @@ export class StoryIntro {
     // On change
     onChange(ev) {
 
-        ev.tr.active = false;
+        ev.tr.mode = TransitionMode.Empty;
 
         this.textbox.addMessage(
             ...ev.loc.dialogue.story
@@ -59,5 +77,7 @@ export class StoryIntro {
     
         this.textbox.activate();
         this.textbox.doNotResumeMusic();
+
+        this.frame = 0;
     }
 }

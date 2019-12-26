@@ -59,6 +59,7 @@ window.onload = () => {
         {name: "map",   src: "assets/bitmaps/map.png"},
         {name: "eye",   src: "assets/bitmaps/eye.png"},
         {name: "ending",   src: "assets/bitmaps/ending.png"},
+        {name: "intro",   src: "assets/bitmaps/intro.png"},
     );
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past_new.tmx"},

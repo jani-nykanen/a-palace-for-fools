@@ -32,60 +32,56 @@ area!
 
 <dialogue id="npc1">
 <chunk>
-If one killed
-The Eye, one 
-could recreate
-the world.
-</chunk>
-<chunk>
-A lot of robots
-like you have
-challenged The
+See that door
+frame? It is
+a portal that
+leads to the
+domain of The
 Eye.
 </chunk>
+
 <chunk>
-Had they 
-succeeded,
-I would not
-be here.
+You need a
+blood gem
+to activate
+it, though.
 </chunk>
+
 </dialogue>
 
 <dialogue id="npc2">
 <chunk>
-When they gained
-more knowledge
-they learned to
-build actual
-robots.
+All the people
+are dead. They
+died long time
+ago.
 </chunk>
 <chunk>
-However, those
-robots went mad
-once the disease
-hit them. They
-are like zombies
-now.
+When The Eye
+saw the palace,
+she killed them
+immediately.
 </chunk>
 <chunk>
-You look just 
-like them, but 
-how come you 
-are not mad?
+It was robots
+who finished
+the palace.
 </chunk>
 </dialogue>
 
 <dialogue id="npc3">
 <chunk>
-To destroy a 
-god one needs
-a blood gem.
+The Eye lives
+in the sky.
+She did not
+kill her people
+because she was
+mad.
 </chunk>
 <chunk>
-That's what
-they say, but 
-I find it hard
-to believe.
+She killed them
+because she was
+afraid.
 </chunk>
 
 </dialogue>
@@ -104,6 +100,153 @@ been alive in the
 first place...
 </chunk>
 </dialogue>
+
+
+<dialogue id="npc5">
+
+<chunk>
+They say that 
+The Eye is not 
+a god, really.
+</chunk>
+
+<chunk>
+She is an
+apparatus
+created by
+people from
+the past.
+</chunk>
+
+<chunk>
+But who built
+her? And why?
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="npc6">
+
+<chunk>
+Most of us don't
+remember what we
+used to be.
+</chunk>
+
+<chunk>
+We were people,
+once. We used
+the power of
+blood gems to
+enter the domain
+of The Eye.
+</chunk>
+
+<chunk>
+We tried to
+challenge our
+old god. We
+failed.
+</chunk>
+
+
+</dialogue>
+
+
+<dialogue id="npc7">
+
+<chunk>
+We are immortal.
+It's a curse, not
+a gift.
+</chunk>
+
+<chunk>
+We cannot oppose
+our god. We can
+just... wait.
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="npc8">
+
+<chunk>
+We built the
+robots to
+finish the
+palace in the
+case we die.
+</chunk>
+
+<chunk>
+However, we also
+programmed them
+to fight, just in
+case.
+</chunk>
+
+<chunk>
+Some of them
+went mad, some
+of them entered
+the domain of
+The Eye.
+</chunk>
+
+<chunk>
+But just like us,
+they failed.
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="npc9">
+
+<chunk>
+We used that
+fire to craft
+blood gems.
+</chunk>
+
+<chunk>
+If you had 
+enough many
+blood shards,
+you could do
+the same.
+</chunk>
+
+<chunk>
+Just be quick,
+that fire might
+not burn for-
+ever.
+</chunk>
+
+</dialogue>
+
+
+<dialogue id="npc10">
+
+<chunk>
+This is the domain
+of The Eye. Some
+say this is the
+future.
+</chunk>
+
+<chunk>
+A future that
+will never
+happen, I hope.
+</chunk>
+
+</dialogue>
+
 
 
 <dialogue id="lever1_fail">
@@ -167,32 +310,32 @@ Proceed?
 <dialogue id="story">
 <chunk>
 A long time ago
-people worshipped
-a god known as 
-"The Eye". She 
-was the only god
-they had.
+people had a
+god they called
+"The Eye".
 </chunk>
 
 <chunk>
-She promised to 
-protect her people
-with one condition:
-the surface and the 
-sea belonged to the 
-man, but not the 
-sky.
+She watched over
+her people and
+protected them
+from evil.
 </chunk>
 
 <chunk>
-Centuries passed 
-and people stopped
-to believe in their
-god. They wanted to
-prove that their god
-does not exist, so
-they built a huge
-flying palace.
+But centuries
+passed and
+people thought
+they need a
+god no longer, 
+</chunk>
+
+<chunk>
+They built a
+huge flying
+palace to
+rival their
+own god.
 </chunk>
 
 <chunk>
@@ -205,18 +348,22 @@ It was a mistake.
 <dialogue id="ending">
 
 <chunk>
-And so the old world
-was destroyed and a
-new one was created.
+And so the 
+old world was 
+destroyed and 
+a new one was 
+created.
 </chunk>
 
 <chunk>
-A new world without
+A new world 
+without
 The Eye...
 </chunk>
 
 <chunk>
-A new world without
+A new world 
+without
 you...
 </chunk>
 

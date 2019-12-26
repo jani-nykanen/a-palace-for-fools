@@ -31,7 +31,7 @@ export class TitleScreen {
                 this.menu.disable();
                 ev.tr.activate(true, TransitionMode.Empty, 2.0,
                     (ev) => {
-                        ev.tr.disable();
+                        
                         ev.changeScene("storyintro");
                     });
             }),
