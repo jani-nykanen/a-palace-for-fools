@@ -3,6 +3,7 @@ import { Game } from "./game.js";
 import { EnableAudioScreen } from "./audiointro.js";
 import { TitleScreen } from "./title.js";
 import { StoryIntro } from "./storyintro.js";
+import { Ending } from "./ending.js";
 
 //
 // Main file
@@ -22,6 +23,7 @@ window.onload = () => {
     c.addScene(new Game(), "game", false);
     c.addScene(new TitleScreen(), "title", false);
     c.addScene(new StoryIntro(), "storyintro", false);
+    c.addScene(new Ending(), "ending", false);
     c.addScene(new EnableAudioScreen(), "audiointro", true);
 
     // Set language to english
@@ -56,6 +58,7 @@ window.onload = () => {
         {name: "logo",   src: "assets/bitmaps/logo.png"},
         {name: "map",   src: "assets/bitmaps/map.png"},
         {name: "eye",   src: "assets/bitmaps/eye.png"},
+        {name: "ending",   src: "assets/bitmaps/ending.png"},
     );
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past_new.tmx"},

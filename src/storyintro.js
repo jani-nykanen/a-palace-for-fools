@@ -2,7 +2,7 @@ import { TransitionMode, Transition } from "./engine/transition.js";
 import { Textbox } from "./textbox.js";
 
 //
-// Title screen
+// The story intro
 //
 // (c) 2019 Jani Nykänen
 //

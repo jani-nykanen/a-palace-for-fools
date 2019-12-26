@@ -202,6 +202,27 @@ It was a mistake.
 </dialogue>
 
 
+<dialogue id="ending">
+
+<chunk>
+And so the old world
+was destroyed and a
+new one was created.
+</chunk>
+
+<chunk>
+A new world without
+The Eye...
+</chunk>
+
+<chunk>
+A new world without
+you...
+</chunk>
+
+</dialogue>
+
+
 <dialogue id="item32">
 <chunk>
 You obtain a

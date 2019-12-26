@@ -165,7 +165,8 @@ export class Lever extends RenderedObject {
                     // Start transition to the ending
                     ev.tr.activate(true, TransitionMode.CircleInside,
                         0.25, (ev) => {
-                            ev.changeScene("title");
+                            ev.changeScene("ending");
+                            ev.tr.disable();
                         });
                     ev.tr.setCenter(80, 72);
                 }
