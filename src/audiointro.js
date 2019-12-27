@@ -40,7 +40,7 @@ export class EnableAudioScreen {
             }
 
             ev.tr.activate(false, TransitionMode.VerticalBar, 2.0);
-            ev.changeScene("title");
+            ev.changeScene("created_by");
         });
         this.textbox.cursorPos = 0;
     }

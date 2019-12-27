@@ -2,12 +2,15 @@ import { Menu, MenuButton } from "./menu.js";
 import { TransitionMode, Transition } from "./engine/transition.js";
 import { Textbox } from "./textbox.js";
 import { MUSIC_VOLUME } from "./game.js";
+import { State } from "./engine/input.js";
 
 //
 // Title screen
 //
 // (c) 2019 Jani Nykänen
 //
+
+const FLICKER_TIME = 60;
 
 
 export class TitleScreen {
@@ -17,6 +20,10 @@ export class TitleScreen {
         this.cursorPos = 0;
         this.logoFrame = 0;
         this.finished = false;
+
+        this.flickerTimer = FLICKER_TIME/2 -1;
+
+        this.phase = 0;
     }
 
 
@@ -84,6 +91,25 @@ export class TitleScreen {
         }
         this.logoFrame = 3;
 
+        
+        // Wait for enter
+        if (this.phase == 0) {
+
+            // Flicker
+            this.flickerTimer += ev.step;
+            this.flickerTimer %= FLICKER_TIME;
+
+            // Check keys
+            if (ev.input.action.start.state == State.Pressed ||
+                ev.input.action.fire1.state == State.Pressed) {
+
+                ++ this.phase;
+                ev.audio.playSample(ev.audio.sounds.pause, 0.60);
+            }
+
+            return; 
+        }
+
         if (this.textbox.active) {
 
             this.textbox.update(ev);
@@ -108,11 +134,23 @@ export class TitleScreen {
         if (!this.finished)
             return;
 
-        c.move(0, 32);
-        this.menu.draw(c);
-        c.moveTo(0, 0);
 
-        this.textbox.draw(c);
+        if (this.phase == 0) {
+
+            if (this.flickerTimer >= FLICKER_TIME/2) {
+
+                c.drawText(c.bitmaps.font, "Press Enter",
+                    c.w/2, c.h-32, 0, 0, true);
+            }
+        }
+        else {
+            
+            c.move(0, 32);
+            this.menu.draw(c);
+            c.moveTo(0, 0);
+
+            this.textbox.draw(c);
+        }
 
         c.drawText(c.bitmaps.font, "©2019 Jani Nykänen",
             c.w/2, c.h-8, 0, 0, true);

@@ -4,6 +4,7 @@ import { EnableAudioScreen } from "./audiointro.js";
 import { TitleScreen } from "./title.js";
 import { StoryIntro } from "./storyintro.js";
 import { Ending } from "./ending.js";
+import { CreatedByIntro } from "./creator_intro.js";
 
 //
 // Main file
@@ -24,7 +25,9 @@ window.onload = () => {
     c.addScene(new TitleScreen(), "title", false);
     c.addScene(new StoryIntro(), "storyintro", false);
     c.addScene(new Ending(), "ending", false);
+    c.addScene(new CreatedByIntro(), "created_by", false);
     c.addScene(new EnableAudioScreen(), "audiointro", true);
+
 
     // Set language to english
     c.setLocalization("en");
@@ -60,6 +63,7 @@ window.onload = () => {
         {name: "eye",   src: "assets/bitmaps/eye.png"},
         {name: "ending",   src: "assets/bitmaps/ending.png"},
         {name: "intro",   src: "assets/bitmaps/intro.png"},
+        {name: "creator",   src: "assets/bitmaps/creator.png"},
     );
     c.assets.addDocuments(
         {name: "past", src: "assets/maps/past_new.tmx"},
