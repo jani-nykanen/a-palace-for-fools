@@ -637,7 +637,7 @@ export class Stage {
 
         o.hurtCollision(
             x*16 + START_X[t], y*16 + START_Y[t],
-            WIDTH[t], HEIGHT[t], ev
+            WIDTH[t], HEIGHT[t], ev, 2
         );
 
     }

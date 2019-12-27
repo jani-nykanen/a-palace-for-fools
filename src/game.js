@@ -195,6 +195,8 @@ export class Game {
 
         this.objm = null;
         this.stage = null;
+
+        this.hideTextbox = false;
     }
 
 
@@ -242,6 +244,8 @@ export class Game {
         const SNOW_SPEED_BASE = [0.30, 0.40];
         const SNOW_SPEED_VARY = [0.20, 0.30];
         const SNOW_FLOAT_SPEED = [0.025, 0.030];
+
+        this.hideTextbox = ev.tr.active;
 
         // Update text box (we have to do this in
         // this order...)
@@ -517,7 +521,8 @@ export class Game {
         this.pauseMenu.draw(c);
 
         // Draw text box
-        this.textbox.draw(c);
+        if (!this.hideTextbox)
+            this.textbox.draw(c);
 
         // Draw map
         this.map.draw(c, this.stage, 
@@ -559,6 +564,16 @@ export class Game {
         }
 
         this.startMusic(ev);
+
+        // First dialogue
+        if (param) {
+
+            this.textbox.addMessage(
+                ...ev.loc.dialogue.beginning
+            );
+            this.textbox.activate();
+            this.textbox.doNotResumeMusic();
+        }
     }
 
 }

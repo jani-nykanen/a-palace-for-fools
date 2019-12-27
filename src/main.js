@@ -113,8 +113,8 @@ window.onload = () => {
         {name: "fire1", key: 90, button: 0},
         {name: "fire2", key: 88, button: 2},
 
-        {name: "start", key: 13, button: 9},
-        {name: "select", key: 16, button: 8},
+        {name: "start", key: 13, button: 9, button2: 7},
+        {name: "select", key: 16, button: 8, button2: 6},
 
         {name: "debug", key: 80},
     )

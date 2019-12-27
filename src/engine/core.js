@@ -191,7 +191,8 @@ export class Core {
         for (let a of arguments) {
 
             this.ev.input.addAction(
-                a.name, a.key, a.axis, a.dir, a.button);
+                a.name, a.key, a.axis, a.dir, 
+                a.button, a.button2);
         }
     }
 

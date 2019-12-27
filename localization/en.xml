@@ -29,6 +29,26 @@ area!
 
 </dialogue>
 
+<dialogue id="beginning">
+
+<chunk>
+You wake up
+after a long
+state of un-
+consciousness.
+</chunk>
+
+<chunk>
+The only thing you
+remember is that
+you can move using
+the arrow keys and
+jump by pressing
+the Z key.
+</chunk>
+
+</dialogue>
+
 
 <dialogue id="npc1">
 <chunk>

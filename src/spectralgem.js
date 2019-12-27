@@ -35,7 +35,7 @@ export class SpectralGem extends Enemy {
         this.ignoreLadder = true;
         this.preventLeaving = true;
 
-        this.spcAngle = 0.0;
+        this.spcAngle = (y*10 + x) * (Math.PI*2 / 10) % (Math.PI * 2);
 
         this.offScreenKill = true;
     }

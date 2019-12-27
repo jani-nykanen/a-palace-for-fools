@@ -112,11 +112,30 @@ export class GamePad {
 
     // Update "analogue" stick
     updateStick(pad) {
+        
+        const EPS1 = 0.1;
+        const EPS2 = 0.01;
 
         if (pad != null) {
+            
+            this.stick.x = 0;
+            this.stick.y = 0;
 
-            this.stick.x = pad.axes[0];
-            this.stick.y = pad.axes[1];
+            if (Math.hypot(pad.axes[0], pad.axes[1]) > EPS2) {
+
+                this.stick.x = pad.axes[0];
+                this.stick.y = pad.axes[1];
+            }
+
+            // On Firefox dpad is considered
+            // axes, not buttons
+            if (pad.axes.length >= 8 &&
+                Math.hypot(this.stick.x, this.stick.y) < EPS1 &&
+                Math.hypot(pad.axes[6], pad.axes[7]) > EPS2) {
+
+                this.stick.x = pad.axes[6];
+                this.stick.y = pad.axes[7];
+            }
         }
 
         // Compute delta

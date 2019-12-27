@@ -102,7 +102,8 @@ export class InputManager {
             this.gamepad.delta.x : this.gamepad.delta.y;    
             
         if (Math.abs(delta) > DELTA &&
-            axis / action.dir > 0 && delta / action.dir > 0) {
+            ((action.dir > 0 && axis > 0 && delta > 0) ||
+             (action.dir < 0 && axis < 0 && delta < 0))) {
 
             action.state = State.Pressed;
         }
@@ -132,6 +133,14 @@ export class InputManager {
 
                 this.action[n].state = 
                     this.gamepad.getButtonState(this.action[n].button);
+
+                // Check the alternative button
+                if (this.action[n].state == State.Up &&
+                    this.action[n].button2 != null) {
+
+                    this.action[n].state = 
+                        this.gamepad.getButtonState(this.action[n].button2);
+                }
             }
         }
     }
@@ -161,7 +170,7 @@ export class InputManager {
 
 
     // Add an action
-    addAction(name, key, axis, dir, button) {
+    addAction(name, key, axis, dir, button, button2) {
 
         this.action[name] = {
 
@@ -170,6 +179,7 @@ export class InputManager {
             axis: axis,
             dir: dir,
             button: button,
+            button2: button2,
         };
         this.prevent.push(key);
     }
