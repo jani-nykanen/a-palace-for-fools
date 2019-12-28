@@ -471,8 +471,9 @@ You obtain a
 
 <chunk>
 It lets you
-stay underwater
+touch water
 without dying.
+Cool, right?
 </chunk>
 
 </dialogue>
@@ -560,7 +561,7 @@ You obtain an
 </chunk>
 
 <chunk>
-Press R.Shift to
+Press Shift to
 open the map.
 Does not work in 
 the past.
@@ -622,13 +623,14 @@ powerful.
 <dialogue id="item21">
 
 <chunk>
-You obtain a
-"GIANT FLY"!
+Wait what you
+shouldn't be
+seeing this.
 </chunk>
 
 <chunk>
-It offers some
-protection.
+Report the dev,
+please.
 </chunk>
 
 </dialogue>
