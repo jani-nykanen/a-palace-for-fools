@@ -57,6 +57,10 @@ export class InputManager {
 
             window.focus();
         });
+        window.addEventListener("mousedown", (e) => {
+
+            window.focus();
+        });
         // Disable context menu
         window.addEventListener("contextmenu", (e) => {
 
