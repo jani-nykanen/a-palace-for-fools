@@ -14,7 +14,7 @@ import { Tilemap } from "./engine/tilemap.js";
 // (c) 2019 Jani Nykänen
 //
 
-export const MUSIC_VOLUME = 0.40;
+export const MUSIC_VOLUME = 0.60;
 
 
 export class Game {
