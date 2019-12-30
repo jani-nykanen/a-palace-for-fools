@@ -753,7 +753,7 @@ export class Player extends GameObject {
         // Play hurt sound
         ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
         
-        if (this.items[21])
+        if (this.items[20])
             dmg = Math.max(1, dmg-1);
         this.health = Math.max(0, this.health-dmg);  
 
@@ -800,7 +800,7 @@ export class Player extends GameObject {
 
         // Reduce life
         ev.audio.playSample(ev.audio.sounds.hurt, 0.40);
-        if (this.items[21])
+        if (this.items[20])
             dmg = Math.max(1, dmg-1);
         this.health = Math.max(0, this.health-dmg);
     }
