@@ -1,6 +1,9 @@
 ## A Palace for Fools
+[](https://img.itch.zone/aW1hZ2UvNTQxOTE4LzI4Mjc4NjEuZ2lm/original/GEOoiu.gif)
 
-[Play here](https://gamejolt.com/games/a-palace-for-fools/444838)
+[Play on Game Jolt](https://gamejolt.com/games/a-palace-for-fools/444838)
+or
+[Play on Itch.io](https://jani-nykanen.itch.io/a-palace-for-fools)
 
 **A Palace for Fools** is a metroidvania platformer shooter. That's all. 
 
