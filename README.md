@@ -1,5 +1,5 @@
 ## A Palace for Fools
-[](https://img.itch.zone/aW1hZ2UvNTQxOTE4LzI4Mjc4NjEuZ2lm/original/GEOoiu.gif)
+![](https://img.itch.zone/aW1hZ2UvNTQxOTE4LzI4Mjc4NjEuZ2lm/original/GEOoiu.gif)
 
 [Play on Game Jolt](https://gamejolt.com/games/a-palace-for-fools/444838)
 or
